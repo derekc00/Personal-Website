@@ -7,5 +7,8 @@ interface PostMetadata {
 
 interface Post {
   slug: string;
+  content: string;
   metadata: PostMetadata;
 }
+
+export type { Post, PostMetadata };

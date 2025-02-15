@@ -1,4 +1,4 @@
-import { getAllPosts } from "./utils/posts";
+import { getAllPosts } from "../../lib/posts";
 import Card from "@/app/components/card";
 import Container from "@/app/components/container";
 
@@ -20,6 +20,7 @@ export default function Blog() {
             .map(({ slug, metadata }) => (
               <Card
                 key={slug}
+                slug={slug}
                 title={metadata.title}
                 date={metadata.date}
                 image={metadata.image}

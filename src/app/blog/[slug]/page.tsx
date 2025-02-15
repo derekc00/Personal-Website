@@ -1,39 +1,24 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
 import ReactMarkdown from "react-markdown";
+import { getPostBySlug } from "../../../lib/posts";
 
-const postsDirectory = path.join(process.cwd(), "content");
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-interface PostProps {
-  params: {
-    slug: string;
-  };
-}
+export default async function Post({ params }: Props) {
+  const slug = (await params).slug; // Wait for the Promise to resolve
 
-export async function generateStaticParams() {
-  const fileNames = fs.readdirSync(postsDirectory);
-  return fileNames.map((fileName) => ({
-    slug: fileName.replace(".md", ""),
-  }));
-}
+  const post = getPostBySlug(slug); // Call the function synchronously
 
-async function getPost(slug: string) {
-  const fullPath = path.join(postsDirectory, `${slug}.md`);
-  const fileContents = fs.readFileSync(fullPath, "utf8");
-  const { content, data } = matter(fileContents);
-  return { content, metadata: data };
-}
-
-// This is your new page component
-export default async function Post({ params }: PostProps) {
-  const { content, metadata } = await getPost(params.slug);
+  if (!post) {
+    return <div>Post not found</div>;
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className="text-4xl font-bold mb-8">{metadata.title}</h1>
+      <h1 className="text-4xl font-bold mb-8">{post.metadata.title}</h1>
       <div className="max-w-3xl">
-        <ReactMarkdown>{content}</ReactMarkdown>
+        <ReactMarkdown>{post.content}</ReactMarkdown>
       </div>
     </main>
   );

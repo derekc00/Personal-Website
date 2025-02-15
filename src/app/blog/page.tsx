@@ -1,42 +1,33 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-
-const postsDirectory = path.join(process.cwd(), "content");
-
-export function getAllPosts() {
-  const fileNames = fs.readdirSync(postsDirectory);
-
-  return fileNames.map((fileName) => {
-    const slug = fileName.replace(".md", "");
-    const fullPath = path.join(postsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data } = matter(fileContents);
-
-    return { slug, metadata: data };
-  });
-}
+import { getAllPosts } from "./utils/posts";
+import Card from "@/app/components/card";
+import Container from "@/app/components/container";
 
 export default function Blog() {
+  const posts = getAllPosts();
+
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className="text-4xl font-bold mb-8">Blog</h1>
-      <div className="max-w-3xl"></div>
-      <ul className="list-disc pl-5">
-        {getAllPosts()
-          .sort((a, b) => (a.metadata.date > b.metadata.date ? -1 : 1))
-          .map(({ slug, metadata }) => (
-            <li key={slug} className="text-lg mb-3">
-              <a
-                href={`/blog/${slug}`}
-                className="text-blue-600 hover:underline"
-              >
-                {metadata.title}
-              </a>
-              <p className="text-sm text-gray-500">{metadata.date}</p>
-            </li>
-          ))}
-      </ul>
-    </main>
+    <Container>
+      <main className="flex min-h-screen flex-col items-center p-24">
+        <h1 className="text-4xl font-bold mb-8 self-start">Blog</h1>
+        <hr className="w-full border-t-2 border-gray-300 my-8" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 w-full">
+          {posts
+            .sort(
+              (a, b) =>
+                new Date(b.metadata.date).getTime() -
+                new Date(a.metadata.date).getTime()
+            )
+            .map(({ slug, metadata }) => (
+              <Card
+                key={slug}
+                title={metadata.title}
+                date={metadata.date}
+                image={metadata.image}
+                tags={metadata.tags}
+              />
+            ))}
+        </div>
+      </main>
+    </Container>
   );
 }

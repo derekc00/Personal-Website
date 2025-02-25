@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-10 transition-colors duration-300 hover:bg-white">
+    <header className="fixed top-0 left-0 right-0 z-10 bg-yellow-700">
       <nav className="flex items-center justify-between max-w-7xl mx-auto px-4 h-16">
         <Link
           href="/"

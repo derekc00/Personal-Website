@@ -2,20 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light mode variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --button-bg: #f3f4f6;
+  --button-hover: #e5e7eb;
+  --button-text: #374151;
+  --button-text-hover: #111827;
+  --input-bg: #f9fafb;
+  --input-border: #d1d5db;
+  --input-text: #111827;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark mode variables */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f3f4f6;
+  --card-bg: #1f2937;
+  --card-border: #374151;
+  --header-bg: rgba(17, 24, 39, 0.8);
+  --button-bg: #374151;
+  --button-hover: #4b5563;
+  --button-text: #e5e7eb;
+  --button-text-hover: #f9fafb;
+  --input-bg: #111827;
+  --input-border: #374151;
+  --input-text: #f9fafb;
+  --shadow: rgba(0, 0, 0, 0.25);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  /* Smooth transition for theme changes */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply transitions to common elements */
+a, button, input, textarea, 
+.card, .header, .footer, 
+h1, h2, h3, h4, h5, h6,
+p, span, div {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Avoid transition on page load */
+.no-transition {
+  transition: none !important;
 }

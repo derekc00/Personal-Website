@@ -297,7 +297,7 @@ async function PostContent({ slug }: { slug: string }) {
 }
 
 // Main component with Suspense
-export default function Post({ params }: Props) {
+export default function PostContainer({ params }: Props) {
   return (
     <Container>
       <Suspense

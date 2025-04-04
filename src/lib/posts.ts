@@ -7,7 +7,7 @@ import { Post, PostMetadata } from "../utils/types";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const postsDirectory = path.join(process.cwd(), "content");
+const postsDirectory = path.join(process.cwd(), "content/blog");
 
 /**
  * Gets all blog posts sorted by date
@@ -22,13 +22,11 @@ export function getAllPosts(): Post[] {
   try {
     const fileNames = fs.readdirSync(postsDirectory);
 
-    // Filter for markdown files
-    const markdownFiles = fileNames.filter((fileName) =>
-      fileName.endsWith(".md")
-    );
+    // Filter for MDX files
+    const mdxFiles = fileNames.filter((fileName) => fileName.endsWith(".mdx"));
 
-    return markdownFiles.map((fileName) => {
-      const slug = fileName.replace(".md", "");
+    return mdxFiles.map((fileName) => {
+      const slug = fileName.replace(".mdx", "");
       const fullPath = path.join(postsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, "utf8");
       const { data, content: parsedContent } = matter(fileContents);
@@ -58,7 +56,7 @@ export function getAllPosts(): Post[] {
  */
 export function getPostBySlug(slug: string): Post | null {
   try {
-    const fullPath = path.join(postsDirectory, `${slug}.md`);
+    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
     if (!fs.existsSync(fullPath)) {
       return null;
     }

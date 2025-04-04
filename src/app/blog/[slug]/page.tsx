@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 import Container from "@/app/components/container";
 import { Post } from "@/utils/types";
+import { PageProps } from "next/types";
 
 type Props = {
   params: { slug: string };
@@ -99,7 +100,7 @@ async function PostContent({ slug }: { slug: string }) {
       <div className="pt-24 pb-16 min-h-screen flex flex-col items-center justify-center">
         <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">
-          The blog post you're looking for doesn't exist.
+          The blog post you&apos;re looking for doesn&apos;t not exist.
         </p>
         <Link
           href="/blog"
@@ -234,15 +235,39 @@ async function PostContent({ slug }: { slug: string }) {
                 />
               ),
               img: ({ alt, src, ...props }) => {
-                // Create a standalone figure element that won't be wrapped in a paragraph
+                // For external URLs that start with http/https, use regular img
+                if (src?.startsWith("http")) {
+                  return (
+                    <figure className="my-6">
+                      <img
+                        src={src}
+                        alt={alt}
+                        className="rounded-lg max-w-full mx-auto"
+                        {...props}
+                      />
+                      {alt && (
+                        <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+                          {alt}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+                }
+
+                // For internal images, use Next.js Image component
                 return (
                   <figure className="my-6">
-                    <img
-                      src={src}
-                      alt={alt}
-                      className="rounded-lg max-w-full mx-auto"
-                      {...props}
-                    />
+                    <div className="relative w-full aspect-video">
+                      <Image
+                        src={src || ""}
+                        alt={alt || ""}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 768px"
+                        className="object-contain rounded-lg mx-auto"
+                        width={undefined}
+                        height={undefined}
+                      />
+                    </div>
                     {alt && (
                       <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
                         {alt}

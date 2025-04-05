@@ -7,11 +7,40 @@ import Link from "next/link";
 import { Metadata } from "next";
 import Container from "@/app/components/container";
 import { Post } from "@/utils/types";
-import { PageProps } from "next/types";
 
-type Props = {
-  params: { slug: string };
-};
+// --- Update metadata generation function ---
+// Assuming generateMetadata also receives params as a Promise now
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>; // Params is a Promise
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const post = await getPost(resolvedParams.slug); // Use the resolved slug
+
+  if (!post) {
+    return {
+      title: "Post Not Found",
+      description: "The requested blog post could not be found",
+    };
+  }
+
+  return {
+    title: post.metadata.title,
+    description: `Read ${
+      post.metadata.title
+    } - a blog post about ${post.metadata.tags.join(", ")}`,
+    openGraph: {
+      title: post.metadata.title,
+      description: `Read ${
+        post.metadata.title
+      } - a blog post about ${post.metadata.tags.join(", ")}`,
+      type: "article",
+      publishedTime: post.metadata.date,
+      images: post.metadata.image ? [{ url: post.metadata.image }] : undefined,
+    },
+  };
+}
 
 // Fetch post from API
 async function getPost(slug: string): Promise<Post | null> {
@@ -56,45 +85,16 @@ async function getAllPostSlugs(): Promise<string[]> {
   }
 }
 
-// Generate metadata for the post
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPost(params.slug);
-
-  if (!post) {
-    return {
-      title: "Post Not Found",
-      description: "The requested blog post could not be found",
-    };
-  }
-
-  return {
-    title: post.metadata.title,
-    description: `Read ${
-      post.metadata.title
-    } - a blog post about ${post.metadata.tags.join(", ")}`,
-    openGraph: {
-      title: post.metadata.title,
-      description: `Read ${
-        post.metadata.title
-      } - a blog post about ${post.metadata.tags.join(", ")}`,
-      type: "article",
-      publishedTime: post.metadata.date,
-      images: post.metadata.image ? [{ url: post.metadata.image }] : undefined,
-    },
-  };
-}
-
-// Generate static paths for all posts
-export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
-  return slugs.map((slug) => ({
-    slug,
+// Generate static params with proper return type
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const posts = await getAllPostSlugs(); // Fetch the full posts or just slugs if API supports it
+  return posts.map((post) => ({
+    slug: post, // Return the direct slug string
   }));
 }
 
 async function PostContent({ slug }: { slug: string }) {
   const post = await getPost(slug);
-
   if (!post) {
     return (
       <div className="pt-24 pb-16 min-h-screen flex flex-col items-center justify-center">
@@ -234,16 +234,17 @@ async function PostContent({ slug }: { slug: string }) {
                   {...props}
                 />
               ),
-              img: ({ alt, src, ...props }) => {
-                // For external URLs that start with http/https, use regular img
+              img: ({ alt, src }) => {
+                // For external URLs that start with http/https
                 if (src?.startsWith("http")) {
                   return (
                     <figure className="my-6">
-                      <img
-                        src={src}
-                        alt={alt}
+                      <Image
+                        src={src || "/placeholder.jpg"}
+                        alt={alt || "Blog post image"}
                         className="rounded-lg max-w-full mx-auto"
-                        {...props}
+                        width={800}
+                        height={600}
                       />
                       {alt && (
                         <figcaption className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -259,13 +260,13 @@ async function PostContent({ slug }: { slug: string }) {
                   <figure className="my-6">
                     <div className="relative w-full aspect-video">
                       <Image
-                        src={src || ""}
-                        alt={alt || ""}
+                        src={src || "/placeholder.jpg"}
+                        alt={alt || "Blog post image"}
                         fill
                         sizes="(max-width: 768px) 100vw, 768px"
                         className="object-contain rounded-lg mx-auto"
-                        width={undefined}
-                        height={undefined}
+                        width={800}
+                        height={600}
                       />
                     </div>
                     {alt && (
@@ -322,7 +323,15 @@ async function PostContent({ slug }: { slug: string }) {
 }
 
 // Main component with Suspense
-export default function PostContainer({ params }: Props) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>; // Type params exactly as in the docs
+}) {
+  // Await the params Promise to get the resolved object
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug; // Extract the slug string
+
   return (
     <Container>
       <Suspense
@@ -341,7 +350,7 @@ export default function PostContainer({ params }: Props) {
           </div>
         }
       >
-        <PostContent slug={params.slug} />
+        <PostContent slug={slug} />
       </Suspense>
     </Container>
   );

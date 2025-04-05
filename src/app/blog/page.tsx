@@ -7,7 +7,7 @@ import ClientSideFilter from "@/app/components/client-side-filter"; // We'll cre
 export default async function Blog({
   searchParams,
 }: {
-  searchParams: { tag?: string };
+  searchParams: Promise<{ tag?: string }>;
 }) {
   // Get posts directly using your existing function
   const posts = getAllPosts();
@@ -24,7 +24,7 @@ export default async function Blog({
   );
 
   // Pre-filter posts if tag is in URL
-  const selectedTag = searchParams.tag || null;
+  const selectedTag = (await searchParams).tag || null;
   const filteredPosts = selectedTag
     ? sortedPosts.filter((post) => post.metadata.tags.includes(selectedTag))
     : sortedPosts;

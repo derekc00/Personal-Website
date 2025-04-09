@@ -45,14 +45,24 @@ body {
 }
 
 /* Apply transitions to common elements */
-a, button, input, textarea, 
-.card, .header, .footer, 
-h1, h2, h3, h4, h5, h6,
-p, span, div {
-  transition: background-color 0.3s ease, 
-              color 0.3s ease, 
-              border-color 0.3s ease,
-              box-shadow 0.3s ease;
+a,
+button,
+input,
+textarea,
+.card,
+.header,
+.footer,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Avoid transition on page load */

@@ -47,7 +47,7 @@ export default {
       }),
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
   // Allow for dark mode variant of any class
   variants: {
     extend: {

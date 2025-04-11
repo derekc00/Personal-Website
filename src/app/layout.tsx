@@ -19,7 +19,7 @@ export default function RootLayout({
   const setInitialTheme = `
     (function() {
       // Check if a theme is stored in localStorage
-      const storedTheme = localStorage.getItem('theme');
+      const storedTheme = localStorage.getItem('theme');  
       
       if (storedTheme === 'dark') {
         // Apply dark mode directly
@@ -44,7 +44,7 @@ export default function RootLayout({
       }, 100);
     })();
   `;
-  
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

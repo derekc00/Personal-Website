@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getMdxBySlug, getAllMdxFiles } from "@/lib/mdx";
+import MDXContent from "@/app/components/MDXContent";
+import { serialize } from "next-mdx-remote/serialize";
 
 // Generate metadata for the page
 export async function generateMetadata({
@@ -53,6 +55,9 @@ export default async function PostPage({
     notFound();
   }
 
+  // Serialize the MDX content
+  const serializedContent = await serialize(post.content);
+
   // Format the date
   const date = new Date(post.frontmatter.date);
   const formattedDate = `${date.toLocaleString("en-US", {
@@ -91,12 +96,9 @@ export default async function PostPage({
           </div>
         )}
       </header>
-      {/* The prose classname styles the MDX content */}
-      <div className="prose prose-lg max-w-none">
-        <Suspense fallback={<div>Loading content...</div>}>
-          {post.content}
-        </Suspense>
-      </div>
+      <Suspense fallback={<div>Loading content...</div>}>
+        <MDXContent source={serializedContent} />
+      </Suspense>
     </article>
   );
 }

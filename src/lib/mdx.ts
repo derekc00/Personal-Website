@@ -5,11 +5,8 @@ import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import fs from "fs/promises";
 import path from "path";
-
-// Define your custom components
-const mdxComponents: MDXComponents = {
-  // Custom components will be merged with those from mdx-components.tsx
-};
+import { useMDXComponents } from "../../mdx-components";
+import matter from "gray-matter";
 
 interface FrontMatter {
   title: string;
@@ -20,29 +17,7 @@ interface FrontMatter {
   [key: string]: any;
 }
 
-export async function processMDX(content: string) {
-  try {
-    const { content: processedContent, frontmatter } =
-      await compileMDX<FrontMatter>({
-        source: content,
-        components: mdxComponents,
-        options: {
-          parseFrontmatter: true,
-          mdxOptions: {
-            remarkPlugins: [remarkGfm],
-            rehypePlugins: [rehypeHighlight, rehypeSlug],
-          },
-        },
-      });
-
-    return { content: processedContent, frontmatter };
-  } catch (error) {
-    console.error(`Error processing MDX: ${error}`);
-    throw error;
-  }
-}
-
-// Get a single MDX file from the content directory
+// This reads the MDX file content and returns the frontmatter and content
 export async function getMdxBySlug(slug: string, directory: string = "blog") {
   try {
     const filePath = path.join(
@@ -51,10 +26,17 @@ export async function getMdxBySlug(slug: string, directory: string = "blog") {
       directory,
       `${slug}.mdx`
     );
+
     const fileContent = await fs.readFile(filePath, "utf8");
-    return processMDX(fileContent);
+    // Use gray-matter to parse the frontmatter
+    const { data, content } = matter(fileContent);
+
+    return {
+      frontmatter: data as FrontMatter,
+      content,
+    };
   } catch (error) {
-    console.error(`Error getting MDX file ${slug}: ${error}`);
+    console.error("Error getting MDX file", slug, error);
     return null;
   }
 }

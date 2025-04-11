@@ -11,10 +11,6 @@ export default {
   darkMode: "class", // Enable class-based dark mode
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
       // Add transition for smooth theme changes
       transitionProperty: {
         colors: "background-color, border-color, color, fill, stroke",
@@ -35,23 +31,26 @@ export default {
         dark: {
           css: {
             color: theme("colors.gray.100"),
+            h1: { color: theme("colors.white") },
+            h2: { color: theme("colors.white") },
+            h3: { color: theme("colors.white") },
+            h4: { color: theme("colors.white") },
+            h5: { color: theme("colors.white") },
+            h6: { color: theme("colors.white") },
+            p: { color: theme("colors.gray.100") },
+            li: { color: theme("colors.gray.100") },
+            strong: { color: theme("colors.white") },
+            code: { color: theme("colors.gray.100") },
             a: {
               color: theme("colors.blue.400"),
               "&:hover": {
                 color: theme("colors.blue.300"),
               },
             },
-            // Dark mode typography elements
           },
         },
       }),
     },
   },
   plugins: [require("@tailwindcss/typography")],
-  // Allow for dark mode variant of any class
-  variants: {
-    extend: {
-      typography: ["dark"],
-    },
-  },
 } satisfies Config;

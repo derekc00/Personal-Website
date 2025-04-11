@@ -16,6 +16,7 @@ const nextConfig = {
 
 const withMDX = createMDX({
   // Use string references to plugins instead of direct imports
+  extension: /\.mdx?$/,
   options: {
     remarkPlugins: [["remark-gfm"]],
     rehypePlugins: [["rehype-slug"], ["rehype-highlight"]],

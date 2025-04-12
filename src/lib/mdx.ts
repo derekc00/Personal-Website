@@ -1,11 +1,5 @@
-import { compileMDX } from "next-mdx-remote/rsc";
-import type { MDXComponents } from "mdx/types";
-import rehypeHighlight from "rehype-highlight";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 import fs from "fs/promises";
 import path from "path";
-import { useMDXComponents } from "../../mdx-components";
 import matter from "gray-matter";
 
 interface FrontMatter {

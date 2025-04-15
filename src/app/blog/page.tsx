@@ -1,13 +1,13 @@
-// src/app/blog/page.tsx (Server Component)
+import React from "react";
 import { getAllPosts } from "@/lib/posts";
 import Card from "@/app/components/card";
 import Container from "@/app/components/container";
-import ClientSideFilter from "@/app/components/client-side-filter"; // We'll create this
+import ClientSideFilter from "@/app/components/client-side-filter";
 
 export default async function Blog({
   searchParams,
 }: {
-  searchParams: Promise<{ tag?: string }>;
+  searchParams: { tags?: string };
 }) {
   // Get posts directly using your existing function
   const posts = getAllPosts();
@@ -23,23 +23,34 @@ export default async function Blog({
     new Set(sortedPosts.flatMap((post) => post.metadata.tags))
   );
 
-  // Pre-filter posts if tag is in URL
-  const selectedTag = (await searchParams).tag || null;
-  const filteredPosts = selectedTag
-    ? sortedPosts.filter((post) => post.metadata.tags.includes(selectedTag))
-    : sortedPosts;
+  // Get active tags from URL
+  const activeTags = searchParams.tags?.split(",").filter(Boolean) || [];
+
+  // Filter posts if tags are selected (show posts that have ANY of the selected tags)
+  const filteredPosts =
+    activeTags.length > 0
+      ? sortedPosts.filter((post) =>
+          post.metadata.tags.some((tag) => activeTags.includes(tag))
+        )
+      : sortedPosts;
 
   return (
     <Container>
       <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div className="max-w-screen-xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
+          <div className="flex flex-col space-y-4 mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
               Blog
             </h1>
+            <p className="text-gray-500 dark:text-gray-400">
+              Explore our latest articles and insights
+            </p>
 
-            {/* Move the client-side tag filtering to a separate component */}
-            <ClientSideFilter allTags={allTags} selectedTag={selectedTag} />
+            {/* Tag filtering component */}
+            <ClientSideFilter
+              allTags={allTags}
+              selectedTag={activeTags[0] || null}
+            />
           </div>
 
           <div className="h-px bg-gray-200 dark:bg-gray-800 w-full my-8" />
@@ -63,8 +74,8 @@ export default async function Blog({
                 No posts found
               </h3>
               <p className="text-gray-500 dark:text-gray-400">
-                {selectedTag
-                  ? `No posts with the tag "${selectedTag}". Try selecting a different tag.`
+                {activeTags.length > 0
+                  ? `No posts found with the selected tags. Try selecting different tags.`
                   : "No blog posts available at the moment."}
               </p>
             </div>

@@ -1,44 +1,68 @@
 import * as React from "react";
 import type { MDXComponents } from "mdx/types";
-import { highlight } from "sugar-high";
+import { Highlight, themes } from "prism-react-renderer";
+import { useTheme } from "next-themes";
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
+  const { theme } = useTheme();
+
   return {
     // Code component for syntax highlighting
-    code: (props: any) => {
+    code: (
+      props: React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      >
+    ) => {
       const { className, children } = props;
-      const language = className?.replace("language-", "");
 
       if (className) {
-        // Code block with language
-        const highlightedCode = highlight(String(children), language);
+        const language = className.replace("language-", "");
         return (
-          <div className="relative my-6">
-            {language && (
-              <div className="absolute right-2 top-2 text-xs text-gray-500 dark:text-gray-400 font-mono">
-                {language}
-              </div>
-            )}
-            <pre className="p-4 rounded-lg overflow-x-auto bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-              <code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-            </pre>
+          <div className="relative my-3">
+            <Highlight
+              theme={theme === "dark" ? themes.nightOwl : themes.github}
+              code={String(children).trim()}
+              language={language}
+            >
+              {({ style, tokens, getLineProps, getTokenProps }) => (
+                <pre className="relative border border-gray-200 dark:border-gray-700">
+                  {language && (
+                    <span className="absolute right-3 top-2 text-xs text-gray-400 dark:text-gray-500 font-mono opacity-60">
+                      {language}
+                    </span>
+                  )}
+                  {tokens.map((line, i) => (
+                    <div
+                      key={i}
+                      {...getLineProps({ line })}
+                      className="table-row"
+                    >
+                      <span className="table-cell text-right pr-4 select-none text-gray-400 dark:text-gray-500 w-12">
+                        {i + 1}
+                      </span>
+                      <span className="table-cell">
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token })} />
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </pre>
+              )}
+            </Highlight>
           </div>
         );
       }
 
-      // Inline code
-      return (
-        <code className="font-mono text-sm px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
-          {children}
-        </code>
-      );
+      return <code>{children}</code>;
     },
 
     // Let Tailwind's typography plugin handle most of the styling
     // Only override specific components that need custom styling
     blockquote: (props: any) => (
-      <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4">
+      <blockquote className="border-l-4 border-blue-300 dark:border-gray-600 pl-4 italic my-4">
         {props.children}
       </blockquote>
     ),

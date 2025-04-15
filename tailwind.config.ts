@@ -26,6 +26,18 @@ export default {
                 color: "var(--tw-prose-links-hover)",
               },
             },
+            pre: {
+              backgroundColor: "transparent",
+              padding: "1rem",
+              borderRadius: "0.5rem",
+              overflowX: "auto",
+            },
+            code: {
+              backgroundColor: "var(--tw-prose-code-bg)",
+              padding: "0.2em 0.4em",
+              borderRadius: "0.25rem",
+              fontWeight: "400",
+            },
             // Add other typography elements as needed
           },
         },
@@ -47,6 +59,9 @@ export default {
               "&:hover": {
                 color: "var(--tw-prose-invert-links-hover)",
               },
+            },
+            pre: {
+              backgroundColor: "transparent",
             },
           },
         },

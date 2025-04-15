@@ -1,25 +1,215 @@
 ---
-title: "Coding Example"
-description: "A coding example"
+title: "Understanding Dijkstra's Algorithm"
+description: "A comprehensive guide to Dijkstra's shortest path algorithm with implementations in multiple languages"
 date: "2025-04-10"
-tags: ["coding"]
+tags: ["algorithms", "graph-theory", "python", "javascript", "swift"]
 image: "https://picsum.photos/600/400"
 published: true
 comments_enabled: true
 ---
 
+# Understanding Dijkstra's Algorithm
+
+Dijkstra's algorithm is a fundamental graph algorithm that finds the shortest path between nodes in a weighted graph. It's widely used in applications like GPS navigation, network routing, and social network analysis.
+
+## How it Works
+
+1. Start at the source node
+2. Keep track of the shortest known distance to each node
+3. Visit the unvisited node with the smallest known distance
+4. Update distances to neighboring nodes if a shorter path is found
+5. Repeat until all nodes are visited
+
+## Python Implementation
+
 ```python
-print("Hello, World!")
+from heapq import heappush, heappop
+from collections import defaultdict
+
+def dijkstra(graph, start):
+    # Initialize distances with infinity
+    distances = {node: float('infinity') for node in graph}
+    distances[start] = 0
+
+    # Priority queue to store (distance, node) pairs
+    pq = [(0, start)]
+
+    while pq:
+        current_distance, current_node = heappop(pq)
+
+        # If we've found a longer path, skip
+        if current_distance > distances[current_node]:
+            continue
+
+        # Check all neighbors
+        for neighbor, weight in graph[current_node].items():
+            distance = current_distance + weight
+
+            # If we found a shorter path, update it
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heappush(pq, (distance, neighbor))
+
+    return distances
+
+# Example usage
+graph = {
+    'A': {'B': 1, 'C': 4},
+    'B': {'A': 1, 'C': 2, 'D': 5},
+    'C': {'A': 4, 'B': 2, 'D': 1},
+    'D': {'B': 5, 'C': 1}
+}
+
+result = dijkstra(graph, 'A')
+print(f"Shortest distances from A: {result}")
 ```
+
+## JavaScript Implementation
 
 ```javascript
-console.log("Hello, World!");
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+
+  enqueue(val, priority) {
+    this.values.push({ val, priority });
+    this.sort();
+  }
+
+  dequeue() {
+    return this.values.shift();
+  }
+
+  sort() {
+    this.values.sort((a, b) => a.priority - b.priority);
+  }
+}
+
+function dijkstra(graph, start) {
+  const distances = {};
+  const queue = new PriorityQueue();
+  const previous = {};
+
+  // Initialize distances
+  for (let vertex in graph) {
+    distances[vertex] = Infinity;
+    previous[vertex] = null;
+  }
+  distances[start] = 0;
+
+  // Add start node to queue
+  queue.enqueue(start, 0);
+
+  while (queue.values.length) {
+    const smallest = queue.dequeue().val;
+
+    if (smallest === end) break;
+
+    for (let neighbor in graph[smallest]) {
+      const distance = distances[smallest] + graph[smallest][neighbor];
+
+      if (distance < distances[neighbor]) {
+        distances[neighbor] = distance;
+        previous[neighbor] = smallest;
+        queue.enqueue(neighbor, distance);
+      }
+    }
+  }
+
+  return { distances, previous };
+}
+
+// Example usage
+const graph = {
+  A: { B: 1, C: 4 },
+  B: { A: 1, C: 2, D: 5 },
+  C: { A: 4, B: 2, D: 1 },
+  D: { B: 5, C: 1 },
+};
+
+const result = dijkstra(graph, "A");
+console.log("Shortest distances from A:", result.distances);
 ```
+
+## Swift Implementation
 
 ```swift
-print("Hello, World!")
+struct Edge {
+    let to: String
+    let weight: Int
+}
+
+class PriorityQueue {
+    private var heap: [(String, Int)] = []
+
+    func enqueue(_ vertex: String, priority: Int) {
+        heap.append((vertex, priority))
+        heap.sort { $0.1 < $1.1 }
+    }
+
+    func dequeue() -> (String, Int)? {
+        return heap.isEmpty ? nil : heap.removeFirst()
+    }
+
+    var isEmpty: Bool {
+        return heap.isEmpty
+    }
+}
+
+func dijkstra(graph: [String: [Edge]], start: String) -> [String: Int] {
+    var distances: [String: Int] = [:]
+    let queue = PriorityQueue()
+
+    // Initialize distances
+    for vertex in graph.keys {
+        distances[vertex] = Int.max
+    }
+    distances[start] = 0
+
+    queue.enqueue(start, priority: 0)
+
+    while !queue.isEmpty {
+        guard let (current, _) = queue.dequeue() else { break }
+
+        for edge in graph[current] ?? [] {
+            let distance = distances[current]! + edge.weight
+
+            if distance < (distances[edge.to] ?? Int.max) {
+                distances[edge.to] = distance
+                queue.enqueue(edge.to, priority: distance)
+            }
+        }
+    }
+
+    return distances
+}
+
+// Example usage
+let graph: [String: [Edge]] = [
+    "A": [Edge(to: "B", weight: 1), Edge(to: "C", weight: 4)],
+    "B": [Edge(to: "A", weight: 1), Edge(to: "C", weight: 2), Edge(to: "D", weight: 5)],
+    "C": [Edge(to: "A", weight: 4), Edge(to: "B", weight: 2), Edge(to: "D", weight: 1)],
+    "D": [Edge(to: "B", weight: 5), Edge(to: "C", weight: 1)]
+]
+
+let result = dijkstra(graph: graph, start: "A")
+print("Shortest distances from A:", result)
 ```
 
-```sql
-SELECT * FROM users;
-```
+## Time Complexity
+
+- Time Complexity: O((V + E) log V) where V is the number of vertices and E is the number of edges
+- Space Complexity: O(V + E)
+
+## Applications
+
+1. GPS Navigation Systems
+2. Network Routing Protocols
+3. Social Network Analysis
+4. Game Development (pathfinding)
+5. Transportation Planning
+
+## Conclusion
+
+Dijkstra's algorithm is a powerful tool for finding the shortest path in weighted graphs. While the implementation might seem complex at first, understanding its core concepts is crucial for many real-world applications. The algorithm's efficiency and versatility make it a fundamental building block in computer science and software development.

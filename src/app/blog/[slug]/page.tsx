@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import { getMdxBySlug, getAllMdxFiles } from "@/lib/mdx";
 import MDXContent from "@/app/components/MDXContent";
 import { serialize } from "next-mdx-remote/serialize";
+import { Badge } from "@/components/ui/badge";
+import { CalendarIcon } from "lucide-react";
 
 // Generate metadata for the page
 export async function generateMetadata({
@@ -82,7 +84,10 @@ export default async function PostPage({
           </div>
         )}
 
-        <div className="text-sm text-gray-500 mb-2">{formattedDate}</div>
+        <div className="flex items-center text-sm text-muted-foreground mb-2">
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {formattedDate}
+        </div>
 
         <h1 className="text-3xl md:text-4xl font-bold mb-4">
           {post.frontmatter.title}
@@ -91,17 +96,18 @@ export default async function PostPage({
         {post.frontmatter.tags && (
           <div className="flex flex-wrap gap-2 mb-4">
             {post.frontmatter.tags.map((tag: string) => (
-              <span
-                key={tag}
-                className="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-100 rounded-full"
-              >
+              <Badge key={tag} variant="outline">
                 {tag}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
       </header>
-      <Suspense fallback={<div>Loading content...</div>}>
+      <Suspense
+        fallback={
+          <div className="text-muted-foreground">Loading content...</div>
+        }
+      >
         <MDXContent source={serializedContent} />
       </Suspense>
     </article>

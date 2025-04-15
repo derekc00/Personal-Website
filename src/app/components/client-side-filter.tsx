@@ -2,6 +2,9 @@
 
 import React from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 export default function ClientSideFilter({
   allTags,
@@ -14,18 +17,29 @@ export default function ClientSideFilter({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Get active tags from URL
-  const activeTags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
+  // Get active tags from URL and convert to lowercase
+  const activeTags =
+    searchParams
+      .get("tags")
+      ?.split(",")
+      .filter(Boolean)
+      .map((tag) => tag.toLowerCase()) || [];
+
+  // Sort tags alphabetically (case-insensitive) and ensure they're lowercase
+  const sortedTags = [...allTags]
+    .map((tag) => tag.toLowerCase())
+    .sort((a, b) => a.localeCompare(b));
 
   const handleTagClick = (tag: string) => {
+    const lowercaseTag = tag.toLowerCase();
     let newTags: string[];
 
-    if (activeTags.includes(tag)) {
+    if (activeTags.includes(lowercaseTag)) {
       // Remove tag if it's already active
-      newTags = activeTags.filter((t) => t !== tag);
+      newTags = activeTags.filter((t) => t !== lowercaseTag);
     } else {
       // Add tag to active tags
-      newTags = [...activeTags, tag];
+      newTags = [...activeTags, lowercaseTag];
     }
 
     if (newTags.length === 0) {
@@ -42,52 +56,51 @@ export default function ClientSideFilter({
   return (
     <div className="space-y-4">
       <div>
-        <span className="text-sm text-gray-500 dark:text-gray-400 mr-2">
-          Filter by:
-        </span>
         <div className="inline-flex flex-wrap gap-2">
-          {allTags.map((tag) => (
-            <button
+          {sortedTags.map((tag) => (
+            <Button
               key={tag}
               onClick={() => handleTagClick(tag)}
-              className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
-                activeTags.includes(tag)
-                  ? "bg-black text-white dark:bg-white dark:text-black"
-                  : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-              }`}
+              variant={activeTags.includes(tag) ? "default" : "outline"}
+              size="sm"
+              className="rounded-full"
             >
               {tag}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
 
       {activeTags.length > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Active filters:
-          </span>
+          <span className="text-sm text-muted-foreground">Active filters:</span>
           <div className="flex flex-wrap gap-2 items-center">
             {activeTags.map((tag) => (
-              <span
+              <Badge
                 key={tag}
-                className="inline-flex items-center px-3 py-1 text-xs font-medium bg-black text-white dark:bg-white dark:text-black rounded-full"
+                variant="secondary"
+                className="flex items-center gap-1"
               >
                 {tag}
-                <button
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-4 w-4 p-0 hover:bg-transparent"
                   onClick={() => handleTagClick(tag)}
-                  className="ml-1 hover:opacity-75"
                 >
-                  ×
-                </button>
-              </span>
+                  <X className="h-3 w-3" />
+                  <span className="sr-only">Remove {tag} filter</span>
+                </Button>
+              </Badge>
             ))}
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={clearFilter}
-              className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+              className="text-xs text-muted-foreground hover:text-foreground"
             >
               Clear all
-            </button>
+            </Button>
           </div>
         </div>
       )}

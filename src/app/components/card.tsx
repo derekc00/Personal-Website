@@ -3,8 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CalendarIcon } from "lucide-react";
 
-interface CardProps {
+interface BlogCardProps {
   title: string;
   date: string;
   image?: string;
@@ -13,7 +21,14 @@ interface CardProps {
   onTagClick?: (tag: string) => void;
 }
 
-const Card = ({ slug, title, date, image, tags, onTagClick }: CardProps) => {
+const BlogCard = ({
+  slug,
+  title,
+  date,
+  image,
+  tags,
+  onTagClick,
+}: BlogCardProps) => {
   const [imageLoading, setImageLoading] = useState(true);
   const fallbackImage = "/home.jpg"; // Default image if none provided
 
@@ -28,12 +43,12 @@ const Card = ({ slug, title, date, image, tags, onTagClick }: CardProps) => {
   });
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-black transition-all duration-300 hover:shadow-lg">
+    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg">
       <div className="relative h-48 overflow-hidden">
         {imageLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-900 animate-pulse">
+          <div className="absolute inset-0 flex items-center justify-center bg-muted animate-pulse">
             <svg
-              className="w-10 h-10 text-gray-300 dark:text-gray-700"
+              className="w-10 h-10 text-muted-foreground"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -56,35 +71,37 @@ const Card = ({ slug, title, date, image, tags, onTagClick }: CardProps) => {
         </Link>
       </div>
 
-      <div className="flex flex-col grow p-5">
-        <div className="flex items-center mb-2">
-          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-            {formattedDate}
-          </span>
+      <CardHeader className="pb-2">
+        <div className="flex items-center text-xs text-muted-foreground">
+          <CalendarIcon className="mr-1 h-3 w-3" />
+          <span>{formattedDate}</span>
         </div>
+      </CardHeader>
 
-        <Link href={`/blog/${slug}`} className="mb-2">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:underline">
+      <CardContent>
+        <Link href={`/blog/${slug}`}>
+          <h2 className="text-xl font-bold line-clamp-2 group-hover:underline">
             {title}
           </h2>
         </Link>
+      </CardContent>
 
-        <div className="mt-auto pt-4">
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag, index) => (
-              <button
-                key={index}
-                onClick={() => onTagClick && onTagClick(tag)}
-                className="inline-block px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
+      <CardFooter>
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <Badge
+              key={index}
+              variant="secondary"
+              className="cursor-pointer hover:bg-secondary/80"
+              onClick={() => onTagClick && onTagClick(tag)}
+            >
+              {tag}
+            </Badge>
+          ))}
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 };
 
-export default Card;
+export default BlogCard;

@@ -70,7 +70,7 @@ export default async function PostPage({
   })} ${date.getDate()}, ${date.getFullYear()}`;
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-8">
+    <article className="max-w-3xl mx-auto px-4 py-8 mt-16">
       <header className="mb-8">
         {post.frontmatter.image && (
           <div className="mb-8 rounded-lg overflow-hidden relative h-64 md:h-96">

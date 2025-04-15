@@ -7,6 +7,7 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/providers/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
+    "./mdx-components.tsx",
   ],
   darkMode: "class", // Enable class-based dark mode
   theme: {
@@ -15,14 +16,14 @@ export default {
       transitionProperty: {
         colors: "background-color, border-color, color, fill, stroke",
       },
-      typography: (theme: (path: string) => string) => ({
+      typography: {
         DEFAULT: {
           css: {
-            color: theme("colors.gray.900"),
+            color: "var(--tw-prose-body)",
             a: {
-              color: theme("colors.blue.600"),
+              color: "var(--tw-prose-links)",
               "&:hover": {
-                color: theme("colors.blue.800"),
+                color: "var(--tw-prose-links-hover)",
               },
             },
             // Add other typography elements as needed
@@ -30,26 +31,26 @@ export default {
         },
         dark: {
           css: {
-            color: theme("colors.gray.100"),
-            h1: { color: theme("colors.white") },
-            h2: { color: theme("colors.white") },
-            h3: { color: theme("colors.white") },
-            h4: { color: theme("colors.white") },
-            h5: { color: theme("colors.white") },
-            h6: { color: theme("colors.white") },
-            p: { color: theme("colors.gray.100") },
-            li: { color: theme("colors.gray.100") },
-            strong: { color: theme("colors.white") },
-            code: { color: theme("colors.gray.100") },
+            color: "var(--tw-prose-invert-body)",
+            h1: { color: "var(--tw-prose-invert-headings)" },
+            h2: { color: "var(--tw-prose-invert-headings)" },
+            h3: { color: "var(--tw-prose-invert-headings)" },
+            h4: { color: "var(--tw-prose-invert-headings)" },
+            h5: { color: "var(--tw-prose-invert-headings)" },
+            h6: { color: "var(--tw-prose-invert-headings)" },
+            p: { color: "var(--tw-prose-invert-body)" },
+            li: { color: "var(--tw-prose-invert-body)" },
+            strong: { color: "var(--tw-prose-invert-headings)" },
+            code: { color: "var(--tw-prose-invert-body)" },
             a: {
-              color: theme("colors.blue.400"),
+              color: "var(--tw-prose-invert-links)",
               "&:hover": {
-                color: theme("colors.blue.300"),
+                color: "var(--tw-prose-invert-links-hover)",
               },
             },
           },
         },
-      }),
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

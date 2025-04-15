@@ -10,5 +10,9 @@ export default function MDXContent({
 }) {
   const components = useMDXComponents({});
 
-  return <MDXRemote {...source} components={components} />;
+  return (
+    <div className="prose dark:prose-invert max-w-none">
+      <MDXRemote {...source} components={components} />
+    </div>
+  );
 }

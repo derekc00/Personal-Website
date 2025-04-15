@@ -10,7 +10,7 @@
 }
 
 /* Sugar-high token styles */
-:root {
+/* :root {
   --sh-class: #4d9ef6;
   --sh-identifier: #6caedd;
   --sh-sign: #cdd3de;
@@ -20,44 +20,44 @@
   --sh-string: #26dabd;
   --sh-keyword: #ff6b6b;
   --sh-comment: #6b7280;
-}
-
+} */
+/* 
 .dark {
-  --sh-class: #61afef;
-  --sh-identifier: #79b8ff;
-  --sh-sign: #e1e4ea;
-  --sh-property: #4299e1;
-  --sh-entity: #56b6c2;
-  --sh-jsxliterals: #a5adfe;
-  --sh-string: #98c379;
-  --sh-keyword: #f97583;
-  --sh-comment: #8b949e;
+--sh-class: #61afef;
+--sh-identifier: #79b8ff;
+--sh-sign: #e1e4ea;
+--sh-property: #4299e1;
+--sh-entity: #56b6c2;
+--sh-jsxliterals: #a5adfe;
+--sh-string: #98c379;
+--sh-keyword: #f97583;
+--sh-comment: #8b949e;
 }
 
 .sh__class {
-  color: var(--sh-class);
+color: var(--sh-class);
 }
 .sh__identifier {
-  color: var(--sh-identifier);
+color: var(--sh-identifier);
 }
 .sh__sign {
-  color: var(--sh-sign);
+color: var(--sh-sign);
 }
 .sh__property {
-  color: var(--sh-property);
+color: var(--sh-property);
 }
 .sh__entity {
-  color: var(--sh-entity);
+color: var(--sh-entity);
 }
 .sh__jsxliterals {
-  color: var(--sh-jsxliterals);
+color: var(--sh-jsxliterals);
 }
 .sh__string {
-  color: var(--sh-string);
+color: var(--sh-string);
 }
 .sh__keyword {
-  color: var(--sh-keyword);
+color: var(--sh-keyword);
 }
 .sh__comment {
-  color: var(--sh-comment);
-}
+color: var(--sh-comment);
+} */

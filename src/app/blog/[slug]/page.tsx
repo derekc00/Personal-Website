@@ -55,8 +55,13 @@ export default async function PostPage({
     notFound();
   }
 
-  // Serialize the MDX content
-  const serializedContent = await serialize(post.content);
+  // Serialize the MDX content with proper options
+  const serializedContent = await serialize(post.content, {
+    mdxOptions: {
+      development: process.env.NODE_ENV === "development",
+    },
+    parseFrontmatter: true,
+  });
 
   // Format the date
   const date = new Date(post.frontmatter.date);

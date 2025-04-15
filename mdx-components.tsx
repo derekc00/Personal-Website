@@ -5,11 +5,8 @@ import { highlight } from "sugar-high";
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    wrapper: ({ children }) => (
-      <div className="prose dark:prose-dark max-w-none">{children}</div>
-    ),
+    // Code component for syntax highlighting
     code: (props: any) => {
-      // NOTE: I don't know how to make this type correct. Had to put any for now.
       const { className, children } = props;
       const language = className?.replace("language-", "");
 
@@ -37,6 +34,29 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         </code>
       );
     },
+
+    // Let Tailwind's typography plugin handle most of the styling
+    // Only override specific components that need custom styling
+    blockquote: (props: any) => (
+      <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 italic my-4">
+        {props.children}
+      </blockquote>
+    ),
+    a: (props: any) => (
+      <a
+        href={props.href}
+        className="text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        {props.children}
+      </a>
+    ),
+    img: (props: any) => (
+      <img
+        src={props.src}
+        alt={props.alt}
+        className="rounded-lg my-6 max-w-full"
+      />
+    ),
     ...components,
   };
 }

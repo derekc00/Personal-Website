@@ -7,57 +7,54 @@ import { useTheme } from "next-themes";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   const { theme } = useTheme();
 
+  const CodeBlock: React.FunctionComponent<
+    React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
+  > = (props) => {
+    const { className, children } = props;
+    if (className) {
+      const language = className.replace("language-", "");
+      return (
+        <div className="relative my-3">
+          <Highlight
+            theme={theme === "dark" ? themes.nightOwl : themes.github}
+            code={String(children).trim()}
+            language={language}
+          >
+            {({ style, tokens, getLineProps, getTokenProps }) => (
+              <pre className="relative border border-gray-200 dark:border-gray-700">
+                {language && (
+                  <span className="absolute right-3 top-2 text-xs text-gray-400 dark:text-gray-500 font-mono opacity-60">
+                    {language}
+                  </span>
+                )}
+                {tokens.map((line, i) => (
+                  <div
+                    key={i}
+                    {...getLineProps({ line })}
+                    className="table-row"
+                  >
+                    <span className="table-cell text-right pr-4 select-none text-gray-400 dark:text-gray-500 w-12">
+                      {i + 1}
+                    </span>
+                    <span className="table-cell">
+                      {line.map((token, key) => (
+                        <span key={key} {...getTokenProps({ token })} />
+                      ))}
+                    </span>
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
+        </div>
+      );
+    }
+    return <code>{children}</code>;
+  };
+
   return {
     // Code component for syntax highlighting
-    code: (
-      props: React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      >
-    ) => {
-      const { className, children } = props;
-
-      if (className) {
-        const language = className.replace("language-", "");
-        return (
-          <div className="relative my-3">
-            <Highlight
-              theme={theme === "dark" ? themes.nightOwl : themes.github}
-              code={String(children).trim()}
-              language={language}
-            >
-              {({ style, tokens, getLineProps, getTokenProps }) => (
-                <pre className="relative border border-gray-200 dark:border-gray-700">
-                  {language && (
-                    <span className="absolute right-3 top-2 text-xs text-gray-400 dark:text-gray-500 font-mono opacity-60">
-                      {language}
-                    </span>
-                  )}
-                  {tokens.map((line, i) => (
-                    <div
-                      key={i}
-                      {...getLineProps({ line })}
-                      className="table-row"
-                    >
-                      <span className="table-cell text-right pr-4 select-none text-gray-400 dark:text-gray-500 w-12">
-                        {i + 1}
-                      </span>
-                      <span className="table-cell">
-                        {line.map((token, key) => (
-                          <span key={key} {...getTokenProps({ token })} />
-                        ))}
-                      </span>
-                    </div>
-                  ))}
-                </pre>
-              )}
-            </Highlight>
-          </div>
-        );
-      }
-
-      return <code>{children}</code>;
-    },
+    code: CodeBlock as any,
 
     // Let Tailwind's typography plugin handle most of the styling
     // Only override specific components that need custom styling

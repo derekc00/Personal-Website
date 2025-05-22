@@ -8,7 +8,7 @@ interface FrontMatter {
   description?: string;
   tags?: string[];
   image?: string;
-  [key: string]: any;
+  [key: string]: string | string[] | undefined;
 }
 
 // This reads the MDX file content and returns the frontmatter and content

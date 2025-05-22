@@ -1,4 +1,7 @@
+"use client";
+
 import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Project } from "@/components/ProjectCard";
 import { FaGithub } from "react-icons/fa";
 import ImageWithSkeleton from "@/components/ImageWithSkeleton";
@@ -37,12 +40,15 @@ const sampleProjects: Project[] = [
   },
 ];
 
-export default function ProjectDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const project = sampleProjects.find((p) => p.slug === params.slug);
+export default function ProjectDetailPage() {
+  const params = useParams();
+  const slug =
+    typeof params.slug === "string"
+      ? params.slug
+      : Array.isArray(params.slug)
+      ? params.slug[0]
+      : "";
+  const project = sampleProjects.find((p) => p.slug === slug);
 
   if (!project) {
     notFound();

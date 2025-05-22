@@ -6,13 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 
-export default function ClientSideFilter({
-  allTags,
-  selectedTag,
-}: {
-  allTags: string[];
-  selectedTag: string | null;
-}) {
+export default function ClientSideFilter({ allTags }: { allTags: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

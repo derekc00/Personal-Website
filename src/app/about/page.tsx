@@ -14,11 +14,10 @@ export default function About() {
             What&apos;s that point of this website?
           </h2>
           <p>
-            I&apos;m not too sure at the moment. My best guess is that it will
-            be a place for old friends, new friends, recruiters, and complete
-            strangers to know more about me and what I&apos;m up. Kind of like
-            social media but without the common side effects I notice I get when
-            I post there.
+            For now, it will be a place for me to share my thoughts and ideas. I
+            am not going to put much effort into this version since I am cooking
+            up a more interactive version. So, I will vibe code this and work on
+            the new version.
           </p>
         </div>
       </main>

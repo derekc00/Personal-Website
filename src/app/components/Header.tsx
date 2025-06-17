@@ -63,16 +63,10 @@ export default function Header() {
                     About
                   </Link>
                   <Link
-                    href="/projects"
+                    href="/content"
                     className="text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Projects
-                  </Link>
-                  <Link
-                    href="/blog"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Blog
+                    Content
                   </Link>
                   <Link
                     href="/three"
@@ -103,17 +97,10 @@ export default function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuLink asChild>
                     <Link
-                      href="/projects"
+                      href="/content"
                       className={navigationMenuTriggerStyle()}
                     >
-                      Projects
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link href="/blog" className={navigationMenuTriggerStyle()}>
-                      Blog
+                      Content
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>

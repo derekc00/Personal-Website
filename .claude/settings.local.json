@@ -19,7 +19,14 @@
       "mcp__linear__update_issue",
       "mcp__linear__update_project",
       "mcp__linear__get_issue",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "mcp__linear__get_issue_git_branch_name",
+      "Bash(git worktree:*)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(git worktree:*)",
+      "Bash(git -C ../githooks branch --show-current)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }

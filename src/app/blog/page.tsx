@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { getAllPosts } from "@/lib/posts";
-import Container from "@/app/components/container";
 import BlogListClient from "@/app/blog/BlogListClient";
+import { PageLayout, PageHeader, Section } from "@/components/ui/page-layout";
 
 export default async function Blog() {
   // Get posts directly using your existing function
@@ -14,24 +14,23 @@ export default async function Blog() {
   );
 
   return (
-    <main>
-      <Container>
-        <div className="flex flex-col items-start justify-center max-w-2xl mx-auto mb-16 pt-24">
-          <h1 className="font-bold text-3xl md:text-5xl tracking-tight mb-4 text-black dark:text-white">
-            Blog
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            {`I've written ${posts.length} articles on my blog. Use the search below to filter by title.`}
-          </p>
-          <div className="relative w-full mb-4">
+    <PageLayout variant="narrow">
+      <PageHeader 
+        title="Blog" 
+        description={`I've written ${posts.length} articles about software development, productivity, and more.`}
+      />
+      
+      <Section>
+        <div className="space-y-6">
+          <div className="relative w-full">
             <input
               aria-label="Search articles"
               type="text"
               placeholder="Search articles"
-              className="block w-full px-4 py-2 text-gray-900 bg-white border border-gray-200 rounded-md dark:border-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+              className="block w-full px-4 py-3 text-foreground bg-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
             />
             <svg
-              className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute right-3 top-3.5 h-5 w-5 text-muted-foreground"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -45,12 +44,14 @@ export default async function Blog() {
               />
             </svg>
           </div>
-          <div className="h-px bg-border w-full my-8" />
-          <Suspense fallback={<div>Loading...</div>}>
+          
+          <div className="h-px bg-border w-full" />
+          
+          <Suspense fallback={<div className="text-center py-8 text-muted-foreground">Loading articles...</div>}>
             <BlogListClient posts={sortedPosts} />
           </Suspense>
         </div>
-      </Container>
-    </main>
+      </Section>
+    </PageLayout>
   );
 }

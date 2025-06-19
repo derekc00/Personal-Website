@@ -1,4 +1,5 @@
 import ProjectCard, { Project } from "@/components/ProjectCard";
+import { PageLayout, PageHeader, Section } from "@/components/ui/page-layout";
 
 const sampleProjects: Project[] = [
   {
@@ -35,13 +36,19 @@ const sampleProjects: Project[] = [
 
 export default function Projects() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <h1 className="text-4xl font-bold mb-8">Projects</h1>
-      <div className="max-w-3xl w-full">
-        {sampleProjects.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
-        ))}
-      </div>
-    </main>
+    <PageLayout>
+      <PageHeader 
+        title="Projects" 
+        description="A collection of projects showcasing my development skills and interests"
+      />
+      
+      <Section>
+        <div className="grid grid-cols-1 gap-8 max-w-4xl mx-auto">
+          {sampleProjects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
+          ))}
+        </div>
+      </Section>
+    </PageLayout>
   );
 }

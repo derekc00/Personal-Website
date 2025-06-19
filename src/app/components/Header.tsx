@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -13,9 +14,23 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
+
+const navigationItems = [
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
+  { href: "/three", label: "Workspace" },
+];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,28 +69,33 @@ export default function Header() {
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
-                <nav className="flex flex-col space-y-4 mt-4">
-                  <Link
-                    href="/about"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/content"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Content
-                  </Link>
-                  <Link
-                    href="/three"
-                    className="text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    three.js
-                  </Link>
-                  <ThemeSwitcher />
-                </nav>
+              <SheetContent side="left" className="w-72">
+                <div className="flex flex-col h-full">
+                  <div className="flex items-center justify-between py-4">
+                    <Link href="/" className="text-xl font-medium">
+                      Derek
+                    </Link>
+                  </div>
+                  <nav className="flex flex-col space-y-2 mt-8">
+                    {navigationItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                          isActive(item.href)
+                            ? "bg-primary text-primary-foreground"
+                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="mt-auto pb-4">
+                    <ThemeSwitcher />
+                  </div>
+                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -84,36 +104,21 @@ export default function Header() {
           <div className="hidden md:flex items-center space-x-4">
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/about"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      About
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/content"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      Content
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href="/three"
-                      className={navigationMenuTriggerStyle()}
-                    >
-                      three.js
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
+                {navigationItems.map((item) => (
+                  <NavigationMenuItem key={item.href}>
+                    <NavigationMenuLink asChild>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          isActive(item.href) && "bg-accent text-accent-foreground"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                ))}
               </NavigationMenuList>
             </NavigationMenu>
             <ThemeSwitcher />

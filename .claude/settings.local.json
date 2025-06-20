@@ -26,7 +26,10 @@
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(git worktree:*)",
       "Bash(git -C ../githooks branch --show-current)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__linear__list_my_issues",
+      "mcp__linear__list_issues",
+      "Bash(git pull:*)"
     ],
     "deny": []
   }

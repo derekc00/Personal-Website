@@ -1,4 +1,39 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
 export default function Footer() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <footer className="w-full border-t border-border py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center">
+            <div className="flex space-x-6 mb-6">
+              <div className="w-5 h-5 bg-muted animate-pulse rounded" />
+              <div className="w-5 h-5 bg-muted animate-pulse rounded" />
+              <div className="w-5 h-5 bg-muted animate-pulse rounded" />
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} Derek Chang. All rights reserved.
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                Built with Next.js, React, and Tailwind CSS
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="w-full border-t border-border py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -40,8 +40,8 @@ export default function Home() {
                 }}
                 options={{
                   delay: 75,
-                  cursor: "|",
-                  cursorClassName: "text-white opacity-75 inline-block w-[2px] bg-white"
+                  cursor: "│",
+                  cursorClassName: "text-white opacity-75"
                 }}
               />
             </h1>

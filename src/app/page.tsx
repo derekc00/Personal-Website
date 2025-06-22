@@ -38,7 +38,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40 z-[5]">
           <div className="absolute bottom-8 left-8">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight">
-              {videoReady ? (
+              {videoReady && (
                 <Typewriter
                   onInit={(typewriter) => {
                     typewriter
@@ -57,8 +57,6 @@ export default function Home() {
                     cursorClassName: "text-white opacity-75"
                   }}
                 />
-              ) : (
-                <span className="text-white opacity-75">│</span>
               )}
             </h1>
           </div>

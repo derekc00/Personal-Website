@@ -27,12 +27,19 @@ export default function Home() {
           <div className="absolute bottom-8 left-8">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight">
               <Typewriter
+                onInit={(typewriter) => {
+                  typewriter
+                    .typeString('Welcome')
+                    .pauseFor(200)
+                    .typeString(' to')
+                    .pauseFor(200)
+                    .typeString(' Derek\'s')
+                    .pauseFor(200)
+                    .typeString(' website')
+                    .start();
+                }}
                 options={{
-                  strings: ["Welcome to Derek's website"],
-                  autoStart: true,
-                  loop: false,
                   delay: 75,
-                  deleteSpeed: 50,
                   cursor: "|",
                   cursorClassName: "text-blue-400"
                 }}

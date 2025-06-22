@@ -38,6 +38,12 @@ We operate as peers and colleagues working together to solve problems and advanc
 - Next.js App Router for React applications
 - Focus on practical implications and alternative frameworks when evaluating solutions
 
+## Git Commit Guidelines
+
+- Do not include Claude attribution in commit messages
+- Keep commit messages focused on technical changes only
+- Use conventional commit format when appropriate
+
 ## Collaboration Notes
 
 Maintain focus on the matter at hand while keeping broader context. Mistakes are learning opportunities, not failures. Trust and respect enable honest dialogue that actually moves things forward.

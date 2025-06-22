@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { useSpring, animated, to } from "@react-spring/web";
 import VideoBackgroundClient from "@/components/VideoBackgroundClient";
 import ErrorBoundary from "@/components/ErrorBoundary";

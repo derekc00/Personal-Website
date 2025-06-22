@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 interface VideoBackgroundProps {
   fileName: string;
+  onVideoReady?: () => void;
 }
 
 function VideoFallback({
@@ -30,7 +31,7 @@ function VideoFallback({
   );
 }
 
-export default function VideoBackground({ fileName }: VideoBackgroundProps) {
+export default function VideoBackground({ fileName, onVideoReady }: VideoBackgroundProps) {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -121,6 +122,7 @@ export default function VideoBackground({ fileName }: VideoBackgroundProps) {
         if (process.env.NODE_ENV === "development") {
           console.log("Video can start playing");
         }
+        onVideoReady?.();
       }}
     >
       <source src={videoUrl} type="video/mp4" />

@@ -56,7 +56,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="text-xl font-medium">
-              Derek
+              Home
             </Link>
             <div className="hidden md:flex items-center space-x-4">
               <div className="h-8 w-32 bg-muted animate-pulse rounded" />
@@ -78,7 +78,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-medium">
-            Derek
+            Home
           </Link>
 
           {/* Mobile menu */}
@@ -94,7 +94,7 @@ export default function Header() {
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between py-4">
                     <Link href="/" className="text-xl font-medium">
-                      Derek
+                      Home
                     </Link>
                   </div>
                   <nav className="flex flex-col space-y-2 mt-8">

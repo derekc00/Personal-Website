@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface ContentFilterProps {
+type ContentFilterProps = {
   categories: string[];
   onSearch: (query: string) => void;
   onCategorySelect: (category: string | null) => void;

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-interface PageLayoutProps {
+type PageLayoutProps = {
   children: React.ReactNode;
   className?: string;
   variant?: "default" | "narrow" | "wide";
@@ -22,7 +22,7 @@ export function PageLayout({ children, className, variant = "default" }: PageLay
   );
 }
 
-interface PageHeaderProps {
+type PageHeaderProps = {
   title: string;
   description?: string;
   className?: string;
@@ -45,7 +45,7 @@ export function PageHeader({ title, description, className }: PageHeaderProps) {
   );
 }
 
-interface SectionProps {
+type SectionProps = {
   children: React.ReactNode;
   className?: string;
 }

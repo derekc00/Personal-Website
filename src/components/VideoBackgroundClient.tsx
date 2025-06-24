@@ -3,7 +3,7 @@
 import { Suspense, useEffect } from "react";
 import VideoBackground from "./VideoBackground";
 
-interface VideoBackgroundClientProps {
+type VideoBackgroundClientProps = {
   fileName: string;
   onVideoReady?: () => void;
 }

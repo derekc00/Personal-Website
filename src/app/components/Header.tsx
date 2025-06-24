@@ -25,6 +25,7 @@ const navigationItems = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -33,6 +34,8 @@ export default function Header() {
   };
 
   useEffect(() => {
+    setMounted(true);
+
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
       if (isScrolled !== scrolled) {
@@ -46,6 +49,24 @@ export default function Header() {
     };
   }, [scrolled]);
 
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-10 transition-all duration-300 bg-transparent dark:bg-background/20 dark:backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="text-xl font-medium">
+              Home
+            </Link>
+            <div className="hidden md:flex items-center space-x-4">
+              <div className="h-8 w-32 bg-muted animate-pulse rounded" />
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-10 transition-all duration-300 ${
@@ -57,7 +78,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-medium">
-            Derek
+            Home
           </Link>
 
           {/* Mobile menu */}
@@ -73,7 +94,7 @@ export default function Header() {
                 <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between py-4">
                     <Link href="/" className="text-xl font-medium">
-                      Derek
+                      Home
                     </Link>
                   </div>
                   <nav className="flex flex-col space-y-2 mt-8">
@@ -111,7 +132,8 @@ export default function Header() {
                         href={item.href}
                         className={cn(
                           navigationMenuTriggerStyle(),
-                          isActive(item.href) && "bg-accent text-accent-foreground"
+                          isActive(item.href) &&
+                            "bg-accent text-accent-foreground"
                         )}
                       >
                         {item.label}

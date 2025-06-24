@@ -51,7 +51,7 @@ export default function RootLayout({
         {/* Inline script to prevent FOUC */}
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider>
           <div className="flex flex-col min-h-screen">
             <Header />

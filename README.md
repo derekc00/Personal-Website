@@ -20,6 +20,29 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Local Development Setup
+
+### Claude Code Configuration
+This project uses Claude Code for AI-assisted development. Local Claude settings are stored in `.claude/settings.local.json` and should not be committed to version control.
+
+To configure your local Claude Code settings:
+1. Create `.claude/settings.local.json` in the project root (already gitignored)
+2. Configure tools, permissions, and preferences as needed
+3. The file is automatically ignored by git to prevent exposing local configurations
+
+Example local settings structure:
+```json
+{
+  "tools": {
+    "allow": ["tool1", "tool2"],
+    "deny": []
+  },
+  "experimental": {
+    "feature": true
+  }
+}
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

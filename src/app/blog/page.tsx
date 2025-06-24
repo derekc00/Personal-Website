@@ -1,17 +1,11 @@
 import React, { Suspense } from "react";
-import { getAllPosts } from "@/lib/posts";
+import { getContentByType } from "@/lib/content";
 import BlogListClient from "@/app/blog/BlogListClient";
 import { PageLayout, PageHeader, Section } from "@/components/ui/page-layout";
 
 export default async function Blog() {
-  // Get posts directly using your existing function
-  const posts = await getAllPosts();
-
-  // Sort posts by date
-  const sortedPosts = posts.sort(
-    (a, b) =>
-      new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
-  );
+  // Get blog posts using unified content system
+  const posts = await getContentByType('blog');
 
   return (
     <PageLayout variant="narrow">
@@ -48,7 +42,7 @@ export default async function Blog() {
           <div className="h-px bg-border w-full" />
           
           <Suspense fallback={<div className="text-center py-8 text-muted-foreground">Loading articles...</div>}>
-            <BlogListClient posts={sortedPosts} />
+            <BlogListClient posts={posts} />
           </Suspense>
         </div>
       </Section>

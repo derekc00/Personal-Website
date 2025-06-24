@@ -4,9 +4,9 @@ import React from "react";
 import { useSearchParams } from "next/navigation";
 import BlogCard from "@/app/components/card";
 
-import type { Post } from "@/utils/types";
+import type { ContentItem } from "@/lib/schemas";
 
-export default function BlogListClient({ posts }: { posts: Post[] }) {
+export default function BlogListClient({ posts }: { posts: ContentItem[] }) {
   const searchParams = useSearchParams();
   const tagsParam = searchParams.get("tags");
   const activeTags = tagsParam ? tagsParam.split(",").filter(Boolean) : [];
@@ -15,20 +15,20 @@ export default function BlogListClient({ posts }: { posts: Post[] }) {
   const filteredPosts =
     activeTags.length > 0
       ? posts.filter((post) =>
-          post.metadata.tags.some((tag) => activeTags.includes(tag))
+          post.tags.some((tag) => activeTags.includes(tag))
         )
       : posts;
 
   return filteredPosts.length > 0 ? (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {filteredPosts.map(({ slug, metadata }) => (
+      {filteredPosts.map((post) => (
         <BlogCard
-          key={slug}
-          slug={slug}
-          title={metadata.title}
-          date={metadata.date}
-          image={metadata.image}
-          tags={metadata.tags}
+          key={post.slug}
+          slug={post.slug}
+          title={post.title}
+          date={post.date}
+          image={post.image || undefined}
+          tags={post.tags}
         />
       ))}
     </div>

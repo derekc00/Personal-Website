@@ -1,69 +1,97 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-
-export interface ContentItem {
-  id: string;
-  title: string;
-  excerpt: string;
-  date: string;
-  category: string;
-  image: string;
-  type: "blog" | "project";
-  slug: string;
-}
+import { FrontmatterSchema, ContentItemSchema, type ContentItem } from "./schemas";
 
 const contentDirectory = path.join(process.cwd(), "content");
 
 export async function getAllContent(): Promise<ContentItem[]> {
-  // Get blog posts
-  const blogPosts = await getBlogPosts();
-
-  // Get projects (you'll need to implement this based on your project structure)
-  const projects = await getProjects();
-
-  // Combine and sort by date
-  return [...blogPosts, ...projects].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-}
-
-async function getBlogPosts(): Promise<ContentItem[]> {
   const blogDir = path.join(contentDirectory, "blog");
-
+  
   if (!fs.existsSync(blogDir)) {
     return [];
   }
 
   const files = fs.readdirSync(blogDir);
+  const validContent: ContentItem[] = [];
 
-  const posts = files
-    .filter((file) => file.endsWith(".mdx"))
-    .map((file) => {
-      const source = fs.readFileSync(path.join(blogDir, file), "utf8");
-      const { data } = matter(source);
+  for (const file of files) {
+    if (!file.endsWith(".mdx")) continue;
+
+    try {
       const slug = file.replace(/\.mdx$/, "");
+      const source = fs.readFileSync(path.join(blogDir, file), "utf8");
+      const { data, content } = matter(source);
 
-      return {
+      // Validate frontmatter with schema
+      const frontmatter = FrontmatterSchema.parse(data);
+      
+      const contentItem: ContentItem = {
         id: slug,
-        title: data.title || "Untitled",
-        excerpt: data.description || data.excerpt || "No description available",
-        date: data.date || new Date().toISOString(),
-        category: data.category || "Blog",
-        image: data.image || "/placeholder.jpg",
-        type: "blog" as const,
         slug,
+        title: frontmatter.title,
+        excerpt: frontmatter.description || frontmatter.excerpt || "No description available",
+        date: frontmatter.date,
+        category: frontmatter.category,
+        image: frontmatter.image || null,
+        type: frontmatter.type,
+        tags: frontmatter.tags,
+        content,
       };
-    });
 
-  return posts;
+      // Validate the complete content item
+      const validatedItem = ContentItemSchema.parse(contentItem);
+      validContent.push(validatedItem);
+    } catch (error) {
+      console.warn(`Invalid content in ${file}:`, error);
+      // Skip invalid content
+    }
+  }
+
+  // Sort by date descending
+  return validContent.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 }
 
-async function getProjects(): Promise<ContentItem[]> {
-  // This is a placeholder - implement based on your project structure
-  // You might want to store project data in a similar MDX format
-  // or in a separate data file
-  return [];
+export async function getContentBySlug(slug: string): Promise<ContentItem | null> {
+  const filePath = path.join(contentDirectory, "blog", `${slug}.mdx`);
+  
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+
+  try {
+    const source = fs.readFileSync(filePath, "utf8");
+    const { data, content } = matter(source);
+
+    // Validate frontmatter with schema
+    const frontmatter = FrontmatterSchema.parse(data);
+    
+    const contentItem: ContentItem = {
+      id: slug,
+      slug,
+      title: frontmatter.title,
+      excerpt: frontmatter.description || frontmatter.excerpt || "No description available",
+      date: frontmatter.date,
+      category: frontmatter.category,
+      image: frontmatter.image || null,
+      type: frontmatter.type,
+      tags: frontmatter.tags,
+      content,
+    };
+
+    // Validate the complete content item
+    return ContentItemSchema.parse(contentItem);
+  } catch (error) {
+    console.warn(`Invalid content for slug ${slug}:`, error);
+    return null;
+  }
+}
+
+export async function getContentByType(type: 'blog' | 'project'): Promise<ContentItem[]> {
+  const allContent = await getAllContent();
+  return allContent.filter(item => item.type === type);
 }
 
 export async function getCategories(): Promise<string[]> {
@@ -82,3 +110,6 @@ export async function searchContent(query: string): Promise<ContentItem[]> {
       item.category.toLowerCase().includes(searchTerm)
   );
 }
+
+// Re-export types for backward compatibility
+export type { ContentItem } from "./schemas";

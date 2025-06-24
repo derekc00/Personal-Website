@@ -14,7 +14,7 @@ interface PageProps {
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
 
   return posts.map((post) => ({
     slug: post.slug,
@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 
 export default async function BlogPost({ params }: PageProps) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();

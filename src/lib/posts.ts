@@ -1,50 +1,29 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import { getContentBySlug, getContentByType } from "./content";
 import { Post, PostMetadata } from "../utils/types";
 
 // Mark as server-only to prevent bundling in client code
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const postsDirectory = path.join(process.cwd(), "content/blog");
-
 /**
  * Gets all blog posts sorted by date
+ * Uses the unified content system while maintaining backward compatibility
  */
-export function getAllPosts(): Post[] {
-  // Ensure the directory exists
-  if (!fs.existsSync(postsDirectory)) {
-    console.warn("Content directory does not exist:", postsDirectory);
-    return [];
-  }
-
+export async function getAllPosts(): Promise<Post[]> {
   try {
-    const fileNames = fs.readdirSync(postsDirectory);
-
-    // Filter for MDX files
-    const mdxFiles = fileNames.filter((fileName) => fileName.endsWith(".mdx"));
-
-    return mdxFiles.map((fileName) => {
-      const slug = fileName.replace(".mdx", "");
-      const fullPath = path.join(postsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, "utf8");
-      const { data, content: parsedContent } = matter(fileContents);
-
-      // Ensure all required metadata exists
-      const metadata: PostMetadata = {
-        title: data.title || "Untitled Post",
-        date: data.date || new Date().toISOString().split("T")[0],
-        tags: Array.isArray(data.tags) ? data.tags : [],
-        image: data.image || undefined,
-      };
-
-      return {
-        slug,
-        metadata,
-        content: parsedContent,
-      };
-    });
+    const blogContent = await getContentByType('blog');
+    
+    // Transform unified ContentItem to legacy Post format
+    return blogContent.map(item => ({
+      slug: item.slug,
+      content: item.content,
+      metadata: {
+        title: item.title,
+        date: item.date,
+        tags: item.tags,
+        image: item.image || undefined,
+      } as PostMetadata
+    }));
   } catch (error) {
     console.error("Error getting posts:", error);
     return [];
@@ -53,26 +32,27 @@ export function getAllPosts(): Post[] {
 
 /**
  * Gets a single blog post by slug
+ * Uses the unified content system while maintaining backward compatibility
  */
-export function getPostBySlug(slug: string): Post | null {
+export async function getPostBySlug(slug: string): Promise<Post | null> {
   try {
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`);
-    if (!fs.existsSync(fullPath)) {
+    const contentItem = await getContentBySlug(slug);
+    
+    if (!contentItem || contentItem.type !== 'blog') {
       return null;
     }
 
-    const fileContents = fs.readFileSync(fullPath, "utf8");
-    const { data, content } = matter(fileContents);
-
-    // Ensure all required metadata exists
-    const metadata: PostMetadata = {
-      title: data.title || "Untitled Post",
-      date: data.date || new Date().toISOString().split("T")[0],
-      tags: Array.isArray(data.tags) ? data.tags : [],
-      image: data.image || undefined,
+    // Transform unified ContentItem to legacy Post format
+    return {
+      slug: contentItem.slug,
+      content: contentItem.content,
+      metadata: {
+        title: contentItem.title,
+        date: contentItem.date,
+        tags: contentItem.tags,
+        image: contentItem.image || undefined,
+      } as PostMetadata
     };
-
-    return { slug, metadata, content };
   } catch (error) {
     console.error(`Error getting post with slug "${slug}":`, error);
     return null;

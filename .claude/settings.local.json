@@ -29,7 +29,11 @@
       "Bash(curl:*)",
       "mcp__linear__list_my_issues",
       "mcp__linear__list_issues",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "mcp__linear__list_projects",
+      "mcp__linear__list_issue_labels",
+      "Bash(npm install:*)",
+      "Bash(npm run test:run:*)"
     ],
     "deny": []
   }

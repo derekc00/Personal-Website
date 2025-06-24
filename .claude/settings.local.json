@@ -41,7 +41,8 @@
       "mcp__linear__list_issue_statuses",
       "Bash(npm test)",
       "Bash(npm test:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(gh pr create:*)"
     ],
     "deny": []
   }

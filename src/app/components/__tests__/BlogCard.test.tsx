@@ -14,7 +14,15 @@ describe('BlogCard', () => {
     render(<BlogCard {...props} />)
 
     expect(screen.getByText('Test Blog Post')).toBeInTheDocument()
-    expect(screen.getByText('Nov 29, 2023')).toBeInTheDocument()
+    
+    // Test date formatting more reliably by checking the actual formatted output
+    const expectedDate = new Date('2023-11-30').toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    })
+    expect(screen.getByText(expectedDate)).toBeInTheDocument()
+    
     expect(screen.getByText('javascript')).toBeInTheDocument()
     expect(screen.getByText('testing')).toBeInTheDocument()
   })

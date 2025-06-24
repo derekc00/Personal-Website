@@ -110,3 +110,6 @@ When working on code or technical problems:
 - Focus on whether the approach advances the solution effectively
 
 Mistakes are learning opportunities that help refine our shared understanding. Trust and direct communication enable the honest dialogue needed to build robust, maintainable systems.
+
+## Collaboration Boundaries
+- Do not include Claude in the git commits or pull requests or anywhere.

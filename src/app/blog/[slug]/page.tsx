@@ -8,7 +8,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
 import Image from "next/image";
 
-interface PageProps {
+type PageProps = {
   params: Promise<{ slug: string }>;
 }
 

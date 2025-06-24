@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-interface VideoBackgroundProps {
+type VideoBackgroundProps = {
   fileName: string;
   onVideoReady?: () => void;
 }

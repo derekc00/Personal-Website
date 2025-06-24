@@ -1,18 +1,10 @@
 import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
-
-interface FrontMatter {
-  title: string;
-  date: string;
-  description?: string;
-  tags?: string[];
-  image?: string;
-  [key: string]: string | string[] | undefined;
-}
+import { FrontmatterSchema, type Frontmatter } from "./schemas";
 
 // This reads the MDX file content and returns the frontmatter and content
-export async function getMdxBySlug(slug: string, directory: string = "blog") {
+export async function getMdxBySlug(slug: string, directory: string = "blog"): Promise<{ frontmatter: Frontmatter; content: string } | null> {
   try {
     const filePath = path.join(
       process.cwd(),
@@ -25,8 +17,11 @@ export async function getMdxBySlug(slug: string, directory: string = "blog") {
     // Use gray-matter to parse the frontmatter
     const { data, content } = matter(fileContent);
 
+    // Validate frontmatter with schema
+    const frontmatter = FrontmatterSchema.parse(data);
+
     return {
-      frontmatter: data as FrontMatter,
+      frontmatter,
       content,
     };
   } catch (error) {
@@ -36,7 +31,7 @@ export async function getMdxBySlug(slug: string, directory: string = "blog") {
 }
 
 // Get all MDX files from a directory
-export async function getAllMdxFiles(directory: string = "blog") {
+export async function getAllMdxFiles(directory: string = "blog"): Promise<(Frontmatter & { slug: string })[]> {
   try {
     const contentDir = path.join(process.cwd(), "content", directory);
     const files = await fs.readdir(contentDir);
@@ -58,10 +53,10 @@ export async function getAllMdxFiles(directory: string = "blog") {
 
     // Filter out any null values and sort by date
     return allMdx
-      .filter(Boolean)
+      .filter((item): item is Frontmatter & { slug: string } => item !== null)
       .sort(
         (a, b) =>
-          new Date(b?.date || 0).getTime() - new Date(a?.date || 0).getTime()
+          new Date(b.date).getTime() - new Date(a.date).getTime()
       );
   } catch (error) {
     console.error(`Error getting all MDX files: ${error}`);

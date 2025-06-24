@@ -33,7 +33,10 @@
       "mcp__linear__list_projects",
       "mcp__linear__list_issue_labels",
       "Bash(npm install:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "mcp__linear__create_comment",
+      "mcp__linear__list_issue_statuses",
+      "Bash(git push:*)"
     ],
     "deny": []
   }

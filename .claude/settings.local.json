@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git worktree:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "mcp__linear__get_issue",
+      "mcp__linear__list_issues",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(claude mcp add:*)"
+    ],
+    "deny": []
+  }
+}

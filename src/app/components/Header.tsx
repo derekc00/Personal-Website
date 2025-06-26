@@ -85,7 +85,7 @@ export default function Header() {
           <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden h-11 w-11"> {/* Increased to 44px minimum */}
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
@@ -103,7 +103,7 @@ export default function Header() {
                         key={item.href}
                         href={item.href}
                         className={cn(
-                          "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                          "flex items-center px-3 py-3 rounded-md text-sm font-medium transition-colors min-h-[44px]", // Increased padding and minimum height for better touch targets
                           isActive(item.href)
                             ? "bg-primary text-primary-foreground"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"

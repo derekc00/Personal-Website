@@ -90,9 +90,9 @@ describe('Posts Library', () => {
       const mockMatterResult = createMockMatterResult();
 
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockReturnValue(mockFileContent);
-      mockMatter.mockReturnValue(mockMatterResult as any);
+      mockMatter.mockReturnValue(mockMatterResult);
 
       const result = getAllPosts();
 
@@ -111,9 +111,9 @@ describe('Posts Library', () => {
       mockMatterResult.data = {}; // No metadata
 
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockReturnValue(mockFileContent);
-      mockMatter.mockReturnValue(mockMatterResult as any);
+      mockMatter.mockReturnValue(mockMatterResult);
 
       const result = getAllPosts();
 
@@ -140,9 +140,9 @@ describe('Posts Library', () => {
       };
 
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockReturnValue(mockFileContent);
-      mockMatter.mockReturnValue(mockMatterResult as any);
+      mockMatter.mockReturnValue(mockMatterResult);
 
       const result = getAllPosts();
 
@@ -153,7 +153,7 @@ describe('Posts Library', () => {
       const mockFiles = ['error.mdx'];
       
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockImplementation(() => {
         throw new Error('File read error');
       });
@@ -189,7 +189,7 @@ describe('Posts Library', () => {
 
       mockFs.existsSync.mockReturnValue(true);
       mockFs.readFileSync.mockReturnValue(mockFileContent);
-      mockMatter.mockReturnValue(mockMatterResult as any);
+      mockMatter.mockReturnValue(mockMatterResult);
 
       const result = getPostBySlug('test-post');
 
@@ -220,7 +220,7 @@ describe('Posts Library', () => {
 
       mockFs.existsSync.mockReturnValue(true);
       mockFs.readFileSync.mockReturnValue(mockFileContent);
-      mockMatter.mockReturnValue(mockMatterResult as any);
+      mockMatter.mockReturnValue(mockMatterResult);
 
       const result = getPostBySlug('test-post');
 
@@ -293,7 +293,7 @@ test`;
       const mockFiles = ['test.mdx'];
       
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockReturnValue(realMdxContent);
       mockMatter.mockReturnValue({
         data: {
@@ -306,7 +306,7 @@ test`;
           comments_enabled: true
         },
         content: 'test'
-      } as any);
+      });
 
       const result = getAllPosts();
 
@@ -341,7 +341,7 @@ test`;
       const mockFiles = ['readme.txt', 'image.jpg', 'data.json'];
       
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
 
       const result = getAllPosts();
 
@@ -353,7 +353,7 @@ test`;
       const mockFiles = ['malformed.mdx'];
       
       mockFs.existsSync.mockReturnValue(true);
-      mockFs.readdirSync.mockReturnValue(mockFiles as any);
+      mockFs.readdirSync.mockReturnValue(mockFiles);
       mockFs.readFileSync.mockReturnValue('content');
       mockMatter.mockImplementation(() => {
         throw new Error('Invalid frontmatter');

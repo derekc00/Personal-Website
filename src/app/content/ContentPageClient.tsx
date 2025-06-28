@@ -6,7 +6,7 @@ import BlogCard from "@/components/BlogCard";
 import { ContentItem } from "@/lib/content";
 import ContentFilter from "./ContentFilter";
 
-interface ContentPageClientProps {
+type ContentPageClientProps = {
   initialContent: ContentItem[];
   categories: string[];
 }

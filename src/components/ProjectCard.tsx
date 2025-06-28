@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import ImageWithSkeleton from "./ImageWithSkeleton";
 
-export interface Project {
+export type Project = {
   slug: string;
   title: string;
   description: string;

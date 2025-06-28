@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ContentItem } from "@/lib/content";
 
-interface BlogCardProps {
+type BlogCardProps = {
   post: ContentItem;
 }
 

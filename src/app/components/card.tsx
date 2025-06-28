@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon } from "lucide-react";
 
-interface BlogCardProps {
+export interface BlogCardProps {
   title: string;
   date: string;
   image?: string;

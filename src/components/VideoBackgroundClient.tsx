@@ -3,8 +3,9 @@
 import { Suspense, useEffect } from "react";
 import VideoBackground from "./VideoBackground";
 
-interface VideoBackgroundClientProps {
+type VideoBackgroundClientProps = {
   fileName: string;
+  onVideoReady?: () => void;
 }
 
 function VideoFallback() {
@@ -18,7 +19,7 @@ function VideoFallback() {
   );
 }
 
-export default function VideoBackgroundClient({ fileName }: VideoBackgroundClientProps) {
+export default function VideoBackgroundClient({ fileName, onVideoReady }: VideoBackgroundClientProps) {
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       console.log('VideoBackgroundClient mounting');
@@ -27,7 +28,7 @@ export default function VideoBackgroundClient({ fileName }: VideoBackgroundClien
 
   return (
     <Suspense fallback={<VideoFallback />}>
-      <VideoBackground fileName={fileName} />
+      <VideoBackground fileName={fileName} onVideoReady={onVideoReady} />
     </Suspense>
   );
 }

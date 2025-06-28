@@ -8,7 +8,7 @@ const MDXContent = dynamic(() => import("./MDXContent"), {
   loading: () => <div className="animate-pulse bg-gray-200 dark:bg-gray-800 h-32 rounded"></div>
 });
 
-interface MDXWrapperProps {
+type MDXWrapperProps = {
   source: MDXRemoteSerializeResult;
 }
 

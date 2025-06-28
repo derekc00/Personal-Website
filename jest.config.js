@@ -9,7 +9,7 @@ module.exports = {
       },
     }],
   },
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
@@ -17,7 +17,7 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{ts,tsx}',
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts', '<rootDir>/src/test/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup-minimal.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__tests__/setup.ts', '<rootDir>/src/test/setup.ts'],
   clearMocks: true,
   resetMocks: true,

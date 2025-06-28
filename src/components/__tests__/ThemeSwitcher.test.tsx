@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, jest, beforeEach } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import { useTheme } from 'next-themes'
 import ThemeSwitcher from '../ThemeSwitcher'

@@ -10,7 +10,7 @@ module.exports = {
     'src/**/*.ts',
     '!src/**/*.d.ts',
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts', '<rootDir>/src/test/setup.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__tests__/setup.ts'],
   clearMocks: true,
   resetMocks: true,

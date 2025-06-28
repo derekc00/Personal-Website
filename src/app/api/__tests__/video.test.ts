@@ -1,19 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, jest, beforeEach } from '@jest/globals'
 import { GET } from '../video/route'
 import { list } from '@vercel/blob'
 
-vi.mock('@vercel/blob', () => ({
-  list: vi.fn(),
+jest.mock('@vercel/blob', () => ({
+  list: jest.fn(),
 }))
 
-const mockList = vi.mocked(list)
+const mockList = jest.mocked(list)
 
 describe('/api/video', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    vi.spyOn(console, 'log').mockImplementation(() => {})
-    vi.spyOn(console, 'warn').mockImplementation(() => {})
-    vi.spyOn(console, 'error').mockImplementation(() => {})
+    jest.clearAllMocks()
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   it('should return video URL when fileName provided and video exists', async () => {

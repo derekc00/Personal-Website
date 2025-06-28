@@ -37,7 +37,7 @@ describe('BlogCard', () => {
   })
 
   it('should call onTagClick when tag is clicked', () => {
-    const mockOnTagClick = vi.fn()
+    const mockOnTagClick = jest.fn()
     const props = createMockBlogCardProps({
       tags: ['javascript'],
       onTagClick: mockOnTagClick

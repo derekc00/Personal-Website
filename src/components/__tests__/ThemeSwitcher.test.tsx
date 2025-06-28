@@ -3,17 +3,17 @@ import { render, screen } from '@testing-library/react'
 import { useTheme } from 'next-themes'
 import ThemeSwitcher from '../ThemeSwitcher'
 
-vi.mock('next-themes', () => ({
-  useTheme: vi.fn()
+jest.mock('next-themes', () => ({
+  useTheme: jest.fn()
 }))
 
-const mockUseTheme = vi.mocked(useTheme)
+const mockUseTheme = jest.mocked(useTheme)
 
 describe('ThemeSwitcher', () => {
-  const mockSetTheme = vi.fn()
+  const mockSetTheme = jest.fn()
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockUseTheme.mockReturnValue({
       theme: 'light',
       setTheme: mockSetTheme,

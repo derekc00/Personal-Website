@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import VideoBackgroundClient from '../VideoBackgroundClient'
 
-vi.mock('../VideoBackground', () => ({
-  default: vi.fn(({ fileName, onVideoReady }) => {
+jest.mock('../VideoBackground', () => ({
+  default: jest.fn(({ fileName, onVideoReady }) => {
     return (
       <div data-testid="video-background">
         Video: {fileName}
@@ -18,7 +18,7 @@ vi.mock('../VideoBackground', () => ({
 }))
 
 describe('VideoBackgroundClient', () => {
-  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
 
   afterEach(() => {
     consoleSpy.mockClear()
@@ -32,7 +32,7 @@ describe('VideoBackgroundClient', () => {
   })
 
   it('should call onVideoReady callback when provided', () => {
-    const mockOnVideoReady = vi.fn()
+    const mockOnVideoReady = jest.fn()
     
     render(<VideoBackgroundClient fileName="test-video.mp4" onVideoReady={mockOnVideoReady} />)
     
@@ -77,7 +77,7 @@ describe('VideoBackgroundClient', () => {
   })
 
   it('should pass props correctly to VideoBackground component', () => {
-    const mockOnVideoReady = vi.fn()
+    const mockOnVideoReady = jest.fn()
     render(<VideoBackgroundClient fileName="custom-video.mp4" onVideoReady={mockOnVideoReady} />)
     
     expect(screen.getByText('Video: custom-video.mp4')).toBeInTheDocument()

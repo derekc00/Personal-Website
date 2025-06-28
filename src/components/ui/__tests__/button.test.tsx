@@ -84,7 +84,7 @@ describe('Button', () => {
   })
 
   it('should handle click events', () => {
-    const handleClick = vi.fn()
+    const handleClick = jest.fn()
     render(<Button onClick={handleClick}>Clickable</Button>)
     
     const button = screen.getByRole('button', { name: 'Clickable' })

@@ -4,13 +4,13 @@ import ContentPage from '../page'
 import { getAllContent, getCategories } from '@/lib/content'
 import { createMockContentItems } from '@/test/factories'
 
-vi.mock('@/lib/content', () => ({
-  getAllContent: vi.fn(),
-  getCategories: vi.fn()
+jest.mock('@/lib/content', () => ({
+  getAllContent: jest.fn(),
+  getCategories: jest.fn()
 }))
 
-vi.mock('../ContentPageClient', () => ({
-  default: vi.fn(({ initialContent, categories }) => (
+jest.mock('../ContentPageClient', () => ({
+  default: jest.fn(({ initialContent, categories }) => (
     <div data-testid="content-page-client">
       <div data-testid="content-count">{initialContent.length} items</div>
       <div data-testid="categories-count">{categories.length} categories</div>
@@ -28,12 +28,12 @@ vi.mock('../ContentPageClient', () => ({
   ))
 }))
 
-const mockGetAllContent = vi.mocked(getAllContent)
-const mockGetCategories = vi.mocked(getCategories)
+const mockGetAllContent = jest.mocked(getAllContent)
+const mockGetCategories = jest.mocked(getCategories)
 
 describe('Content Page', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should fetch all content and categories', async () => {

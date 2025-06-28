@@ -1,20 +1,20 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, jest } from '@jest/globals'
 import { GET } from '../posts/route'
 import { getContentByType, getContentBySlug } from '@/lib/content'
 import type { ContentItem } from '@/lib/schemas'
 
 // Mock the content functions
-vi.mock('@/lib/content', () => ({
-  getContentByType: vi.fn(),
-  getContentBySlug: vi.fn(),
+jest.mock('@/lib/content', () => ({
+  getContentByType: jest.fn(),
+  getContentBySlug: jest.fn(),
 }))
 
-const mockGetContentByType = vi.mocked(getContentByType)
-const mockGetContentBySlug = vi.mocked(getContentBySlug)
+const mockGetContentByType = jest.mocked(getContentByType)
+const mockGetContentBySlug = jest.mocked(getContentBySlug)
 
 describe('/api/posts', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should return all blog posts when no slug provided', async () => {

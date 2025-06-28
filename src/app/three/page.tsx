@@ -86,7 +86,7 @@ function Desk() {
   );
 }
 
-function ProjectDisplays() {
+function ProjectDisplays({ isMobile = false }: { isMobile?: boolean }) {
   const router = useRouter();
 
   const handleProjectClick = () => {
@@ -114,7 +114,7 @@ function ProjectDisplays() {
         </Plane>
         <Text
           position={[0, 0.5, 0.2]}
-          fontSize={0.3}
+          fontSize={isMobile ? 0.25 : 0.3}
           color="#333333"
           anchorX="center"
           anchorY="middle"
@@ -123,7 +123,7 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, 0, 0.2]}
-          fontSize={0.15}
+          fontSize={isMobile ? 0.12 : 0.15}
           color="#666666"
           anchorX="center"
           anchorY="middle"
@@ -132,12 +132,12 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, -0.5, 0.2]}
-          fontSize={0.1}
+          fontSize={isMobile ? 0.08 : 0.1}
           color="#999999"
           anchorX="center"
           anchorY="middle"
         >
-          Click to explore
+          {isMobile ? "Tap to explore" : "Click to explore"}
         </Text>
       </group>
       
@@ -152,7 +152,7 @@ function ProjectDisplays() {
         </Plane>
         <Text
           position={[0, 0.5, 0.2]}
-          fontSize={0.3}
+          fontSize={isMobile ? 0.25 : 0.3}
           color="#333333"
           anchorX="center"
           anchorY="middle"
@@ -161,7 +161,7 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, 0, 0.2]}
-          fontSize={0.15}
+          fontSize={isMobile ? 0.12 : 0.15}
           color="#666666"
           anchorX="center"
           anchorY="middle"
@@ -170,12 +170,12 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, -0.5, 0.2]}
-          fontSize={0.1}
+          fontSize={isMobile ? 0.08 : 0.1}
           color="#999999"
           anchorX="center"
           anchorY="middle"
         >
-          Click to learn more
+          {isMobile ? "Tap to learn more" : "Click to learn more"}
         </Text>
       </group>
 
@@ -190,7 +190,7 @@ function ProjectDisplays() {
         </Plane>
         <Text
           position={[0, 0.5, 0.2]}
-          fontSize={0.3}
+          fontSize={isMobile ? 0.25 : 0.3}
           color="#333333"
           anchorX="center"
           anchorY="middle"
@@ -199,7 +199,7 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, 0, 0.2]}
-          fontSize={0.15}
+          fontSize={isMobile ? 0.12 : 0.15}
           color="#666666"
           anchorX="center"
           anchorY="middle"
@@ -208,19 +208,19 @@ function ProjectDisplays() {
         </Text>
         <Text
           position={[0, -0.5, 0.2]}
-          fontSize={0.1}
+          fontSize={isMobile ? 0.08 : 0.1}
           color="#999999"
           anchorX="center"
           anchorY="middle"
         >
-          Click to read
+          {isMobile ? "Tap to read" : "Click to read"}
         </Text>
       </group>
 
       {/* Floating Welcome Text */}
       <Text
         position={[0, 4, -5]}
-        fontSize={0.6}
+        fontSize={isMobile ? 0.4 : 0.6}
         color="#2563eb"
         anchorX="center"
         anchorY="middle"
@@ -230,12 +230,15 @@ function ProjectDisplays() {
       
       <Text
         position={[0, 3, -5]}
-        fontSize={0.2}
+        fontSize={isMobile ? 0.15 : 0.2}
         color="#64748b"
         anchorX="center"
         anchorY="middle"
       >
-        Use mouse to navigate • Click displays to explore
+        {isMobile 
+          ? "Touch to rotate • Pinch to zoom • Tap displays to explore"
+          : "Use mouse to navigate • Click displays to explore"
+        }
       </Text>
     </group>
   );
@@ -275,9 +278,27 @@ export default function ThreeWorkspace() {
   const [contextLost, setContextLost] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [isReady, setIsReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const updateViewport = () => {
+      const width = window.innerWidth;
+      const mobile = width < 768; // md breakpoint
+      
+      setIsMobile(mobile);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Viewport updated:', { width, mobile });
+      }
+    };
+
+    // Initialize viewport
+    updateViewport();
+    
+    // Add resize listener
+    window.addEventListener('resize', updateViewport);
+    
     if (process.env.NODE_ENV === 'development') {
       console.log('3D Workspace initializing...');
     }
@@ -313,6 +334,7 @@ export default function ThreeWorkspace() {
         console.log('3D Workspace cleanup');
       }
       clearTimeout(timer);
+      window.removeEventListener('resize', updateViewport);
     };
   }, []);
 
@@ -357,25 +379,62 @@ export default function ThreeWorkspace() {
     );
   }
 
+  // Calculate responsive camera settings
+  const getCameraSettings = () => {
+    if (isMobile) {
+      return {
+        position: [0, 3, 12] as [number, number, number], // Further back and higher on mobile
+        fov: 85 // Wider FOV on mobile for better overview
+      };
+    }
+    return {
+      position: [0, 2, 8] as [number, number, number], // Original desktop position
+      fov: 75 // Original desktop FOV
+    };
+  };
+
+  // Calculate responsive performance settings
+  const getPerformanceSettings = () => {
+    if (isMobile) {
+      return {
+        dpr: [0.5, 1] as [number, number], // Lower DPR on mobile
+        performance: { min: 0.3 }, // More aggressive performance throttling
+        gl: {
+          antialias: false, // Disable antialiasing on mobile
+          alpha: false,
+          powerPreference: "low-power" as const,
+          preserveDrawingBuffer: false,
+          failIfMajorPerformanceCaveat: false,
+          stencil: false
+        }
+      };
+    }
+    return {
+      dpr: [1, 1.5] as [number, number],
+      performance: { min: 0.5 },
+      gl: {
+        antialias: true,
+        alpha: false,
+        powerPreference: "default" as const,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+        stencil: false
+      }
+    };
+  };
+
+  const cameraSettings = getCameraSettings();
+  const performanceSettings = getPerformanceSettings();
+
   return (
     <div ref={canvasRef} style={{ width: '100vw', height: '100vh' }}>
       <Canvas
         key={`canvas-${retryCount}`} // Force remount on retry
-        camera={{ 
-          position: [0, 2, 8], 
-          fov: 75 
-        }}
-        shadows
-        gl={{ 
-          antialias: true, 
-          alpha: false,
-          powerPreference: "default", // Changed from high-performance to default
-          preserveDrawingBuffer: false,
-          failIfMajorPerformanceCaveat: false,
-          stencil: false // Disable stencil buffer to reduce memory usage
-        }}
-        dpr={[1, 1.5]} // Reduced max DPR
-        performance={{ min: 0.5 }}
+        camera={cameraSettings}
+        shadows={!isMobile} // Disable shadows on mobile for performance
+        gl={performanceSettings.gl}
+        dpr={performanceSettings.dpr}
+        performance={performanceSettings.performance}
         onCreated={({ gl }) => {
           if (process.env.NODE_ENV === 'development') {
             console.log('Three.js canvas created successfully');
@@ -413,17 +472,24 @@ export default function ThreeWorkspace() {
         <Lighting />
         <Room />
         <Desk />
-        <ProjectDisplays />
+        <ProjectDisplays isMobile={isMobile} />
         
         <OrbitControls 
-          enablePan={true}
+          enablePan={!isMobile} // Disable panning on mobile to avoid conflicts with scrolling
           enableZoom={true}
           enableRotate={true}
-          minDistance={3}
-          maxDistance={15}
+          minDistance={isMobile ? 5 : 3} // Prevent getting too close on mobile
+          maxDistance={isMobile ? 20 : 15} // Allow more distance on mobile
           maxPolarAngle={Math.PI / 2}
           enableDamping={true}
-          dampingFactor={0.05}
+          dampingFactor={isMobile ? 0.1 : 0.05} // Slightly more damping on mobile
+          rotateSpeed={isMobile ? 0.8 : 1} // Slightly slower rotation on mobile
+          zoomSpeed={isMobile ? 0.8 : 1} // Slower zoom for better control on mobile
+          panSpeed={isMobile ? 0.5 : 1} // Slower pan when enabled
+          touches={{
+            ONE: isMobile ? 2 : 0, // Single finger rotate on mobile (TOUCH.ROTATE = 2)
+            TWO: isMobile ? 1 : 1  // Two finger zoom/pan (TOUCH.DOLLY_PAN = 1)
+          }}
         />
       </Canvas>
     </div>

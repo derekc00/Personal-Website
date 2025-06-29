@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import BlogCard from "@/app/components/card";
+import BlogCard from "@/components/BlogCard";
 
 import type { ContentItem } from "@/lib/schemas";
 
@@ -24,11 +24,7 @@ export default function BlogListClient({ posts }: { posts: ContentItem[] }) {
       {filteredPosts.map((post) => (
         <BlogCard
           key={post.slug}
-          slug={post.slug}
-          title={post.title}
-          date={post.date}
-          image={post.image || undefined}
-          tags={post.tags}
+          post={post}
         />
       ))}
     </div>

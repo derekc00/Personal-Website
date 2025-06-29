@@ -1,5 +1,4 @@
 import type { ContentItem } from '@/lib/schemas'
-import type { BlogCardProps } from '@/app/components/card'
 
 export type ContentItemOptions = Partial<ContentItem>
 
@@ -31,15 +30,3 @@ export function createMockContentItems(count: number, options: ContentItemOption
   )
 }
 
-// Import BlogCardProps from the actual component instead of redefining
-
-export function createMockBlogCardProps(options: Partial<BlogCardProps> = {}): BlogCardProps {
-  return {
-    title: 'Test Blog Post',
-    date: '2023-01-01',
-    image: '/test-image.jpg',
-    tags: ['test', 'blog'],
-    slug: 'test-blog-post',
-    ...options,
-  }
-}

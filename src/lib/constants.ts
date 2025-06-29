@@ -45,3 +45,23 @@ export const DEFAULT_VALUES = {
   CATEGORY: 'Uncategorized',
   CONTENT_TYPE: 'blog',
 } as const;
+
+export const UI_CONSTANTS = {
+  SCROLL_THRESHOLD: 10,
+  TRANSITION_DELAY: 100,
+  BREAKPOINTS: {
+    MOBILE: 768,
+  },
+  DIMENSIONS: {
+    PROJECT_CARD_WIDTH: 600,
+    PROJECT_CARD_HEIGHT: 300,
+  },
+} as const;
+
+export const NAVIGATION_ROUTES = {
+  HOME: '/',
+  ABOUT: '/about',
+  PROJECTS: '/projects', 
+  BLOG: '/blog',
+  WORKSPACE: '/three',
+} as const;

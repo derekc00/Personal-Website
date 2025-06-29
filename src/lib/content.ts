@@ -73,7 +73,7 @@ export async function getContentBySlug(slug: string): Promise<ContentItem | null
       id: slug,
       slug,
       title: frontmatter.title,
-      excerpt: frontmatter.description || frontmatter.excerpt || "No description available",
+      excerpt: frontmatter.description || frontmatter.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
       date: frontmatter.date,
       category: frontmatter.category,
       image: frontmatter.image || null,

@@ -15,7 +15,10 @@ jest.mock('@/components/VideoBackgroundClient', () => {
     </div>
   )
   MockVideoBackgroundClient.displayName = 'MockVideoBackgroundClient'
-  return MockVideoBackgroundClient
+  return {
+    __esModule: true,
+    default: MockVideoBackgroundClient
+  }
 })
 
 jest.mock('@/components/ErrorBoundary', () => {
@@ -23,7 +26,10 @@ jest.mock('@/components/ErrorBoundary', () => {
     <div data-testid="error-boundary">{children}</div>
   )
   MockErrorBoundary.displayName = 'MockErrorBoundary'
-  return MockErrorBoundary
+  return {
+    __esModule: true,
+    default: MockErrorBoundary
+  }
 })
 
 jest.mock('typewriter-effect', () => {
@@ -41,7 +47,10 @@ jest.mock('typewriter-effect', () => {
     return <div data-testid="typewriter">Welcome to Derek&apos;s website</div>
   }
   MockTypewriter.displayName = 'MockTypewriter'
-  return MockTypewriter
+  return {
+    __esModule: true,
+    default: MockTypewriter
+  }
 })
 
 // Import the component after the mocks are set up

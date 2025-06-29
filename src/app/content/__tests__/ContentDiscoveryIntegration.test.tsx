@@ -16,7 +16,10 @@ jest.mock('@/components/BlogCard', () => {
     </div>
   )
   MockBlogCard.displayName = 'MockBlogCard'
-  return MockBlogCard
+  return {
+    __esModule: true,
+    default: MockBlogCard
+  }
 })
 
 // Mock UI components to avoid styling dependencies in integration tests

@@ -4,7 +4,7 @@ import React from 'react'
 
 // Mock the components using the default export pattern
 jest.mock('@/components/VideoBackgroundClient', () => {
-  const MockVideoBackgroundClient = ({ fileName, onVideoReady }: any) => (
+  const MockVideoBackgroundClient = ({ fileName, onVideoReady }: { fileName: string; onVideoReady?: () => void }) => (
     <div data-testid="video-background-client">
       <div>Video: {fileName}</div>
       {onVideoReady && (
@@ -19,7 +19,7 @@ jest.mock('@/components/VideoBackgroundClient', () => {
 })
 
 jest.mock('@/components/ErrorBoundary', () => {
-  const MockErrorBoundary = ({ children }: any) => (
+  const MockErrorBoundary = ({ children }: { children: React.ReactNode }) => (
     <div data-testid="error-boundary">{children}</div>
   )
   MockErrorBoundary.displayName = 'MockErrorBoundary'
@@ -27,7 +27,7 @@ jest.mock('@/components/ErrorBoundary', () => {
 })
 
 jest.mock('typewriter-effect', () => {
-  const MockTypewriter = ({ onInit }: any) => {
+  const MockTypewriter = ({ onInit }: { onInit?: (typewriter: { typeString: jest.Mock; pauseFor: jest.Mock; start: jest.Mock }) => void }) => {
     const mockTypewriter = {
       typeString: jest.fn().mockReturnThis(),
       pauseFor: jest.fn().mockReturnThis(),

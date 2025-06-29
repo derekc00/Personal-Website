@@ -197,7 +197,7 @@ describe('Content Discovery Integration Logic', () => {
         const categories = visibleItems.map(item => item.getAttribute('data-category'))
         
         // Debug: Check what categories we actually have
-        const uniqueCategories = [...new Set(categories)]
+        console.log('Found categories:', [...new Set(categories)])
         
         // The search should find items containing "design" in title, excerpt, or category
         // Design category items match via category name

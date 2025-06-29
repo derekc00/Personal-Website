@@ -7,7 +7,7 @@ import { createMockContentItems } from '@/test/factories'
 
 // Mock the BlogCard component to make integration testing more focused
 jest.mock('@/components/BlogCard', () => {
-  const MockBlogCard = ({ post }: any) => (
+  const MockBlogCard = ({ post }: { post: { id: string; title: string; excerpt: string; category: string; type: string } }) => (
     <div data-testid={`blog-card-${post.id}`} data-category={post.category} data-type={post.type}>
       <h3>{post.title}</h3>
       <p>{post.excerpt}</p>

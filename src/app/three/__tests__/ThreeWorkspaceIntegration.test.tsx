@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps, react/display-name, @typescript-eslint/no-require-imports */
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -6,7 +7,7 @@ import { useRouter } from 'next/navigation'
 
 // Mock Three.js and React Three Fiber components
 jest.mock('@react-three/fiber', () => ({
-  Canvas: ({ children, onCreated, shadows, ...props }: any) => {
+  Canvas: ({ children, onCreated, shadows, ...props }: { children?: React.ReactNode; onCreated?: (state: any) => void; shadows?: boolean; [key: string]: any }) => {
     // Simulate WebGL context creation
     const mockGL = {
       domElement: {
@@ -22,7 +23,7 @@ jest.mock('@react-three/fiber', () => ({
         onCreated?.({ gl: mockGL })
       }, 0)
       return () => clearTimeout(timer)
-    }, [onCreated])
+    }, [onCreated, mockGL])
     
     return (
       <div 
@@ -37,7 +38,7 @@ jest.mock('@react-three/fiber', () => ({
 }))
 
 jest.mock('@react-three/drei', () => ({
-  OrbitControls: ({ enableZoom, enableRotate, enableDamping, ...props }: any) => (
+  OrbitControls: ({ enableZoom, enableRotate, enableDamping, ...props }: { enableZoom?: boolean; enableRotate?: boolean; enableDamping?: boolean; [key: string]: any }) => (
     <div 
       data-testid="orbit-controls" 
       enableZoom={enableZoom ? 'true' : 'false'}
@@ -46,14 +47,14 @@ jest.mock('@react-three/drei', () => ({
       {...props} 
     />
   ),
-  Text: ({ children, onClick, ...props }: any) => (
+  Text: ({ children, onClick, ...props }: { children?: React.ReactNode; onClick?: () => void; [key: string]: any }) => (
     <div data-testid="three-text" onClick={onClick} {...props}>
       {children}
     </div>
   ),
-  Box: (props: any) => <div data-testid="three-box" {...props} />,
-  Plane: ({ onClick, ...props }: any) => {
-    const handleClick = (e: any) => {
+  Box: (props: Record<string, any>) => <div data-testid="three-box" {...props} />,
+  Plane: ({ onClick, ...props }: { onClick?: (e: any) => void; [key: string]: any }) => {
+    const handleClick = (e: React.MouseEvent) => {
       if (onClick) {
         onClick(e)
       }
@@ -68,12 +69,15 @@ jest.mock('next/navigation', () => ({
 
 // Mock UI components
 jest.mock('@/components/ui/button', () => ({
-  Button: React.forwardRef(({ children, onClick, className, ...props }: any, ref: any) => (
+  Button: React.forwardRef<HTMLButtonElement, { children?: React.ReactNode; onClick?: () => void; className?: string; [key: string]: any }>(({ children, onClick, className, ...props }, ref) => (
     <button ref={ref} onClick={onClick} className={className} {...props}>
       {children}
     </button>
   ))
 }))
+
+// Add display name for Button
+;(jest.mocked(require('@/components/ui/button')).Button as any).displayName = 'Button'
 
 // Import components after mocks
 import ThreeWorkspace from '../page'

@@ -4,7 +4,7 @@ import React from 'react'
 
 // Mock ProjectCard with proper default export and Project type
 jest.mock('@/components/ProjectCard', () => {
-  const MockProjectCard = ({ project }: any) => (
+  const MockProjectCard = ({ project }: { project: { slug: string; title: string; description: string; technologies: string[]; role: string; githubLink: string } }) => (
     <div data-testid={`project-card-${project.slug}`}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>
@@ -21,20 +21,20 @@ jest.mock('@/components/ProjectCard', () => {
   return {
     __esModule: true,
     default: MockProjectCard,
-    Project: {} as any // Mock the Project type export
+    Project: {} as unknown // Mock the Project type export
   }
 })
 
 // Mock page layout components
 jest.mock('@/components/ui/page-layout', () => ({
-  PageLayout: ({ children }: any) => <div data-testid="page-layout">{children}</div>,
-  PageHeader: ({ title, description }: any) => (
+  PageLayout: ({ children }: { children: React.ReactNode }) => <div data-testid="page-layout">{children}</div>,
+  PageHeader: ({ title, description }: { title: string; description: string }) => (
     <div data-testid="page-header">
       <h1>{title}</h1>
       <p>{description}</p>
     </div>
   ),
-  Section: ({ children }: any) => <div data-testid="section">{children}</div>
+  Section: ({ children }: { children: React.ReactNode }) => <div data-testid="section">{children}</div>
 }))
 
 // Import after mocks

@@ -10,7 +10,7 @@ export class TestHelpers {
   async waitForHydration() {
     // Wait for Next.js hydration to complete
     await this.page.waitForFunction(() => {
-      return window.next?.router?.isReady;
+      return (window as any).next?.router?.isReady;
     }, { timeout: 10000 }).catch(() => {
       // Fallback: wait for React hydration
       return this.page.waitForFunction(() => {

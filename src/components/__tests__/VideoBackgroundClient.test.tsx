@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import VideoBackgroundClient from '../VideoBackgroundClient'
 
 jest.mock('../VideoBackground', () => {
-  const MockVideoBackground = ({ fileName, onVideoReady }: any) => (
+  const MockVideoBackground = ({ fileName, onVideoReady }: { fileName: string; onVideoReady?: () => void }) => (
     <div data-testid="video-background">
       Video: {fileName}
       {onVideoReady && (

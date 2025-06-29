@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ImageWithSkeleton from "./ImageWithSkeleton";
+import { UI_CONSTANTS } from '@/lib/constants';
 
 export type Project = {
   slug: string;
@@ -43,8 +44,8 @@ export default function ProjectCard({ project }: { project: Project }) {
           <ImageWithSkeleton
             src={project.image}
             alt={project.title}
-            width={600}
-            height={300}
+            width={UI_CONSTANTS.DIMENSIONS.PROJECT_CARD_WIDTH}
+            height={UI_CONSTANTS.DIMENSIONS.PROJECT_CARD_HEIGHT}
             className="rounded-t-xl object-cover w-full h-48"
           />
         )}

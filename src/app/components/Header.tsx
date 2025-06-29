@@ -15,12 +15,13 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { UI_CONSTANTS, NAVIGATION_ROUTES } from '@/lib/constants';
 
 const navigationItems = [
-  { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
-  { href: "/blog", label: "Blog" },
-  { href: "/three", label: "Workspace" },
+  { href: NAVIGATION_ROUTES.ABOUT, label: "About" },
+  { href: NAVIGATION_ROUTES.PROJECTS, label: "Projects" },
+  { href: NAVIGATION_ROUTES.BLOG, label: "Blog" },
+  { href: NAVIGATION_ROUTES.WORKSPACE, label: "Workspace" },
 ];
 
 export default function Header() {
@@ -37,7 +38,7 @@ export default function Header() {
     setMounted(true);
 
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
+      const isScrolled = window.scrollY > UI_CONSTANTS.SCROLL_THRESHOLD;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
       }

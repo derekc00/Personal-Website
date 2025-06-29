@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { ContentItem } from '@/lib/schemas'
+import { HTTP_STATUS, ERROR_MESSAGES, ASSET_PATHS, CONTENT_TYPES, API_ENDPOINTS } from '@/lib/constants'
 
 const mockPosts: ContentItem[] = [
   {
@@ -9,8 +10,8 @@ const mockPosts: ContentItem[] = [
     excerpt: 'This is a test post excerpt',
     date: '2023-12-01',
     category: 'Tech',
-    image: '/test-image.jpg',
-    type: 'blog',
+    image: ASSET_PATHS.TEST_IMAGE,
+    type: CONTENT_TYPES.BLOG,
     tags: ['javascript', 'testing'],
     content: '# Test Post 1\nThis is test content.',
   },
@@ -22,7 +23,7 @@ const mockPosts: ContentItem[] = [
     date: '2023-11-01',
     category: 'Tech',
     image: null,
-    type: 'blog',
+    type: CONTENT_TYPES.BLOG,
     tags: ['react', 'testing'],
     content: '# Test Post 2\nMore test content.',
   },
@@ -30,14 +31,14 @@ const mockPosts: ContentItem[] = [
 
 export const handlers = [
   // Handle GET requests to /api/posts
-  http.get('/api/posts', ({ request }) => {
+  http.get(API_ENDPOINTS.POSTS, ({ request }) => {
     const url = new URL(request.url)
     const slug = url.searchParams.get('slug')
 
     if (slug) {
       const post = mockPosts.find(p => p.slug === slug)
       if (!post) {
-        return HttpResponse.json({ error: 'Post not found' }, { status: 404 })
+        return HttpResponse.json({ error: ERROR_MESSAGES.POST_NOT_FOUND }, { status: HTTP_STATUS.NOT_FOUND })
       }
       return HttpResponse.json(post)
     }

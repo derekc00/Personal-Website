@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import matter from "gray-matter";
 import { FrontmatterSchema, type Frontmatter } from "./schemas";
+import { FILE_EXTENSIONS } from './constants';
 
 // This reads the MDX file content and returns the frontmatter and content
 export async function getMdxBySlug(slug: string, directory: string = "blog"): Promise<{ frontmatter: Frontmatter; content: string } | null> {
@@ -10,7 +11,7 @@ export async function getMdxBySlug(slug: string, directory: string = "blog"): Pr
       process.cwd(),
       "content",
       directory,
-      `${slug}.mdx`
+      `${slug}${FILE_EXTENSIONS.MDX}`
     );
 
     const fileContent = await fs.readFile(filePath, "utf8");
@@ -35,11 +36,11 @@ export async function getAllMdxFiles(directory: string = "blog"): Promise<(Front
   try {
     const contentDir = path.join(process.cwd(), "content", directory);
     const files = await fs.readdir(contentDir);
-    const mdxFiles = files.filter((file) => file.endsWith(".mdx"));
+    const mdxFiles = files.filter((file) => file.endsWith(FILE_EXTENSIONS.MDX));
 
     const allMdx = await Promise.all(
       mdxFiles.map(async (file) => {
-        const slug = file.replace(/\.mdx$/, "");
+        const slug = file.replace(new RegExp(`\\${FILE_EXTENSIONS.MDX}$`), "");
         const result = await getMdxBySlug(slug, directory);
 
         if (!result) return null;

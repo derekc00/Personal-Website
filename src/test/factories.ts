@@ -1,4 +1,5 @@
 import type { ContentItem } from '@/lib/schemas'
+import { ASSET_PATHS, CONTENT_TYPES } from '@/lib/constants'
 
 export type ContentItemOptions = Partial<ContentItem>
 
@@ -10,8 +11,8 @@ export function createMockContentItem(options: ContentItemOptions = {}): Content
     excerpt: 'Test post excerpt',
     date: '2023-01-01',
     category: 'Tech',
-    image: '/test-image.jpg',
-    type: 'blog',
+    image: ASSET_PATHS.TEST_IMAGE,
+    type: CONTENT_TYPES.BLOG,
     tags: ['test'],
     content: '# Test Post\nTest content',
     ...options,
@@ -29,4 +30,3 @@ export function createMockContentItems(count: number, options: ContentItemOption
     })
   )
 }
-

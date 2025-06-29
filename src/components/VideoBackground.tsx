@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ERROR_MESSAGES, API_ENDPOINTS } from '@/lib/constants';
 
 type VideoBackgroundProps = {
   fileName: string;
@@ -44,13 +45,13 @@ export default function VideoBackground({ fileName, onVideoReady }: VideoBackgro
         }
 
         const response = await fetch(
-          `/api/video?fileName=${encodeURIComponent(fileName)}`
+          `${API_ENDPOINTS.VIDEO}?fileName=${encodeURIComponent(fileName)}`
         );
         const data = await response.json();
 
         if (!response.ok) {
           console.warn(`API error: ${data.error}`);
-          setError(data.error || "Video not found");
+          setError(data.error || ERROR_MESSAGES.VIDEO_NOT_FOUND);
           setLoading(false);
           return;
         }
@@ -96,7 +97,7 @@ export default function VideoBackground({ fileName, onVideoReady }: VideoBackgro
   if (error || !videoUrl) {
     return (
       <VideoFallback
-        message={error || "Video not available"}
+        message={error || ERROR_MESSAGES.VIDEO_NOT_FOUND}
         showConfig={error?.includes("auth")}
       />
     );

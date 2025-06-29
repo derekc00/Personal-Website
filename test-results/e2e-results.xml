@@ -1,0 +1,632 @@
+<testsuites id="" name="" tests="150" failures="0" skipped="150" errors="0" time="0.10021699999999999">
+<testsuite name="blog.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="chromium" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Blog E2E Tests › loads blog page successfully with correct title" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › displays blog page header and description" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality is present and accessible" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog posts are displayed correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality filters blog posts" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › individual blog post navigation works" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog post page displays content correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › navigation breadcrumbs work correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog page has proper accessibility" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › responsive design works on mobile" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="content-discovery.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="chromium" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Content Discovery E2E Tests › loads content page successfully with correct title" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays search functionality" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays category filter buttons" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays content cards" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › category filtering works correctly" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › search functionality filters content" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › combined search and filter works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content card navigation works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › load more functionality works (if present)" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content page has proper accessibility" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › responsive design works on mobile" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › page handles empty search results gracefully" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="chromium" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage E2E Tests › loads homepage successfully with correct title" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › displays video background and typewriter effect" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation header is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › mobile navigation menu works" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › theme switcher is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation links lead to correct pages" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › homepage has proper accessibility attributes" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › page loads with proper meta tags" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="blog.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="firefox" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Blog E2E Tests › loads blog page successfully with correct title" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › displays blog page header and description" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality is present and accessible" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog posts are displayed correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality filters blog posts" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › individual blog post navigation works" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog post page displays content correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › navigation breadcrumbs work correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog page has proper accessibility" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › responsive design works on mobile" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="content-discovery.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="firefox" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Content Discovery E2E Tests › loads content page successfully with correct title" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays search functionality" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays category filter buttons" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays content cards" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › category filtering works correctly" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › search functionality filters content" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › combined search and filter works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content card navigation works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › load more functionality works (if present)" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content page has proper accessibility" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › responsive design works on mobile" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › page handles empty search results gracefully" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="firefox" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage E2E Tests › loads homepage successfully with correct title" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › displays video background and typewriter effect" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation header is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › mobile navigation menu works" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › theme switcher is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation links lead to correct pages" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › homepage has proper accessibility attributes" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › page loads with proper meta tags" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="blog.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="webkit" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Blog E2E Tests › loads blog page successfully with correct title" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › displays blog page header and description" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality is present and accessible" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog posts are displayed correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality filters blog posts" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › individual blog post navigation works" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog post page displays content correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › navigation breadcrumbs work correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog page has proper accessibility" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › responsive design works on mobile" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="content-discovery.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="webkit" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Content Discovery E2E Tests › loads content page successfully with correct title" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays search functionality" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays category filter buttons" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays content cards" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › category filtering works correctly" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › search functionality filters content" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › combined search and filter works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content card navigation works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › load more functionality works (if present)" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content page has proper accessibility" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › responsive design works on mobile" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › page handles empty search results gracefully" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage E2E Tests › loads homepage successfully with correct title" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › displays video background and typewriter effect" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation header is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › mobile navigation menu works" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › theme switcher is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation links lead to correct pages" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › homepage has proper accessibility attributes" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › page loads with proper meta tags" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="blog.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Chrome" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Blog E2E Tests › loads blog page successfully with correct title" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › displays blog page header and description" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality is present and accessible" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog posts are displayed correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality filters blog posts" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › individual blog post navigation works" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog post page displays content correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › navigation breadcrumbs work correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog page has proper accessibility" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › responsive design works on mobile" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="content-discovery.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Chrome" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Content Discovery E2E Tests › loads content page successfully with correct title" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays search functionality" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays category filter buttons" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays content cards" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › category filtering works correctly" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › search functionality filters content" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › combined search and filter works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content card navigation works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › load more functionality works (if present)" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content page has proper accessibility" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › responsive design works on mobile" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › page handles empty search results gracefully" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage E2E Tests › loads homepage successfully with correct title" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › displays video background and typewriter effect" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation header is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › mobile navigation menu works" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › theme switcher is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation links lead to correct pages" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › homepage has proper accessibility attributes" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › page loads with proper meta tags" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="blog.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Safari" tests="10" failures="0" skipped="10" time="0" errors="0">
+<testcase name="Blog E2E Tests › loads blog page successfully with correct title" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › displays blog page header and description" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality is present and accessible" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog posts are displayed correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › search functionality filters blog posts" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › individual blog post navigation works" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog post page displays content correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › navigation breadcrumbs work correctly" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › blog page has proper accessibility" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Blog E2E Tests › responsive design works on mobile" classname="blog.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="content-discovery.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Safari" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="Content Discovery E2E Tests › loads content page successfully with correct title" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays search functionality" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays category filter buttons" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › displays content cards" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › category filtering works correctly" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › search functionality filters content" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › combined search and filter works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content card navigation works" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › load more functionality works (if present)" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › content page has proper accessibility" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › responsive design works on mobile" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Content Discovery E2E Tests › page handles empty search results gracefully" classname="content-discovery.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="homepage.spec.ts" timestamp="2025-06-29T04:13:54.726Z" hostname="Mobile Safari" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Homepage E2E Tests › loads homepage successfully with correct title" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › displays video background and typewriter effect" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation header is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › mobile navigation menu works" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › theme switcher is present and functional" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › navigation links lead to correct pages" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › homepage has proper accessibility attributes" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Homepage E2E Tests › page loads with proper meta tags" classname="homepage.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

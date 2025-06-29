@@ -45,8 +45,8 @@ describe('Content Page', () => {
 
     await ContentPage()
 
-    expect(mockGetAllContent).toHaveBeenCalledOnce()
-    expect(mockGetCategories).toHaveBeenCalledOnce()
+    expect(mockGetAllContent).toHaveBeenCalledTimes(1)
+    expect(mockGetCategories).toHaveBeenCalledTimes(1)
   })
 
   it('should render ContentPageClient with fetched data', async () => {
@@ -132,8 +132,8 @@ describe('Content Page', () => {
     await ContentPage()
 
     // Both functions should be called
-    expect(getAllContentSpy).toHaveBeenCalledOnce()
-    expect(getCategoriesSpy).toHaveBeenCalledOnce()
+    expect(getAllContentSpy).toHaveBeenCalledTimes(1)
+    expect(getCategoriesSpy).toHaveBeenCalledTimes(1)
   })
 
   it('should handle mixed content types', async () => {

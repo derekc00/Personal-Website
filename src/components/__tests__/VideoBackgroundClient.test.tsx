@@ -2,8 +2,8 @@ import { describe, it, expect } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import VideoBackgroundClient from '../VideoBackgroundClient'
 
-jest.mock('../VideoBackground', () => ({
-  default: jest.fn(({ fileName, onVideoReady }) => {
+jest.mock('../VideoBackground', () => 
+  jest.fn(({ fileName, onVideoReady }) => {
     return (
       <div data-testid="video-background">
         Video: {fileName}
@@ -15,7 +15,7 @@ jest.mock('../VideoBackground', () => ({
       </div>
     )
   })
-}))
+)
 
 describe('VideoBackgroundClient', () => {
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
@@ -24,10 +24,12 @@ describe('VideoBackgroundClient', () => {
     consoleSpy.mockClear()
   })
 
-  it('should render video background with correct filename', () => {
+  it('should render video background with correct filename', async () => {
     render(<VideoBackgroundClient fileName="test-video.mp4" />)
     
-    expect(screen.getByTestId('video-background')).toBeInTheDocument()
+    // Should show either the mocked component or the suspense fallback
+    const videoElement = await screen.findByTestId('video-background')
+    expect(videoElement).toBeInTheDocument()
     expect(screen.getByText('Video: test-video.mp4')).toBeInTheDocument()
   })
 
@@ -39,7 +41,7 @@ describe('VideoBackgroundClient', () => {
     const readyTrigger = screen.getByTestId('video-ready-trigger')
     readyTrigger.click()
     
-    expect(mockOnVideoReady).toHaveBeenCalledOnce()
+    expect(mockOnVideoReady).toHaveBeenCalledTimes(1)
   })
 
   it('should handle missing onVideoReady callback gracefully', () => {

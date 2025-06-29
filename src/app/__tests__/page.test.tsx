@@ -2,8 +2,8 @@ import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Home from '../page'
 
-jest.mock('@/components/VideoBackgroundClient', () => ({
-  default: jest.fn(({ fileName, onVideoReady }) => {
+jest.mock('@/components/VideoBackgroundClient', () => 
+  jest.fn(({ fileName, onVideoReady }) => {
     return (
       <div data-testid="video-background-client">
         <div>Video: {fileName}</div>
@@ -15,14 +15,14 @@ jest.mock('@/components/VideoBackgroundClient', () => ({
       </div>
     )
   })
-}))
+)
 
-jest.mock('@/components/ErrorBoundary', () => ({
-  default: jest.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
-}))
+jest.mock('@/components/ErrorBoundary', () => 
+  jest.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
+)
 
-jest.mock('typewriter-effect', () => ({
-  default: jest.fn(({ onInit }) => {
+jest.mock('typewriter-effect', () => 
+  jest.fn(({ onInit }) => {
     const mockTypewriter = {
       typeString: jest.fn().mockReturnThis(),
       pauseFor: jest.fn().mockReturnThis(),
@@ -35,7 +35,7 @@ jest.mock('typewriter-effect', () => ({
     
     return <div data-testid="typewriter">Welcome to Derek&apos;s website</div>
   })
-}))
+)
 
 describe('Home', () => {
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})

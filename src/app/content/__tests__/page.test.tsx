@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from '@jest/globals'
+import { describe, it, expect } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import ContentPage from '../page'
 import { getAllContent, getCategories } from '@/lib/content'

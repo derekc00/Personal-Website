@@ -1,5 +1,5 @@
-import { describe, it, expect, jest } from '@jest/globals'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect } from '@jest/globals'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import { createMockContentItems } from '@/test/factories'
@@ -11,7 +11,7 @@ const MockContentPageClient = ({ initialContent, categories }) => {
   const [selectedCategory, setSelectedCategory] = React.useState(null)
   const [searchQuery, setSearchQuery] = React.useState('')
 
-  const applyFilters = () => {
+  const applyFilters = React.useCallback(() => {
     let filtered = initialContent
 
     // Apply category filter first
@@ -32,7 +32,7 @@ const MockContentPageClient = ({ initialContent, categories }) => {
 
     setFilteredContent(filtered)
     setVisibleCount(9)
-  }
+  }, [initialContent, selectedCategory, searchQuery])
 
   const handleSearch = (query) => {
     setSearchQuery(query)
@@ -45,7 +45,7 @@ const MockContentPageClient = ({ initialContent, categories }) => {
   // Apply filters whenever search or category changes
   React.useEffect(() => {
     applyFilters()
-  }, [searchQuery, selectedCategory])
+  }, [searchQuery, selectedCategory, applyFilters])
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 9)

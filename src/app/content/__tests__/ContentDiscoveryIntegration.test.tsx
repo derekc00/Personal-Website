@@ -1,6 +1,7 @@
 import { describe, it, expect, jest } from '@jest/globals'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import React from 'react'
 import ContentPageClient from '../ContentPageClient'
 import { createMockContentItems } from '@/test/factories'
 
@@ -18,21 +19,19 @@ jest.mock('@/components/BlogCard', () => ({
 
 // Mock UI components to avoid styling dependencies in integration tests
 jest.mock('@/components/ui/button', () => {
-  const React = require('react')
-  return {
-    Button: React.forwardRef(({ children, onClick, className, ...props }, ref) => (
-      <button ref={ref} onClick={onClick} className={className} {...props}>
-        {children}
-      </button>
-    ))
-  }
+  const Button = React.forwardRef(({ children, onClick, className, ...props }, ref) => (
+    <button ref={ref} onClick={onClick} className={className} {...props}>
+      {children}
+    </button>
+  ))
+  Button.displayName = 'Button'
+  return { Button }
 })
 
 jest.mock('@/components/ui/input', () => {
-  const React = require('react')
-  return {
-    Input: React.forwardRef((props, ref) => <input ref={ref} {...props} />)
-  }
+  const Input = React.forwardRef((props, ref) => <input ref={ref} {...props} />)
+  Input.displayName = 'Input'
+  return { Input }
 })
 
 jest.mock('lucide-react', () => ({

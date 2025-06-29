@@ -1,11 +1,12 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 
 // Mock Three.js and React Three Fiber components
 jest.mock('@react-three/fiber', () => ({
-  Canvas: jest.fn(({ children, onCreated, onError, ...props }) => {
+  Canvas: jest.fn(({ children, onCreated, ...props }) => {
     // Simulate WebGL context creation
     const mockGL = {
       domElement: {
@@ -47,14 +48,13 @@ jest.mock('next/navigation', () => ({
 
 // Mock UI components
 jest.mock('@/components/ui/button', () => {
-  const React = require('react')
-  return {
-    Button: React.forwardRef(({ children, onClick, className, ...props }, ref) => (
-      <button ref={ref} onClick={onClick} className={className} {...props}>
-        {children}
-      </button>
-    ))
-  }
+  const Button = React.forwardRef(({ children, onClick, className, ...props }, ref) => (
+    <button ref={ref} onClick={onClick} className={className} {...props}>
+      {children}
+    </button>
+  ))
+  Button.displayName = 'Button'
+  return { Button }
 })
 
 // Import components after mocks
@@ -96,7 +96,7 @@ describe('Three.js Workspace Integration', () => {
           getContext: jest.fn(() => mockContext),
           width: 1,
           height: 1
-        } as any
+        } as HTMLCanvasElement
       }
       return originalCreateElement(tagName)
     })

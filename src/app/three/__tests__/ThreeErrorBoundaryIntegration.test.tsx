@@ -1,18 +1,17 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 
 // Mock UI components
 jest.mock('@/components/ui/button', () => {
-  const React = require('react')
-  return {
-    Button: React.forwardRef(({ children, onClick, className, ...props }, ref) => (
-      <button ref={ref} onClick={onClick} className={className} {...props}>
-        {children}
-      </button>
-    ))
-  }
+  const Button = React.forwardRef(({ children, onClick, className, ...props }, ref) => (
+    <button ref={ref} onClick={onClick} className={className} {...props}>
+      {children}
+    </button>
+  ))
+  Button.displayName = 'Button'
+  return { Button }
 })
 
 import ThreeErrorBoundary from '@/components/ThreeErrorBoundary'

@@ -2,20 +2,23 @@ import { describe, it, expect } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import VideoBackgroundClient from '../VideoBackgroundClient'
 
-jest.mock('../VideoBackground', () => 
-  jest.fn(({ fileName, onVideoReady }) => {
-    return (
-      <div data-testid="video-background">
-        Video: {fileName}
-        {onVideoReady && (
-          <button onClick={onVideoReady} data-testid="video-ready-trigger">
-            Trigger Ready
-          </button>
-        )}
-      </div>
-    )
-  })
-)
+jest.mock('../VideoBackground', () => {
+  const MockVideoBackground = ({ fileName, onVideoReady }: any) => (
+    <div data-testid="video-background">
+      Video: {fileName}
+      {onVideoReady && (
+        <button onClick={onVideoReady} data-testid="video-ready-trigger">
+          Trigger Ready
+        </button>
+      )}
+    </div>
+  )
+  MockVideoBackground.displayName = 'MockVideoBackground'
+  return {
+    __esModule: true,
+    default: MockVideoBackground
+  }
+})
 
 describe('VideoBackgroundClient', () => {
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})

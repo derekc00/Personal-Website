@@ -1,28 +1,33 @@
 import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import Home from '../page'
+import React from 'react'
 
-jest.mock('@/components/VideoBackgroundClient', () => 
-  jest.fn(({ fileName, onVideoReady }) => {
-    return (
-      <div data-testid="video-background-client">
-        <div>Video: {fileName}</div>
-        {onVideoReady && (
-          <button onClick={onVideoReady} data-testid="video-ready-trigger">
-            Trigger Video Ready
-          </button>
-        )}
-      </div>
-    )
-  })
-)
+// Mock the components using the default export pattern
+jest.mock('@/components/VideoBackgroundClient', () => {
+  const MockVideoBackgroundClient = ({ fileName, onVideoReady }: any) => (
+    <div data-testid="video-background-client">
+      <div>Video: {fileName}</div>
+      {onVideoReady && (
+        <button onClick={onVideoReady} data-testid="video-ready-trigger">
+          Trigger Video Ready
+        </button>
+      )}
+    </div>
+  )
+  MockVideoBackgroundClient.displayName = 'MockVideoBackgroundClient'
+  return MockVideoBackgroundClient
+})
 
-jest.mock('@/components/ErrorBoundary', () => 
-  jest.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
-)
+jest.mock('@/components/ErrorBoundary', () => {
+  const MockErrorBoundary = ({ children }: any) => (
+    <div data-testid="error-boundary">{children}</div>
+  )
+  MockErrorBoundary.displayName = 'MockErrorBoundary'
+  return MockErrorBoundary
+})
 
-jest.mock('typewriter-effect', () => 
-  jest.fn(({ onInit }) => {
+jest.mock('typewriter-effect', () => {
+  const MockTypewriter = ({ onInit }: any) => {
     const mockTypewriter = {
       typeString: jest.fn().mockReturnThis(),
       pauseFor: jest.fn().mockReturnThis(),
@@ -34,8 +39,13 @@ jest.mock('typewriter-effect', () =>
     }
     
     return <div data-testid="typewriter">Welcome to Derek&apos;s website</div>
-  })
-)
+  }
+  MockTypewriter.displayName = 'MockTypewriter'
+  return MockTypewriter
+})
+
+// Import the component after the mocks are set up
+import Home from '../page'
 
 describe('Home', () => {
   const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})

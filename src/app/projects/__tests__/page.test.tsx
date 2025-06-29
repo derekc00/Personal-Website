@@ -1,9 +1,10 @@
 import { describe, it, expect } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
-import Projects from '../page'
+import React from 'react'
 
-jest.mock('@/components/ProjectCard', () => ({
-  default: jest.fn(({ project }) => (
+// Mock ProjectCard with proper default export and Project type
+jest.mock('@/components/ProjectCard', () => {
+  const MockProjectCard = ({ project }: any) => (
     <div data-testid={`project-card-${project.slug}`}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>
@@ -15,19 +16,29 @@ jest.mock('@/components/ProjectCard', () => ({
         GitHub
       </a>
     </div>
-  ))
-}))
+  )
+  MockProjectCard.displayName = 'MockProjectCard'
+  return {
+    __esModule: true,
+    default: MockProjectCard,
+    Project: {} as any // Mock the Project type export
+  }
+})
 
+// Mock page layout components
 jest.mock('@/components/ui/page-layout', () => ({
-  PageLayout: jest.fn(({ children }) => <div data-testid="page-layout">{children}</div>),
-  PageHeader: jest.fn(({ title, description }) => (
+  PageLayout: ({ children }: any) => <div data-testid="page-layout">{children}</div>,
+  PageHeader: ({ title, description }: any) => (
     <div data-testid="page-header">
       <h1>{title}</h1>
       <p>{description}</p>
     </div>
-  )),
-  Section: jest.fn(({ children }) => <div data-testid="section">{children}</div>)
+  ),
+  Section: ({ children }: any) => <div data-testid="section">{children}</div>
 }))
+
+// Import after mocks
+import Projects from '../page'
 
 describe('Projects Page', () => {
   it('should render page header with correct title and description', () => {

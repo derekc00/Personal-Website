@@ -1,7 +1,13 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import BlogListClient from '../BlogListClient';
 import { ContentItem } from '@/lib/schemas';
+
+// Mock Next.js navigation
+const mockSearchParams = new URLSearchParams();
+jest.mock('next/navigation', () => ({
+  useSearchParams: () => mockSearchParams
+}));
 
 const mockPosts: ContentItem[] = [
   {
@@ -27,69 +33,76 @@ const mockPosts: ContentItem[] = [
     category: 'Life',
     tags: ['productivity'],
     published: true
+  },
+  {
+    slug: 'test-post-3',
+    title: 'Test Post 3',
+    excerpt: 'A post with multiple tags',
+    date: '2025-01-03',
+    image: '/test3.jpg',
+    content: 'Test content',
+    type: 'blog',
+    category: 'Tech',
+    tags: ['javascript', 'react', 'testing'],
+    published: true
   }
 ];
 
 describe('BlogListClient Component', () => {
-  it('renders all blog posts initially', () => {
+  beforeEach(() => {
+    // Clear search params before each test
+    mockSearchParams.forEach((_, key) => mockSearchParams.delete(key));
+  });
+
+  it('renders all blog posts when no tags are selected', () => {
     render(<BlogListClient posts={mockPosts} />);
     
     expect(screen.getByText('Test Post 1')).toBeInTheDocument();
     expect(screen.getByText('Test Post 2')).toBeInTheDocument();
+    expect(screen.getByText('Test Post 3')).toBeInTheDocument();
   });
 
-  it('filters posts based on search input', async () => {
+  it('filters posts by single tag', () => {
+    mockSearchParams.set('tags', 'productivity');
     render(<BlogListClient posts={mockPosts} />);
     
-    const searchInput = screen.getByRole('searchbox');
-    fireEvent.change(searchInput, { target: { value: 'coffee' } });
-    
-    await waitFor(() => {
-      expect(screen.getByText('Test Post 1')).toBeInTheDocument();
-      expect(screen.queryByText('Test Post 2')).not.toBeInTheDocument();
-    });
+    expect(screen.queryByText('Test Post 1')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Post 2')).toBeInTheDocument();
+    expect(screen.queryByText('Test Post 3')).not.toBeInTheDocument();
   });
 
-  it('shows no results message when search has no matches', async () => {
+  it('filters posts by multiple tags', () => {
+    mockSearchParams.set('tags', 'javascript,react');
     render(<BlogListClient posts={mockPosts} />);
     
-    const searchInput = screen.getByRole('searchbox');
-    fireEvent.change(searchInput, { target: { value: 'nonexistent' } });
-    
-    await waitFor(() => {
-      expect(screen.getByText(/No articles found/i)).toBeInTheDocument();
-    });
+    // Posts with either javascript OR react tag should show
+    expect(screen.getByText('Test Post 1')).toBeInTheDocument();
+    expect(screen.queryByText('Test Post 2')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Post 3')).toBeInTheDocument();
   });
 
-  it('clears search and shows all posts', async () => {
+  it('shows no posts message when filtered results are empty', () => {
+    mockSearchParams.set('tags', 'nonexistent');
     render(<BlogListClient posts={mockPosts} />);
     
-    const searchInput = screen.getByRole('searchbox');
-    
-    // Filter first
-    fireEvent.change(searchInput, { target: { value: 'coffee' } });
-    await waitFor(() => {
-      expect(screen.queryByText('Test Post 2')).not.toBeInTheDocument();
-    });
-    
-    // Clear search
-    fireEvent.change(searchInput, { target: { value: '' } });
-    await waitFor(() => {
-      expect(screen.getByText('Test Post 1')).toBeInTheDocument();
-      expect(screen.getByText('Test Post 2')).toBeInTheDocument();
-    });
+    expect(screen.getByText('No posts found')).toBeInTheDocument();
+    expect(screen.getByText(/No posts found with the selected tags/)).toBeInTheDocument();
   });
 
-  it('maintains search state during re-renders', () => {
-    const { rerender } = render(<BlogListClient posts={mockPosts} />);
+  it('shows no posts message when posts array is empty', () => {
+    render(<BlogListClient posts={[]} />);
     
-    const searchInput = screen.getByRole('searchbox') as HTMLInputElement;
-    fireEvent.change(searchInput, { target: { value: 'coffee' } });
+    expect(screen.getByText('No posts found')).toBeInTheDocument();
+    expect(screen.getByText('No blog posts available at the moment.')).toBeInTheDocument();
+  });
+
+  it('handles empty tag values in query params', () => {
+    mockSearchParams.set('tags', 'javascript,,testing');
+    render(<BlogListClient posts={mockPosts} />);
     
-    // Re-render component
-    rerender(<BlogListClient posts={mockPosts} />);
-    
-    // Search value should persist
-    expect(searchInput.value).toBe('coffee');
+    // Should filter out empty strings and show posts with javascript OR testing
+    expect(screen.getByText('Test Post 1')).toBeInTheDocument();
+    expect(screen.queryByText('Test Post 2')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Post 3')).toBeInTheDocument();
   });
 });

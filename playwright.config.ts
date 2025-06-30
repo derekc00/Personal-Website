@@ -35,11 +35,23 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
     
-    // Run critical tests on Firefox
+    // Firefox browser
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    
+    // Run critical tests on Firefox (additional project)
     {
       name: 'firefox-critical',
       use: { ...devices['Desktop Firefox'] },
       testMatch: '**/critical-paths/*.critical.spec.ts',
+    },
+    
+    // WebKit browser (Safari)
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
     },
     
     // Mobile testing for journey tests only

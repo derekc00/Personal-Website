@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { type AuthChangeEvent, type Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { getAuthenticatedUser, type AuthUser } from '@/lib/auth'
+import { signInSchema, resetPasswordSchema } from '@/lib/schemas/auth'
+import { z } from 'zod'
 
 export type AuthState = {
   user: AuthUser | null
@@ -52,9 +54,13 @@ export function useAuth(): AuthState & AuthActions {
   const signIn = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true)
+      
+      // Validate input
+      const validatedData = signInSchema.parse({ email, password })
+      
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        email: validatedData.email,
+        password: validatedData.password
       })
       
       if (error) {
@@ -63,16 +69,24 @@ export function useAuth(): AuthState & AuthActions {
       
       await refreshUser()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Sign in failed')
+      if (error instanceof z.ZodError) {
+        setError(error.errors[0].message)
+      } else {
+        setError(error instanceof Error ? error.message : 'Sign in failed')
+      }
     }
   }, [refreshUser, setError, setLoading])
 
   const signUp = useCallback(async (email: string, password: string) => {
     try {
       setLoading(true)
+      
+      // Basic validation - full validation should happen at form level
+      const validatedData = signInSchema.parse({ email, password })
+      
       const { data, error } = await supabase.auth.signUp({
-        email,
-        password
+        email: validatedData.email,
+        password: validatedData.password
       })
       
       if (error) {
@@ -86,7 +100,11 @@ export function useAuth(): AuthState & AuthActions {
       
       await refreshUser()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Sign up failed')
+      if (error instanceof z.ZodError) {
+        setError(error.errors[0].message)
+      } else {
+        setError(error instanceof Error ? error.message : 'Sign up failed')
+      }
     }
   }, [refreshUser, setError, setLoading])
 
@@ -113,7 +131,11 @@ export function useAuth(): AuthState & AuthActions {
   const resetPassword = useCallback(async (email: string) => {
     try {
       setLoading(true)
-      const { error } = await supabase.auth.resetPasswordForEmail(email)
+      
+      // Validate input
+      const validatedData = resetPasswordSchema.parse({ email })
+      
+      const { error } = await supabase.auth.resetPasswordForEmail(validatedData.email)
       
       if (error) {
         throw new Error(error.message)
@@ -121,7 +143,11 @@ export function useAuth(): AuthState & AuthActions {
       
       setLoading(false)
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Password reset failed')
+      if (error instanceof z.ZodError) {
+        setError(error.errors[0].message)
+      } else {
+        setError(error instanceof Error ? error.message : 'Password reset failed')
+      }
     }
   }, [setError, setLoading])
 

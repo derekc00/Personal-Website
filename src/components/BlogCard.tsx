@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon } from "lucide-react";
 import { ContentItem } from "@/lib/schemas";
+import { ASSET_PATHS, CONTENT_TYPES } from '@/lib/constants';
 
 interface BlogCardProps {
   post: ContentItem;
@@ -20,7 +21,7 @@ interface BlogCardProps {
 
 export default function BlogCard({ post, onTagClick }: BlogCardProps) {
   const [imageLoading, setImageLoading] = useState(true);
-  const fallbackImage = "/home.jpg";
+  const fallbackImage = ASSET_PATHS.FALLBACK_IMAGE;
 
   const handleImageLoad = () => {
     setImageLoading(false);
@@ -32,7 +33,7 @@ export default function BlogCard({ post, onTagClick }: BlogCardProps) {
     day: "numeric",
   });
 
-  const href = post.type === "blog" ? `/blog/${post.slug}` : `/projects/${post.slug}`;
+  const href = post.type === CONTENT_TYPES.BLOG ? `/blog/${post.slug}` : `/projects/${post.slug}`;
 
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg h-full flex flex-col">

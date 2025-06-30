@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 import ThemeProvider from "@/providers/ThemeProvider";
+import { UI_CONSTANTS } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: "Derek's Website",
@@ -41,7 +42,7 @@ export default function RootLayout({
       // Remove the class after a short delay to enable transitions
       window.setTimeout(function() {
         document.documentElement.classList.remove('no-transition');
-      }, 100);
+      }, ${UI_CONSTANTS.TRANSITION_DELAY});
     })();
   `;
 

@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { FrontmatterSchema, ContentItemSchema, type ContentItem } from "./schemas";
+import { FILE_EXTENSIONS, ERROR_MESSAGES, CONTENT_TYPES } from './constants';
 
 const contentDirectory = path.join(process.cwd(), "content");
 
@@ -16,10 +17,10 @@ export async function getAllContent(): Promise<ContentItem[]> {
   const validContent: ContentItem[] = [];
 
   for (const file of files) {
-    if (!file.endsWith(".mdx")) continue;
+    if (!file.endsWith(FILE_EXTENSIONS.MDX)) continue;
 
     try {
-      const slug = file.replace(/\.mdx$/, "");
+      const slug = file.replace(new RegExp(`\\${FILE_EXTENSIONS.MDX}$`), "");
       const source = fs.readFileSync(path.join(blogDir, file), "utf8");
       const { data, content } = matter(source);
 
@@ -30,7 +31,7 @@ export async function getAllContent(): Promise<ContentItem[]> {
         id: slug,
         slug,
         title: frontmatter.title,
-        excerpt: frontmatter.description || frontmatter.excerpt || "No description available",
+        excerpt: frontmatter.description || frontmatter.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
         date: frontmatter.date,
         category: frontmatter.category,
         image: frontmatter.image || null,
@@ -55,7 +56,7 @@ export async function getAllContent(): Promise<ContentItem[]> {
 }
 
 export async function getContentBySlug(slug: string): Promise<ContentItem | null> {
-  const filePath = path.join(contentDirectory, "blog", `${slug}.mdx`);
+  const filePath = path.join(contentDirectory, "blog", `${slug}${FILE_EXTENSIONS.MDX}`);
   
   if (!fs.existsSync(filePath)) {
     return null;
@@ -72,7 +73,7 @@ export async function getContentBySlug(slug: string): Promise<ContentItem | null
       id: slug,
       slug,
       title: frontmatter.title,
-      excerpt: frontmatter.description || frontmatter.excerpt || "No description available",
+      excerpt: frontmatter.description || frontmatter.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
       date: frontmatter.date,
       category: frontmatter.category,
       image: frontmatter.image || null,
@@ -89,7 +90,7 @@ export async function getContentBySlug(slug: string): Promise<ContentItem | null
   }
 }
 
-export async function getContentByType(type: 'blog' | 'project'): Promise<ContentItem[]> {
+export async function getContentByType(type: typeof CONTENT_TYPES.BLOG | typeof CONTENT_TYPES.PROJECT): Promise<ContentItem[]> {
   const allContent = await getAllContent();
   return allContent.filter(item => item.type === type);
 }

@@ -1,4 +1,5 @@
 import { getContentByType, getContentBySlug } from '@/lib/content';
+import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET /api/posts - Get all posts
@@ -13,8 +14,8 @@ export async function GET(request: NextRequest) {
       
       if (!content || content.type !== 'blog') {
         return NextResponse.json(
-          { error: 'Post not found' },
-          { status: 404 }
+          { error: ERROR_MESSAGES.POST_NOT_FOUND },
+          { status: HTTP_STATUS.NOT_FOUND }
         );
       }
       
@@ -27,8 +28,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error in posts API:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch posts' },
-      { status: 500 }
+      { error: ERROR_MESSAGES.FAILED_TO_FETCH_POSTS },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
     );
   }
 }

@@ -1,6 +1,9 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
+import { hasRole } from '@/lib/auth'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -13,14 +16,24 @@ export default function ProtectedRoute({
   requiredRole = 'admin',
   fallback 
 }: ProtectedRouteProps) {
-  // TODO: Implement authentication check after DER-62 is merged
-  // For now, just render children as placeholder
+  const router = useRouter()
+  const { user, loading } = useAuth()
   
-  // Placeholder implementation
-  const isAuthenticated = false // Will be replaced with actual auth check
-  const userRole = null // Will be replaced with actual user role
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/admin/auth/login')
+    }
+  }, [user, loading, router])
   
-  if (!isAuthenticated) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+  
+  if (!user) {
     return fallback || (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -37,7 +50,7 @@ export default function ProtectedRoute({
     )
   }
   
-  if (requiredRole && userRole !== requiredRole && userRole !== 'admin') {
+  if (requiredRole && !hasRole(user, requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

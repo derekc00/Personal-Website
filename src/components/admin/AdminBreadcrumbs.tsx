@@ -9,7 +9,7 @@ export default function AdminBreadcrumbs() {
   
   const generateBreadcrumbs = () => {
     const segments = pathname.split('/').filter(Boolean)
-    const breadcrumbs = []
+    const breadcrumbs: Array<{ label: string; href: string; current: boolean }> = []
     
     segments.forEach((segment, index) => {
       const href = '/' + segments.slice(0, index + 1).join('/')

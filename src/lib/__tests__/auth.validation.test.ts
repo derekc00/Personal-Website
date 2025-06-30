@@ -7,6 +7,7 @@ import {
   updatePasswordSchema,
   userRoleSchema,
   userProfileSchema,
+  supabaseJWTSchema,
 } from '../schemas/auth'
 
 describe('Auth Validation Schemas', () => {
@@ -18,6 +19,26 @@ describe('Auth Validation Schemas', () => {
       }
       
       expect(() => signInSchema.parse(validData)).not.toThrow()
+    })
+
+    it('should normalize email to lowercase', () => {
+      const data = {
+        email: 'TEST@EXAMPLE.COM',
+        password: 'password123',
+      }
+      
+      const result = signInSchema.parse(data)
+      expect(result.email).toBe('test@example.com')
+    })
+
+    it('should trim whitespace from email', () => {
+      const data = {
+        email: '  test@example.com  ',
+        password: 'password123',
+      }
+      
+      const result = signInSchema.parse(data)
+      expect(result.email).toBe('test@example.com')
     })
 
     it('should reject invalid email', () => {
@@ -200,6 +221,47 @@ describe('Auth Validation Schemas', () => {
       }
       
       expect(() => userProfileSchema.parse(invalidProfile)).toThrow(z.ZodError)
+    })
+  })
+
+  describe('supabaseJWTSchema', () => {
+    it('should validate valid JWT payload', () => {
+      const validJWT = {
+        sub: '123e4567-e89b-12d3-a456-426614174000',
+        email: 'test@example.com',
+        role: 'authenticated',
+        app_metadata: {
+          provider: 'email',
+          providers: ['email']
+        },
+        user_metadata: {},
+        exp: 1700000000,
+        iat: 1699999000
+      }
+      
+      expect(() => supabaseJWTSchema.parse(validJWT)).not.toThrow()
+    })
+
+    it('should reject JWT with invalid sub UUID', () => {
+      const invalidJWT = {
+        sub: 'not-a-uuid',
+        role: 'authenticated',
+        exp: 1700000000,
+        iat: 1699999000
+      }
+      
+      expect(() => supabaseJWTSchema.parse(invalidJWT)).toThrow(z.ZodError)
+    })
+
+    it('should accept JWT without optional fields', () => {
+      const minimalJWT = {
+        sub: '123e4567-e89b-12d3-a456-426614174000',
+        role: 'authenticated',
+        exp: 1700000000,
+        iat: 1699999000
+      }
+      
+      expect(() => supabaseJWTSchema.parse(minimalJWT)).not.toThrow()
     })
   })
 })

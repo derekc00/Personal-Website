@@ -1,7 +1,11 @@
 import { z } from 'zod';
 
-// Email validation
-const emailSchema = z.string().email('Invalid email address');
+// Email validation with normalization
+const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .email('Invalid email address');
 
 // Password validation with security requirements
 const passwordSchema = z
@@ -86,6 +90,58 @@ export const authSessionSchema = z.object({
   }),
 });
 
+// JWT validation schemas
+export const supabaseJWTSchema = z.object({
+  sub: z.string().uuid(),
+  email: emailSchema.optional(),
+  phone: z.string().optional(),
+  role: z.string(),
+  app_metadata: z.object({
+    provider: z.string(),
+    providers: z.array(z.string())
+  }).optional(),
+  user_metadata: z.record(z.any()).optional(),
+  aal: z.string().optional(),
+  amr: z.array(z.object({
+    method: z.string(),
+    timestamp: z.number()
+  })).optional(),
+  session_id: z.string().optional(),
+  exp: z.number(),
+  iat: z.number(),
+  iss: z.string().optional()
+});
+
+// Database schema validation
+export const contentRowSchema = z.object({
+  id: z.string().uuid(),
+  slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
+  title: z.string().min(1).max(200),
+  excerpt: z.string().max(500),
+  content: z.string(),
+  type: z.enum(['blog', 'project']),
+  category: z.string().nullable(),
+  image: z.string().url().nullable(),
+  tags: z.array(z.string()).nullable(),
+  github_url: z.string().url().nullable(),
+  demo_url: z.string().url().nullable(),
+  comments_enabled: z.boolean().default(true),
+  published: z.boolean().default(false),
+  author_id: z.string().uuid().nullable(),
+  created_at: z.string().datetime(),
+  updated_at: z.string().datetime(),
+  views: z.number().int().min(0).default(0)
+});
+
+export const contentInsertSchema = contentRowSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  views: true
+});
+
+export const contentUpdateSchema = contentInsertSchema.partial();
+
 // Type exports
 export type SignInInput = z.infer<typeof signInSchema>;
 export type SignUpInput = z.infer<typeof signUpSchema>;
@@ -97,3 +153,7 @@ export type UserProfileInsert = z.infer<typeof userProfileInsertSchema>;
 export type UserProfileUpdate = z.infer<typeof userProfileUpdateSchema>;
 export type AuthUser = z.infer<typeof authUserSchema>;
 export type AuthSession = z.infer<typeof authSessionSchema>;
+export type SupabaseJWT = z.infer<typeof supabaseJWTSchema>;
+export type ContentRow = z.infer<typeof contentRowSchema>;
+export type ContentInsert = z.infer<typeof contentInsertSchema>;
+export type ContentUpdate = z.infer<typeof contentUpdateSchema>;

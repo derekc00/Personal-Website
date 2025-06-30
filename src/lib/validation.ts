@@ -1,5 +1,5 @@
 import { z, ZodError, ZodSchema } from 'zod';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export class ValidationError extends Error {
   public readonly errors: z.ZodIssue[];
@@ -56,4 +56,53 @@ export function safeValidateData<T extends ZodSchema>(
     }
     throw error;
   }
+}
+
+// API Route validation middleware
+export function withValidation<T extends ZodSchema>(
+  schema: T,
+  handler: (
+    req: NextRequest,
+    context: { params: Record<string, string> },
+    validatedData: z.infer<T>
+  ) => Promise<NextResponse> | NextResponse
+) {
+  return async (req: NextRequest, context: { params: Record<string, string> }) => {
+    try {
+      const body = await req.json();
+      const validatedData = schema.parse(body);
+      return await handler(req, context, validatedData);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Validation failed',
+            details: error.flatten()
+          },
+          { status: 400 }
+        );
+      }
+      
+      // Handle JSON parsing errors
+      if (error instanceof SyntaxError) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Invalid JSON in request body'
+          },
+          { status: 400 }
+        );
+      }
+      
+      // Generic error response
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Internal server error'
+        },
+        { status: 500 }
+      );
+    }
+  };
 }

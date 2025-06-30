@@ -61,6 +61,7 @@
     "eslint-config-next": "15.1.2",
     "husky": "^9.1.7",
     "jest": "^30.0.3",
+    "jest-environment-jsdom": "^30.0.2",
     "jsdom": "^26.1.0",
     "msw": "^2.10.2",
     "postcss": "^8",

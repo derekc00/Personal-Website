@@ -36,6 +36,30 @@ export default function AdminLogin() {
     )
   }
   
+  // Check if Supabase is configured at runtime
+  const isSupabaseConfigured = !!(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
+  
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-yellow-800 mb-2">
+              Supabase Configuration Required
+            </h2>
+            <p className="text-yellow-700">
+              Authentication is not available because Supabase environment variables are not configured.
+              Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to your environment.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">

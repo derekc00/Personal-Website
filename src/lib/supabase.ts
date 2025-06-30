@@ -97,13 +97,7 @@ export type Database = {
   }
 }
 
-export type ContentRow = Database['public']['Tables']['content']['Row']
-export type ContentInsert = Database['public']['Tables']['content']['Insert']
-export type ContentUpdate = Database['public']['Tables']['content']['Update']
-
-export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
-export type UserProfileInsert = Database['public']['Tables']['user_profiles']['Insert']
-export type UserProfileUpdate = Database['public']['Tables']['user_profiles']['Update']
+// Types are now exported from schemas/auth.ts to maintain single source of truth
 
 // Auth helper functions
 export async function getCurrentUser() {
@@ -111,7 +105,7 @@ export async function getCurrentUser() {
   return user
 }
 
-export async function getCurrentUserProfile(): Promise<UserProfile | null> {
+export async function getCurrentUserProfile() {
   const user = await getCurrentUser()
   if (!user) return null
 

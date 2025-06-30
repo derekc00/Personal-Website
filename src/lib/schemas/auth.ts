@@ -112,32 +112,38 @@ export const supabaseJWTSchema = z.object({
   iss: z.string().optional()
 });
 
-// Database schema validation
+// Database schema validation (synced with actual database structure)
 export const contentRowSchema = z.object({
   id: z.string().uuid(),
   slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
   title: z.string().min(1).max(200),
   excerpt: z.string().max(500),
-  content: z.string(),
-  type: z.enum(['blog', 'project']),
-  category: z.string().nullable(),
+  date: z.string().datetime(),
+  category: z.string(),
   image: z.string().url().nullable(),
-  tags: z.array(z.string()).nullable(),
-  github_url: z.string().url().nullable(),
-  demo_url: z.string().url().nullable(),
-  comments_enabled: z.boolean().default(true),
-  published: z.boolean().default(false),
-  author_id: z.string().uuid().nullable(),
+  type: z.enum(['blog', 'project']),
+  tags: z.array(z.string()),
+  content: z.string(),
+  published: z.boolean(),
+  comments_enabled: z.boolean(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
-  views: z.number().int().min(0).default(0)
+  author_id: z.string().uuid().nullable()
 });
 
 export const contentInsertSchema = contentRowSchema.omit({
   id: true,
   created_at: true,
-  updated_at: true,
-  views: true
+  updated_at: true
+}).partial({
+  date: true,
+  category: true,
+  image: true,
+  type: true,
+  tags: true,
+  published: true,
+  comments_enabled: true,
+  author_id: true
 });
 
 export const contentUpdateSchema = contentInsertSchema.partial();

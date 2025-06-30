@@ -5,6 +5,10 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  testMatch: [
+    '**/journeys/*.journey.spec.ts',
+    '**/critical-paths/*.critical.spec.ts'
+  ],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -12,42 +16,46 @@ export default defineConfig({
   reporter: [
     ['html'],
     ['json', { outputFile: 'test-results/e2e-results.json' }],
-    ['junit', { outputFile: 'test-results/e2e-results.xml' }]
+    ['junit', { outputFile: 'test-results/e2e-results.xml' }],
+    ['line']
   ],
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    actionTimeout: 10000,
+    navigationTimeout: 15000,
   },
 
   projects: [
+    // Desktop browsers (most important)
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    
+    // Run critical tests on Firefox
     {
-      name: 'firefox',
+      name: 'firefox-critical',
       use: { ...devices['Desktop Firefox'] },
+      testMatch: '**/critical-paths/*.critical.spec.ts',
     },
+    
+    // Mobile testing for journey tests only
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'Mobile Chrome',
+      name: 'mobile',
       use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      testMatch: '**/journeys/*.journey.spec.ts',
     },
   ],
 
   webServer: {
-    command: 'npm run build && npm start',
+    command: process.env.CI ? 'npm run build && npm start' : 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
 });

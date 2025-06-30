@@ -2,6 +2,12 @@ import React, { Suspense } from "react";
 import { getContentByType } from "@/lib/content";
 import BlogListClient from "@/app/blog/BlogListClient";
 import { PageLayout, PageHeader, Section } from "@/components/ui/page-layout";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog - Derek Chang",
+  description: "Articles about software development, productivity, and more.",
+};
 
 export default async function Blog() {
   // Get blog posts using unified content system

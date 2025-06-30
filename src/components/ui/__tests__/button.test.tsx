@@ -1,5 +1,5 @@
 import React from 'react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from '@jest/globals'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { Button } from '../button'
 
@@ -84,13 +84,13 @@ describe('Button', () => {
   })
 
   it('should handle click events', () => {
-    const handleClick = vi.fn()
+    const handleClick = jest.fn()
     render(<Button onClick={handleClick}>Clickable</Button>)
     
     const button = screen.getByRole('button', { name: 'Clickable' })
     fireEvent.click(button)
     
-    expect(handleClick).toHaveBeenCalledOnce()
+    expect(handleClick).toHaveBeenCalledTimes(1)
   })
 
   it('should be disabled when disabled prop is true', () => {

@@ -1,32 +1,43 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, jest } from '@jest/globals'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import Home from '../page'
+import React from 'react'
 
-vi.mock('@/components/VideoBackgroundClient', () => ({
-  default: vi.fn(({ fileName, onVideoReady }) => {
-    return (
-      <div data-testid="video-background-client">
-        <div>Video: {fileName}</div>
-        {onVideoReady && (
-          <button onClick={onVideoReady} data-testid="video-ready-trigger">
-            Trigger Video Ready
-          </button>
-        )}
-      </div>
-    )
-  })
-}))
+// Mock the components using the default export pattern
+jest.mock('@/components/VideoBackgroundClient', () => {
+  const MockVideoBackgroundClient = ({ fileName, onVideoReady }: { fileName: string; onVideoReady?: () => void }) => (
+    <div data-testid="video-background-client">
+      <div>Video: {fileName}</div>
+      {onVideoReady && (
+        <button onClick={onVideoReady} data-testid="video-ready-trigger">
+          Trigger Video Ready
+        </button>
+      )}
+    </div>
+  )
+  MockVideoBackgroundClient.displayName = 'MockVideoBackgroundClient'
+  return {
+    __esModule: true,
+    default: MockVideoBackgroundClient
+  }
+})
 
-vi.mock('@/components/ErrorBoundary', () => ({
-  default: vi.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
-}))
+jest.mock('@/components/ErrorBoundary', () => {
+  const MockErrorBoundary = ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="error-boundary">{children}</div>
+  )
+  MockErrorBoundary.displayName = 'MockErrorBoundary'
+  return {
+    __esModule: true,
+    default: MockErrorBoundary
+  }
+})
 
-vi.mock('typewriter-effect', () => ({
-  default: vi.fn(({ onInit }) => {
+jest.mock('typewriter-effect', () => {
+  const MockTypewriter = ({ onInit }: { onInit?: (typewriter: { typeString: jest.Mock; pauseFor: jest.Mock; start: jest.Mock }) => void }) => {
     const mockTypewriter = {
-      typeString: vi.fn().mockReturnThis(),
-      pauseFor: vi.fn().mockReturnThis(),
-      start: vi.fn()
+      typeString: jest.fn().mockReturnThis(),
+      pauseFor: jest.fn().mockReturnThis(),
+      start: jest.fn()
     }
     
     if (onInit) {
@@ -34,12 +45,20 @@ vi.mock('typewriter-effect', () => ({
     }
     
     return <div data-testid="typewriter">Welcome to Derek&apos;s website</div>
-  })
-}))
+  }
+  MockTypewriter.displayName = 'MockTypewriter'
+  return {
+    __esModule: true,
+    default: MockTypewriter
+  }
+})
+
+// Import the component after the mocks are set up
+import Home from '../page'
 
 describe('Home', () => {
-  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   afterEach(() => {
     consoleSpy.mockClear()

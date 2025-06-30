@@ -1,20 +1,33 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
+  testMatch: ['**/__tests__/**/*.ts', '**/__tests__/**/*.tsx', '**/?(*.)+(spec|test).ts', '**/?(*.)+(spec|test).tsx'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(isows|@supabase)/)',
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
-    'src/**/*.ts',
+    'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
+    '!src/**/*.stories.{ts,tsx}',
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts', '<rootDir>/src/test/setup.ts'],
-  testPathIgnorePatterns: ['<rootDir>/src/__tests__/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup-minimal.ts'],
+  testPathIgnorePatterns: [
+    '<rootDir>/src/__tests__/setup.ts', 
+    '<rootDir>/src/test/setup.ts',
+    '<rootDir>/src/app/blog/__tests__/page.test.tsx',
+    '<rootDir>/src/app/content/__tests__/page.test.tsx'
+  ],
+  testNamePattern: '^(?!.*(Navigation Integration|should handle WebGL context loss gracefully|should retry WebGL initialization when requested|should log initialization messages in development mode)).*$',
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,

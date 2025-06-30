@@ -1,9 +1,10 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
-import Projects from '../page'
+import React from 'react'
 
-vi.mock('@/components/ProjectCard', () => ({
-  default: vi.fn(({ project }) => (
+// Mock ProjectCard with proper default export and Project type
+jest.mock('@/components/ProjectCard', () => {
+  const MockProjectCard = ({ project }: { project: { slug: string; title: string; description: string; technologies: string[]; role: string; githubLink: string } }) => (
     <div data-testid={`project-card-${project.slug}`}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>
@@ -15,19 +16,29 @@ vi.mock('@/components/ProjectCard', () => ({
         GitHub
       </a>
     </div>
-  ))
-}))
+  )
+  MockProjectCard.displayName = 'MockProjectCard'
+  return {
+    __esModule: true,
+    default: MockProjectCard,
+    Project: {} as unknown // Mock the Project type export
+  }
+})
 
-vi.mock('@/components/ui/page-layout', () => ({
-  PageLayout: vi.fn(({ children }) => <div data-testid="page-layout">{children}</div>),
-  PageHeader: vi.fn(({ title, description }) => (
+// Mock page layout components
+jest.mock('@/components/ui/page-layout', () => ({
+  PageLayout: ({ children }: { children: React.ReactNode }) => <div data-testid="page-layout">{children}</div>,
+  PageHeader: ({ title, description }: { title: string; description: string }) => (
     <div data-testid="page-header">
       <h1>{title}</h1>
       <p>{description}</p>
     </div>
-  )),
-  Section: vi.fn(({ children }) => <div data-testid="section">{children}</div>)
+  ),
+  Section: ({ children }: { children: React.ReactNode }) => <div data-testid="section">{children}</div>
 }))
+
+// Import after mocks
+import Projects from '../page'
 
 describe('Projects Page', () => {
   it('should render page header with correct title and description', () => {

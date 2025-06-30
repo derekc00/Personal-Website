@@ -1,3 +1,6 @@
+// Mock the supabase module before importing auth
+jest.mock('../supabase');
+
 import { isAdmin, canEdit, hasRole, type AuthUser } from '../auth'
 
 describe('auth helpers', () => {

@@ -9,6 +9,9 @@ module.exports = {
       },
     }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(isows|@supabase)/)',
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },

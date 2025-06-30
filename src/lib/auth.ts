@@ -4,8 +4,8 @@ import {
   getCurrentUserProfile, 
   signInWithEmail, 
   signUpWithEmail, 
-  signOut, 
-  resetPassword,
+  signOut as supabaseSignOut, 
+  resetPassword as supabaseResetPassword,
   type UserProfile 
 } from './supabase'
 import { 
@@ -46,19 +46,19 @@ export async function signUp(email: string, password: string) {
   return data
 }
 
-export async function logout() {
-  const { error } = await signOut()
+export async function signOut() {
+  const { error } = await supabaseSignOut()
   
   if (error) {
     throw new Error(error.message)
   }
 }
 
-export async function requestPasswordReset(email: string) {
+export async function resetPassword(email: string) {
   // Validate input
   const validatedData = resetPasswordSchema.parse({ email })
   
-  const { error } = await resetPassword(validatedData.email)
+  const { error } = await supabaseResetPassword(validatedData.email)
   
   if (error) {
     throw new Error(error.message)

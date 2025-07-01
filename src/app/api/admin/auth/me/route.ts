@@ -8,8 +8,7 @@ export async function GET(req: NextRequest) {
       success: true,
       data: {
         id: user.id,
-        email: user.email,
-        role: user.role
+        email: user.email
       }
     })
   })(req)

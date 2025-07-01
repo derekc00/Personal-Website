@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withRole } from '@/lib/api/middleware'
+import { withAuth } from '@/lib/api/middleware'
 import { getContent, updateContent, deleteContent } from '@/lib/api/content-utils'
 import { contentUpdateSchema } from '@/lib/schemas/auth'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
@@ -11,7 +11,7 @@ type RouteParams = {
 
 // GET /api/admin/content/[slug] - Get single content item
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  return withRole('editor')(async () => {
+  return withAuth(async () => {
     try {
       const { slug } = await params
       const content = await getContent(slug)
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 
 // PATCH /api/admin/content/[slug] - Update existing content
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
-  return withRole('editor')(async (innerReq: NextRequest) => {
+  return withAuth(async (innerReq: NextRequest) => {
     try {
       const { slug } = await params
       const body = await innerReq.json()
@@ -127,7 +127,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 
 // DELETE /api/admin/content/[slug] - Delete content
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  return withRole('admin')(async (innerReq: NextRequest) => {
+  return withAuth(async (innerReq: NextRequest) => {
     try {
       const { slug } = await params
       const url = new URL(innerReq.url)

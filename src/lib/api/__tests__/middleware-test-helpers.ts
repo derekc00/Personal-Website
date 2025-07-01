@@ -56,13 +56,10 @@ export function createMockSupabaseClient() {
 }
 
 export function createMockMiddleware() {
-  return (role?: string) => {
-    return (handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>) => {
-      return (req: NextRequest) => handler(req, {
-        id: 'user-123',
-        email: 'test@example.com',
-        role: (role || 'editor') as 'admin' | 'editor'
-      })
-    }
+  return (handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>) => {
+    return (req: NextRequest) => handler(req, {
+      id: 'user-123',
+      email: 'test@example.com'
+    })
   }
 }

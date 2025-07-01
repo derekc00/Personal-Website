@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withRole } from '@/lib/api/middleware'
+import { withAuth } from '@/lib/api/middleware'
 import { createContent, listContent } from '@/lib/api/content-utils'
 import { contentInsertSchema } from '@/lib/schemas/auth'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 // GET /api/admin/content - List all content (including drafts)
 export async function GET(req: NextRequest) {
-  return withRole('editor')(async () => {
+  return withAuth(async () => {
     try {
       const content = await listContent(true) // Include unpublished content
       
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/content - Create new content
 export async function POST(req: NextRequest) {
-  return withRole('editor')(async (req: NextRequest, user) => {
+  return withAuth(async (req: NextRequest, user) => {
     try {
       const body = await req.json()
       

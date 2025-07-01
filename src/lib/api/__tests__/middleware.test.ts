@@ -7,7 +7,7 @@ jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn()
 }))
 
-import { withAuth, withRole, getAuthenticatedUser } from '../middleware'
+import { withAuth, getAuthenticatedUser } from '../middleware'
 import { createClient } from '@supabase/supabase-js'
 
 const mockCreateClient = createClient as jest.MockedFunction<typeof createClient>

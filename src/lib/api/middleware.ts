@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
-import { type UserRole } from '@/lib/schemas/auth'
 
 export type AuthenticatedUser = {
   id: string
   email: string
-  role: UserRole
 }
 
 export async function getAuthenticatedUser(req: NextRequest): Promise<AuthenticatedUser | null> {
@@ -36,20 +34,9 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<Authentica
       return null
     }
 
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
-      
-    if (!profile) {
-      return null
-    }
-
     return {
       id: user.id,
-      email: user.email!,
-      role: profile.role as UserRole
+      email: user.email!
     }
   } catch (error) {
     console.error('Error getting authenticated user:', error)
@@ -58,8 +45,7 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<Authentica
 }
 
 export function withAuth(
-  handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>,
-  options?: { requiredRole?: UserRole }
+  handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>
 ) {
   return async (req: NextRequest): Promise<NextResponse> => {
     const user = await getAuthenticatedUser(req)
@@ -71,28 +57,7 @@ export function withAuth(
       )
     }
 
-    if (options?.requiredRole) {
-      if (options.requiredRole === 'admin' && user.role !== 'admin') {
-        return NextResponse.json(
-          { success: false, error: ERROR_MESSAGES.ACCESS_DENIED, code: 'INSUFFICIENT_ROLE' },
-          { status: HTTP_STATUS.FORBIDDEN }
-        )
-      }
-      
-      if (options.requiredRole === 'editor' && !['admin', 'editor'].includes(user.role)) {
-        return NextResponse.json(
-          { success: false, error: ERROR_MESSAGES.ACCESS_DENIED, code: 'INSUFFICIENT_ROLE' },
-          { status: HTTP_STATUS.FORBIDDEN }
-        )
-      }
-    }
-
     return handler(req, user)
   }
 }
 
-export function withRole(role: UserRole) {
-  return (handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>) => {
-    return withAuth(handler, { requiredRole: role })
-  }
-}

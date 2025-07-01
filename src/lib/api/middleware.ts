@@ -63,7 +63,7 @@ export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> 
   }
 }
 
-export async function withAuth(
+export function withAuth(
   handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>,
   options?: { requiredRole?: UserRole }
 ) {

@@ -29,23 +29,25 @@ export type MockSupabaseQuery = {
   eq: jest.Mock
   single: jest.Mock
   order: jest.Mock
+  then?: jest.Mock
 }
 
 export function createMockSupabaseQuery(): MockSupabaseQuery {
-  const singleMock = jest.fn()
-  const eqMock = jest.fn(() => ({ single: singleMock }))
-  const selectMock = jest.fn(() => ({ eq: eqMock }))
-  const orderMock = jest.fn(() => ({ eq: eqMock }))
+  const mockQuery: MockSupabaseQuery = {} as MockSupabaseQuery
   
-  return {
-    select: selectMock,
-    insert: jest.fn(() => ({ select: selectMock })),
-    update: jest.fn(() => ({ eq: eqMock })),
-    delete: jest.fn(() => ({ eq: eqMock })),
-    eq: eqMock,
-    single: singleMock,
-    order: orderMock
-  }
+  // Set up the chain properly
+  mockQuery.single = jest.fn().mockReturnValue(mockQuery)
+  mockQuery.eq = jest.fn(() => mockQuery)
+  mockQuery.select = jest.fn(() => mockQuery)
+  mockQuery.order = jest.fn(() => mockQuery)
+  mockQuery.insert = jest.fn(() => mockQuery)
+  mockQuery.update = jest.fn(() => mockQuery)
+  mockQuery.delete = jest.fn(() => mockQuery)
+  
+  // Make the query thenable so it works with await
+  mockQuery.then = jest.fn()
+  
+  return mockQuery
 }
 
 export function setupSupabaseMock(supabase: jest.Mocked<typeof import('@/lib/supabase').supabase>, mockQuery: MockSupabaseQuery) {

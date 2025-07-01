@@ -87,20 +87,13 @@ describe('Content Utils', () => {
 
   describe('createContent', () => {
     it('should create content with provided data', async () => {
-      // Setup for checkSlugExists to return false
-      const checkQuery = createMockSupabaseQuery()
-      checkQuery.single.mockResolvedValue({ data: null, error: { message: 'Not found' } })
-      
-      // Setup for insert
+      // Setup for insert - only one query when slug is provided
       const insertQuery = createMockSupabaseQuery()
-      insertQuery.single.mockResolvedValue({ data: mockContent, error: null })
+      insertQuery.then = jest.fn().mockImplementation((resolve) => {
+        return Promise.resolve(resolve({ data: mockContent, error: null }))
+      })
       
-      // Mock from to return different queries based on usage
-      let callCount = 0
-      mockSupabase.from = jest.fn(() => {
-        callCount++
-        return callCount === 1 ? checkQuery : insertQuery
-      }) as typeof mockSupabase.from
+      mockSupabase.from = jest.fn(() => insertQuery) as typeof mockSupabase.from
 
       const contentData: ContentInsert & { author_id: string } = {
         title: 'Test Post',
@@ -284,11 +277,10 @@ describe('Content Utils', () => {
     })
 
     it('should return empty array on error', async () => {
-      mockQuery.order.mockReturnValue({
-        data: null,
-        error: { message: 'Error' },
-        then: jest.fn((cb) => cb({ data: null, error: { message: 'Error' } }))
-      } as unknown as ReturnType<typeof mockQuery.order>)
+      // Make order return the query itself to support chaining
+      mockQuery.then = jest.fn().mockImplementation((resolve) => {
+        return Promise.resolve(resolve({ data: null, error: { message: 'Error' } }))
+      })
 
       const result = await listContent()
       

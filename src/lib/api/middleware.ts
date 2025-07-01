@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
 import { type UserRole } from '@/lib/schemas/auth'
-import { cookies } from 'next/headers'
 
 export type AuthenticatedUser = {
   id: string
@@ -10,33 +9,28 @@ export type AuthenticatedUser = {
   role: UserRole
 }
 
-export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> {
+export async function getAuthenticatedUser(req: NextRequest): Promise<AuthenticatedUser | null> {
   try {
-    const cookieStore = await cookies()
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabaseUrl || !supabaseServiceKey) {
       console.error('Supabase not configured')
       return null
     }
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      cookies: {
-        getAll: async () => cookieStore.getAll(),
-        setAll: async (cookies) => {
-          try {
-            cookies.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options)
-            })
-          } catch {
-            // Ignore cookie setting errors in API routes
-          }
-        }
-      }
-    })
+    // For API routes, get the auth token from the Authorization header
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader?.startsWith('Bearer ')) {
+      return null
+    }
     
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const token = authHeader.substring(7)
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    
+    // Verify the JWT token
+    const { data: { user }, error } = await supabase.auth.getUser(token)
     
     if (error || !user) {
       return null
@@ -68,7 +62,7 @@ export function withAuth(
   options?: { requiredRole?: UserRole }
 ) {
   return async (req: NextRequest): Promise<NextResponse> => {
-    const user = await getAuthenticatedUser()
+    const user = await getAuthenticatedUser(req)
     
     if (!user) {
       return NextResponse.json(

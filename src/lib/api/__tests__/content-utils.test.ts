@@ -93,7 +93,7 @@ describe('Content Utils', () => {
         return Promise.resolve(resolve({ data: mockContent, error: null }))
       })
       
-      mockSupabase.from = jest.fn(() => insertQuery) as typeof mockSupabase.from
+      mockSupabase.from = jest.fn(() => insertQuery as unknown as ReturnType<typeof mockSupabase.from>)
 
       const contentData: ContentInsert & { author_id: string } = {
         title: 'Test Post',

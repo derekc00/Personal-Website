@@ -51,5 +51,6 @@ export function createMockSupabaseQuery(): MockSupabaseQuery {
 }
 
 export function setupSupabaseMock(supabase: jest.Mocked<typeof import('@/lib/supabase').supabase>, mockQuery: MockSupabaseQuery) {
-  supabase.from = jest.fn(() => mockQuery) as typeof supabase.from
+  // Cast to unknown first to satisfy TypeScript without using any
+  supabase.from = jest.fn(() => mockQuery as unknown as ReturnType<typeof supabase.from>)
 }

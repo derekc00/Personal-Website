@@ -33,7 +33,7 @@ export async function generateUniqueSlug(title: string): Promise<string> {
   return slug
 }
 
-export async function createContent(data: ContentInsert & { author_id: string }): Promise<ContentRow | null> {
+export async function createContent(data: Omit<ContentInsert, 'slug'> & { slug?: string; author_id: string }): Promise<ContentRow | null> {
   const slug = data.slug || await generateUniqueSlug(data.title)
   
   const { data: content, error } = await supabase

@@ -24,6 +24,8 @@
     "@react-three/drei": "^10.0.8",
     "@react-three/fiber": "^9.1.2",
     "@supabase/supabase-js": "^2.50.2",
+    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query-devtools": "^5.81.5",
     "@types/mdx": "^2.0.13",
     "@vercel/blob": "^0.27.0",
     "class-variance-authority": "^0.7.1",

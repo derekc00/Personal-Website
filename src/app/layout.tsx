@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Footer from "@/app/components/Footer";
 import Header from "@/app/components/Header";
 import ThemeProvider from "@/providers/ThemeProvider";
+import { QueryProvider } from "@/providers/QueryProvider";
 import { UI_CONSTANTS } from '@/lib/constants';
 
 export const metadata: Metadata = {
@@ -53,13 +54,15 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
       </head>
       <body suppressHydrationWarning>
-        <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">{children}</main>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

@@ -10,8 +10,7 @@ export type AuthenticatedUser = {
   role: UserRole
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function getAuthenticatedUser(_req: NextRequest): Promise<AuthenticatedUser | null> {
+export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> {
   try {
     const cookieStore = await cookies()
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -69,7 +68,7 @@ export async function withAuth(
   options?: { requiredRole?: UserRole }
 ) {
   return async (req: NextRequest): Promise<NextResponse> => {
-    const user = await getAuthenticatedUser(req)
+    const user = await getAuthenticatedUser()
     
     if (!user) {
       return NextResponse.json(

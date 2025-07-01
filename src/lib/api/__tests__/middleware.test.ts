@@ -37,8 +37,7 @@ describe('API Middleware', () => {
     it('should return null when Supabase is not configured', async () => {
       delete process.env.NEXT_PUBLIC_SUPABASE_URL
       
-      const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUser()
       
       expect(user).toBeNull()
     })
@@ -49,8 +48,7 @@ describe('API Middleware', () => {
         error: null 
       })
       
-      const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUser()
       
       expect(user).toBeNull()
     })
@@ -64,8 +62,7 @@ describe('API Middleware', () => {
       
       mockSupabase._mocks.single.mockResolvedValue({ data: null, error: null })
       
-      const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUser()
       
       expect(user).toBeNull()
     })
@@ -79,8 +76,7 @@ describe('API Middleware', () => {
       
       mockSupabase._mocks.single.mockResolvedValue({ data: mockProfile, error: null })
       
-      const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUser()
       
       expect(user).toEqual({
         id: mockUser.id,

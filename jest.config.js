@@ -22,4 +22,7 @@ module.exports = {
   resetMocks: true,
   restoreMocks: true,
   setupFiles: ['<rootDir>/jest.setup.env.js'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(isows|@supabase)/)'
+  ],
 };

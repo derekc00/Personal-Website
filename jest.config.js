@@ -5,9 +5,21 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jest-environment-jsdom',
   roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.(ts|tsx)', '**/?(*.)+(spec|test).(ts|tsx)'],
+  testMatch: [
+    '**/__tests__/**/*.(ts|tsx)', 
+    '**/?(*.)+(spec|test).(ts|tsx)',
+    '!**/api/**/__tests__/**/*',
+    '!**/api/**/*.test.*',
+    '!**/api/**/*.spec.*'
+  ],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react',
+        allowJs: true,
+        esModuleInterop: true,
+      },
+    }],
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
@@ -22,4 +34,7 @@ module.exports = {
   resetMocks: true,
   restoreMocks: true,
   setupFiles: ['<rootDir>/jest.setup.env.js'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(isows|@supabase|jose)/)'
+  ],
 };

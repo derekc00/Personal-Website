@@ -6,7 +6,10 @@
 export const HTTP_STATUS = {
   OK: 200,
   BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
   NOT_FOUND: 404,
+  CONFLICT: 409,
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
@@ -16,6 +19,13 @@ export const ERROR_MESSAGES = {
   NO_DESCRIPTION: 'No description available',
   FILENAME_REQUIRED: 'fileName parameter is required',
   FAILED_TO_FETCH_POSTS: 'Failed to fetch posts',
+  UNAUTHORIZED: 'Authentication required',
+  INVALID_REQUEST: 'Invalid request',
+  INVALID_CREDENTIALS: 'Invalid credentials provided',
+  CONTENT_NOT_FOUND: 'Content not found',
+  OPTIMISTIC_LOCK_ERROR: 'Content was modified by another user',
+  SLUG_ALREADY_EXISTS: 'A content item with this slug already exists',
+  INTERNAL_SERVER_ERROR: 'An unexpected error occurred',
 } as const;
 
 export const FILE_EXTENSIONS = {

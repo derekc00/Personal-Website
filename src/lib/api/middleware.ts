@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@/lib/supabase-server'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
 import { type ApiAuthenticatedUser } from '@/lib/types/auth'
 
 
 export async function getAuthenticatedUserFromRequest(req: NextRequest): Promise<ApiAuthenticatedUser | null> {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-    
-    if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Supabase not configured')
-      return null
-    }
-
     // For API routes, get the auth token from the Authorization header
     const authHeader = req.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
@@ -22,7 +14,8 @@ export async function getAuthenticatedUserFromRequest(req: NextRequest): Promise
     
     const token = authHeader.substring(7)
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    // Use the centralized server client with the auth token
+    const supabase = createServerClient(token)
     
     // Verify the JWT token
     const { data: { user }, error } = await supabase.auth.getUser(token)

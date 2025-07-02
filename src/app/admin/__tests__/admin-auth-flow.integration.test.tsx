@@ -3,10 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import { hasRole } from '@/lib/auth'
 import AdminLayout from '../layout'
-import AdminLogin from '../auth/login/page'
-import type { AuthUser } from '@/lib/auth'
+import AdminLogin from '../(auth)/login/page'
 
 // Mock the dependencies
 jest.mock('next/navigation', () => ({
@@ -16,10 +14,6 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@/hooks/useAuth', () => ({
   useAuth: jest.fn(),
-}))
-
-jest.mock('@/lib/auth', () => ({
-  hasRole: jest.fn(),
 }))
 
 // Mock child components to simplify testing
@@ -61,7 +55,6 @@ describe('Admin Authentication Flow Integration', () => {
   const mockUseRouter = useRouter as jest.Mock
   const mockUsePathname = usePathname as jest.Mock
   const mockUseAuth = useAuth as jest.Mock
-  const mockHasRole = hasRole as jest.Mock
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -122,7 +115,7 @@ describe('Admin Authentication Flow Integration', () => {
   describe('Login Flow', () => {
     it('should allow user to login and access admin panel', async () => {
       const userInteraction = userEvent.setup()
-      const adminUser: AuthUser = {
+      const adminUser = {
         id: '123',
         email: 'admin@example.com',
         role: 'admin',
@@ -154,7 +147,6 @@ describe('Admin Authentication Flow Integration', () => {
         signOut: mockSignOut,
         error: null,
       })
-      mockHasRole.mockReturnValue(true)
 
       rerender(<AdminLogin />)
 
@@ -183,7 +175,7 @@ describe('Admin Authentication Flow Integration', () => {
 
   describe('Authenticated User Flow', () => {
     it('should display admin dashboard for authenticated admin', () => {
-      const adminUser: AuthUser = {
+      const adminUser = {
         id: '123',
         email: 'admin@example.com',
         role: 'admin',
@@ -196,7 +188,6 @@ describe('Admin Authentication Flow Integration', () => {
         signOut: mockSignOut,
         error: null,
       })
-      mockHasRole.mockReturnValue(true)
 
       render(
         <AdminLayout>
@@ -212,7 +203,7 @@ describe('Admin Authentication Flow Integration', () => {
     })
 
     it('should deny access for non-admin users', () => {
-      const editorUser: AuthUser = {
+      const editorUser = {
         id: '456',
         email: 'editor@example.com',
         role: 'editor',
@@ -225,7 +216,6 @@ describe('Admin Authentication Flow Integration', () => {
         signOut: mockSignOut,
         error: null,
       })
-      mockHasRole.mockReturnValue(false)
 
       render(
         <AdminLayout>
@@ -241,7 +231,7 @@ describe('Admin Authentication Flow Integration', () => {
 
   describe('Logout Flow', () => {
     it('should logout user and redirect to login page', async () => {
-      const adminUser: AuthUser = {
+      const adminUser = {
         id: '123',
         email: 'admin@example.com',
         role: 'admin',
@@ -254,7 +244,6 @@ describe('Admin Authentication Flow Integration', () => {
         signOut: mockSignOut,
         error: null,
       })
-      mockHasRole.mockReturnValue(true)
 
       const { rerender } = render(
         <AdminLayout>
@@ -292,7 +281,7 @@ describe('Admin Authentication Flow Integration', () => {
 
   describe('Session Persistence', () => {
     it('should maintain session across page refreshes', () => {
-      const adminUser: AuthUser = {
+      const adminUser = {
         id: '123',
         email: 'admin@example.com',
         role: 'admin',
@@ -306,7 +295,6 @@ describe('Admin Authentication Flow Integration', () => {
         signOut: mockSignOut,
         error: null,
       })
-      mockHasRole.mockReturnValue(true)
 
       const { rerender } = render(
         <AdminLayout>

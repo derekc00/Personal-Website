@@ -1,7 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import Footer from "@/app/components/Footer";
-import Header from "@/app/components/Header";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { UI_CONSTANTS } from '@/lib/constants';
 
@@ -54,11 +52,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
+          {children}
         </ThemeProvider>
       </body>
     </html>

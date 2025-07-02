@@ -7,7 +7,7 @@ jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn()
 }))
 
-import { withAuth, getAuthenticatedUser } from '../middleware'
+import { withAuth, getAuthenticatedUserFromRequest } from '../middleware'
 import { createClient } from '@supabase/supabase-js'
 
 const mockCreateClient = createClient as jest.MockedFunction<typeof createClient>
@@ -32,19 +32,19 @@ describe('API Middleware', () => {
     process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key'
   })
 
-  describe('getAuthenticatedUser', () => {
+  describe('getAuthenticatedUserFromRequest', () => {
     it('should return null when Supabase is not configured', async () => {
       delete process.env.NEXT_PUBLIC_SUPABASE_URL
       
       const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUserFromRequest(req)
       
       expect(user).toBeNull()
     })
 
     it('should return null when no authorization header is present', async () => {
       const req = new NextRequest('http://localhost:3000/api/test')
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUserFromRequest(req)
       
       expect(user).toBeNull()
     })
@@ -55,7 +55,7 @@ describe('API Middleware', () => {
           authorization: 'Invalid token'
         }
       })
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUserFromRequest(req)
       
       expect(user).toBeNull()
     })
@@ -71,51 +71,49 @@ describe('API Middleware', () => {
           authorization: 'Bearer test-token'
         }
       })
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUserFromRequest(req)
       
       expect(user).toBeNull()
       expect(mockSupabase.auth.getUser).toHaveBeenCalledWith('test-token')
     })
 
-    it('should return null when user profile is not found', async () => {
+    it('should return authenticated user without profile', async () => {
       const mockUser = createMockUser()
       mockSupabase.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
       
-      mockSupabase._mocks.single.mockResolvedValue({ data: null, error: null })
-      
       const req = new NextRequest('http://localhost:3000/api/test', {
         headers: {
           authorization: 'Bearer test-token'
         }
       })
-      const user = await getAuthenticatedUser(req)
-      
-      expect(user).toBeNull()
-    })
-
-    it('should return authenticated user with profile', async () => {
-      const mockUser = createMockUser()
-      mockSupabase.auth.getUser.mockResolvedValue({ 
-        data: { user: mockUser }, 
-        error: null 
-      })
-      
-      mockSupabase._mocks.single.mockResolvedValue({ data: mockProfile, error: null })
-      
-      const req = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer test-token'
-        }
-      })
-      const user = await getAuthenticatedUser(req)
+      const user = await getAuthenticatedUserFromRequest(req)
       
       expect(user).toEqual({
         id: mockUser.id,
-        email: mockUser.email!,
-        role: mockProfile.role
+        email: mockUser.email!
+      })
+    })
+
+    it('should return authenticated user', async () => {
+      const mockUser = createMockUser()
+      mockSupabase.auth.getUser.mockResolvedValue({ 
+        data: { user: mockUser }, 
+        error: null 
+      })
+      
+      const req = new NextRequest('http://localhost:3000/api/test', {
+        headers: {
+          authorization: 'Bearer test-token'
+        }
+      })
+      const user = await getAuthenticatedUserFromRequest(req)
+      
+      expect(user).toEqual({
+        id: mockUser.id,
+        email: mockUser.email!
       })
       expect(mockSupabase.auth.getUser).toHaveBeenCalledWith('test-token')
     })
@@ -167,120 +165,10 @@ describe('API Middleware', () => {
       
       expect(handler).toHaveBeenCalledWith(req, {
         id: mockUser.id,
-        email: mockUser.email!,
-        role: mockProfile.role
+        email: mockUser.email!
       })
       expect(response.status).toBe(200)
     })
   })
 
-  describe('withRole', () => {
-    it('should return 403 when user does not have required admin role', async () => {
-      const mockUser = createMockUser()
-      mockSupabase.auth.getUser.mockResolvedValue({ 
-        data: { user: mockUser }, 
-        error: null 
-      })
-      
-      mockSupabase._mocks.single.mockResolvedValue({ data: mockProfile, error: null })
-      
-      const handler = jest.fn()
-      const protectedHandler = await withRole('admin')(handler)
-      const req = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer test-token'
-        }
-      })
-      
-      const response = await protectedHandler(req)
-      const body = await response.json()
-      
-      expect(response.status).toBe(HTTP_STATUS.FORBIDDEN)
-      expect(body).toEqual({
-        success: false,
-        error: ERROR_MESSAGES.ACCESS_DENIED,
-        code: 'INSUFFICIENT_ROLE'
-      })
-      expect(handler).not.toHaveBeenCalled()
-    })
-
-    it('should allow admin user to access admin-protected route', async () => {
-      const adminProfile = { ...mockProfile, role: 'admin' }
-      const mockUser = createMockUser()
-      
-      mockSupabase.auth.getUser.mockResolvedValue({ 
-        data: { user: mockUser }, 
-        error: null 
-      })
-      
-      mockSupabase._mocks.single.mockResolvedValue({ data: adminProfile, error: null })
-      
-      const handler = jest.fn(() => 
-        Promise.resolve(NextResponse.json({ success: true }))
-      )
-      const protectedHandler = await withRole('admin')(handler)
-      const req = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer test-token'
-        }
-      })
-      
-      const response = await protectedHandler(req)
-      
-      expect(handler).toHaveBeenCalled()
-      expect(response.status).toBe(200)
-    })
-
-    it('should allow admin user to access editor-protected route', async () => {
-      const adminProfile = { ...mockProfile, role: 'admin' }
-      const mockUser = createMockUser()
-      
-      mockSupabase.auth.getUser.mockResolvedValue({ 
-        data: { user: mockUser }, 
-        error: null 
-      })
-      
-      mockSupabase._mocks.single.mockResolvedValue({ data: adminProfile, error: null })
-      
-      const handler = jest.fn(() => 
-        Promise.resolve(NextResponse.json({ success: true }))
-      )
-      const protectedHandler = await withRole('editor')(handler)
-      const req = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer test-token'
-        }
-      })
-      
-      const response = await protectedHandler(req)
-      
-      expect(handler).toHaveBeenCalled()
-      expect(response.status).toBe(200)
-    })
-
-    it('should allow editor user to access editor-protected route', async () => {
-      const mockUser = createMockUser()
-      mockSupabase.auth.getUser.mockResolvedValue({ 
-        data: { user: mockUser }, 
-        error: null 
-      })
-      
-      mockSupabase._mocks.single.mockResolvedValue({ data: mockProfile, error: null })
-      
-      const handler = jest.fn(() => 
-        Promise.resolve(NextResponse.json({ success: true }))
-      )
-      const protectedHandler = await withRole('editor')(handler)
-      const req = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer test-token'
-        }
-      })
-      
-      const response = await protectedHandler(req)
-      
-      expect(handler).toHaveBeenCalled()
-      expect(response.status).toBe(200)
-    })
-  })
 })

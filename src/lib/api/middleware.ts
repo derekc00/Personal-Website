@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
+import { type ApiAuthenticatedUser } from '@/lib/types/auth'
 
-export type AuthenticatedUser = {
-  id: string
-  email: string
-}
 
-export async function getAuthenticatedUser(req: NextRequest): Promise<AuthenticatedUser | null> {
+export async function getAuthenticatedUserFromRequest(req: NextRequest): Promise<ApiAuthenticatedUser | null> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -45,10 +42,10 @@ export async function getAuthenticatedUser(req: NextRequest): Promise<Authentica
 }
 
 export function withAuth(
-  handler: (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>
+  handler: (req: NextRequest, user: ApiAuthenticatedUser) => Promise<NextResponse>
 ) {
   return async (req: NextRequest): Promise<NextResponse> => {
-    const user = await getAuthenticatedUser(req)
+    const user = await getAuthenticatedUserFromRequest(req)
     
     if (!user) {
       return NextResponse.json(

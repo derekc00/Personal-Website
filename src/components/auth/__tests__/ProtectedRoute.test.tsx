@@ -3,8 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import ProtectedRoute from '../ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
-import { hasRole } from '@/lib/auth'
-import type { AuthUser } from '@/lib/auth'
+import { userHasRole } from '@/lib/types/auth'
 
 // Mock the dependencies
 jest.mock('next/navigation', () => ({
@@ -15,15 +14,15 @@ jest.mock('@/hooks/useAuth', () => ({
   useAuth: jest.fn(),
 }))
 
-jest.mock('@/lib/auth', () => ({
-  hasRole: jest.fn(),
+jest.mock('@/lib/types/auth', () => ({
+  userHasRole: jest.fn(),
 }))
 
 describe('ProtectedRoute', () => {
   const mockPush = jest.fn()
   const mockUseRouter = useRouter as jest.Mock
   const mockUseAuth = useAuth as jest.Mock
-  const mockHasRole = hasRole as jest.Mock
+  const mockUserHasRole = userHasRole as jest.Mock
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -115,7 +114,7 @@ describe('ProtectedRoute', () => {
       loading: false,
     })
 
-    mockHasRole.mockReturnValue(false)
+    mockUserHasRole.mockReturnValue(false)
 
     render(
       <ProtectedRoute requiredRole="admin">
@@ -140,7 +139,7 @@ describe('ProtectedRoute', () => {
       loading: false,
     })
 
-    mockHasRole.mockReturnValue(true)
+    mockUserHasRole.mockReturnValue(true)
 
     render(
       <ProtectedRoute requiredRole="admin">

@@ -1,18 +1,13 @@
-import { type User } from '@supabase/supabase-js'
 import { 
   getCurrentUser, 
   getCurrentUserProfile
 } from './supabase'
 import { 
-  type UserRole,
-  type UserProfile
-} from './schemas/auth'
+  type SessionAuthenticatedUser
+} from './types/auth'
 
-export type AuthUser = User & {
-  profile?: UserProfile
-}
 
-export async function getAuthenticatedUser(): Promise<AuthUser | null> {
+export async function getAuthenticatedUserFromSession(): Promise<SessionAuthenticatedUser | null> {
   const user = await getCurrentUser()
   if (!user) return null
   
@@ -24,20 +19,3 @@ export async function getAuthenticatedUser(): Promise<AuthUser | null> {
   }
 }
 
-export function hasRole(user: AuthUser | null, role: UserRole): boolean {
-  if (!user?.profile) return false
-  
-  if (role === 'admin') {
-    return user.profile.role === 'admin'
-  }
-  
-  return user.profile.role === 'admin' || user.profile.role === 'editor'
-}
-
-export function isAdmin(user: AuthUser | null): boolean {
-  return hasRole(user, 'admin')
-}
-
-export function canEdit(user: AuthUser | null): boolean {
-  return hasRole(user, 'editor')
-}

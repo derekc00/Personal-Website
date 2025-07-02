@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api/middleware'
 import { getContent, updateContent, deleteContent } from '@/lib/api/content-utils'
+import { createServerClient } from '@/lib/supabase-server'
 import { contentUpdateSchema } from '@/lib/schemas/auth'
+import { handleApiError, createApiError } from '@/lib/api/errors'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
-import { z } from 'zod'
 
 type RouteParams = {
   params: Promise<{ slug: string }>
@@ -17,13 +18,10 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       const content = await getContent(slug)
       
       if (!content) {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: ERROR_MESSAGES.CONTENT_NOT_FOUND, 
-            code: 'NOT_FOUND' 
-          },
-          { status: HTTP_STATUS.NOT_FOUND }
+        return createApiError(
+          ERROR_MESSAGES.CONTENT_NOT_FOUND,
+          'NOT_FOUND',
+          HTTP_STATUS.NOT_FOUND
         )
       }
       
@@ -32,15 +30,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
         data: content
       })
     } catch (error) {
-      console.error('Error getting content:', error)
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 
-          code: 'GET_ERROR' 
-        },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-      )
+      return handleApiError(error)
     }
   })(req)
 }
@@ -74,13 +64,10 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       const content = await updateContent(slug, validationResult.data, updated_at)
       
       if (!content) {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: ERROR_MESSAGES.CONTENT_NOT_FOUND, 
-            code: 'NOT_FOUND' 
-          },
-          { status: HTTP_STATUS.NOT_FOUND }
+        return createApiError(
+          ERROR_MESSAGES.CONTENT_NOT_FOUND,
+          'NOT_FOUND',
+          HTTP_STATUS.NOT_FOUND
         )
       }
       
@@ -90,37 +77,14 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
       })
     } catch (error) {
       if (error instanceof Error && error.message === 'OPTIMISTIC_LOCK_ERROR') {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: ERROR_MESSAGES.OPTIMISTIC_LOCK_ERROR, 
-            code: 'OPTIMISTIC_LOCK_ERROR' 
-          },
-          { status: HTTP_STATUS.CONFLICT }
+        return createApiError(
+          ERROR_MESSAGES.OPTIMISTIC_LOCK_ERROR,
+          'OPTIMISTIC_LOCK_ERROR',
+          HTTP_STATUS.CONFLICT
         )
       }
       
-      if (error instanceof z.ZodError) {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: ERROR_MESSAGES.INVALID_REQUEST,
-            code: 'VALIDATION_ERROR',
-            details: error.errors
-          },
-          { status: HTTP_STATUS.BAD_REQUEST }
-        )
-      }
-      
-      console.error('Error updating content:', error)
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 
-          code: 'UPDATE_ERROR' 
-        },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-      )
+      return handleApiError(error)
     }
   })(req)
 }
@@ -133,16 +97,22 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
       const url = new URL(innerReq.url)
       const hardDelete = url.searchParams.get('hard') === 'true'
       
-      const success = await deleteContent(slug, !hardDelete)
+      // Get the auth token from the request
+      const authHeader = innerReq.headers.get('authorization')
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : undefined
+      
+      // Create an authenticated Supabase client
+      const supabaseClient = createServerClient(token)
+      
+      
+      const success = await deleteContent(slug, !hardDelete, supabaseClient)
+      
       
       if (!success) {
-        return NextResponse.json(
-          { 
-            success: false, 
-            error: ERROR_MESSAGES.CONTENT_NOT_FOUND, 
-            code: 'NOT_FOUND' 
-          },
-          { status: HTTP_STATUS.NOT_FOUND }
+        return createApiError(
+          ERROR_MESSAGES.CONTENT_NOT_FOUND,
+          'NOT_FOUND',
+          HTTP_STATUS.NOT_FOUND
         )
       }
       
@@ -151,15 +121,7 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
         { status: HTTP_STATUS.OK }
       )
     } catch (error) {
-      console.error('Error deleting content:', error)
-      return NextResponse.json(
-        { 
-          success: false, 
-          error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR, 
-          code: 'DELETE_ERROR' 
-        },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
-      )
+      return handleApiError(error)
     }
   })(req)
 }

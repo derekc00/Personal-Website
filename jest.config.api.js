@@ -3,19 +3,12 @@
  */
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'node',
   roots: ['<rootDir>/src'],
-  testMatch: [
-    '**/__tests__/**/*.(ts|tsx)', 
-    '**/?(*.)+(spec|test).(ts|tsx)',
-    '!**/api/**/__tests__/**/*',
-    '!**/api/**/*.test.*',
-    '!**/api/**/*.spec.*'
-  ],
+  testMatch: ['**/api/**/__tests__/**/*.test.(ts|tsx)', '**/api/**/*.spec.(ts|tsx)'],
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: {
-        jsx: 'react',
         allowJs: true,
         esModuleInterop: true,
       },
@@ -25,15 +18,13 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   collectCoverageFrom: [
-    'src/**/*.(ts|tsx)',
+    'src/lib/api/**/*.(ts|tsx)',
     '!src/**/*.d.ts',
   ],
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts', '<rootDir>/src/test/setup.ts'],
-  testPathIgnorePatterns: ['<rootDir>/src/__tests__/setup.ts'],
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
-  setupFiles: ['<rootDir>/jest.setup.env.js'],
+  setupFiles: ['<rootDir>/jest.setup.api.js'],
   transformIgnorePatterns: [
     'node_modules/(?!(isows|@supabase|jose)/)'
   ],

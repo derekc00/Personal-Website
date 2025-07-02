@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { getContentByType } from "@/lib/content";
-import BlogListClient from "@/app/blog/BlogListClient";
+import BlogListClient from "./BlogListClient";
 import { PageLayout, PageHeader, Section } from "@/components/ui/page-layout";
 
 export default async function Blog() {

@@ -7,10 +7,8 @@ import {
   signOut as supabaseSignOut,
   resetPassword as supabaseResetPassword
 } from '@/lib/supabase'
-import { 
-  getAuthenticatedUser, 
-  type AuthUser 
-} from '@/lib/auth'
+import { getAuthenticatedUserFromSession } from '@/lib/auth'
+import { type SessionAuthenticatedUser } from '@/lib/types/auth'
 import { 
   signInSchema, 
   resetPasswordSchema 
@@ -19,7 +17,7 @@ import { handleSupabaseError } from '@/lib/errors'
 import { z } from 'zod'
 
 export type AuthState = {
-  user: AuthUser | null
+  user: SessionAuthenticatedUser | null
   session: Session | null
   loading: boolean
   error: string | null
@@ -52,7 +50,7 @@ export function useAuth(): AuthState & AuthActions {
   const refreshUser = useCallback(async () => {
     try {
       setLoading(true)
-      const user = await getAuthenticatedUser()
+      const user = await getAuthenticatedUserFromSession()
       setState(prev => ({ 
         ...prev, 
         user, 
@@ -170,7 +168,7 @@ export function useAuth(): AuthState & AuthActions {
         }
         
         if (mounted) {
-          const user = session ? await getAuthenticatedUser() : null
+          const user = session ? await getAuthenticatedUserFromSession() : null
           setState({
             user,
             session,
@@ -194,7 +192,7 @@ export function useAuth(): AuthState & AuthActions {
         if (!mounted) return
 
         try {
-          const user = session ? await getAuthenticatedUser() : null
+          const user = session ? await getAuthenticatedUserFromSession() : null
           setState({
             user,
             session,

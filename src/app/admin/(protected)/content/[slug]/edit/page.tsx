@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { ContentEditor } from '../../../components/ContentEditor'
 
 export const metadata: Metadata = {
   title: 'Edit Content',
@@ -11,10 +12,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ sl
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Edit Content</h1>
-      <p className="text-gray-600">Editing content: {slug}</p>
-      <div className="mt-8 p-4 border border-gray-200 rounded">
-        <p className="text-sm text-gray-500">Content editor will be implemented here</p>
-      </div>
+      <ContentEditor slug={slug} />
     </div>
   )
 }

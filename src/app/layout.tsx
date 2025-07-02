@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import ThemeProvider from "@/providers/ThemeProvider";
 import { UI_CONSTANTS } from '@/lib/constants';
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Derek's Website",
@@ -51,9 +52,11 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: setInitialTheme }} />
       </head>
       <body suppressHydrationWarning>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

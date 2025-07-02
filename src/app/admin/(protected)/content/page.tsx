@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { ContentList } from '../components/ContentList'
 
 export const metadata: Metadata = {
   title: 'Content Management',
@@ -22,9 +23,7 @@ export default function ContentManagementPage() {
         </Link>
       </div>
       
-      <div className="border border-gray-200 rounded-lg p-8">
-        <p className="text-gray-500 text-center">Content list will be displayed here</p>
-      </div>
+      <ContentList />
     </div>
   )
 }

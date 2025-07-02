@@ -17,7 +17,6 @@ import {
   ChevronUp,
   ChevronDown,
   Check,
-  X,
   MoreVertical
 } from 'lucide-react'
 import {
@@ -102,7 +101,11 @@ export function ContentList() {
   }
 
   const handleDelete = async (slug: string, hard = false) => {
-    if (confirm(`Are you sure you want to ${hard ? 'permanently delete' : 'delete'} this content?`)) {
+    const message = hard 
+      ? 'Are you sure you want to PERMANENTLY DELETE this content? This cannot be undone!'
+      : 'Are you sure you want to unpublish this content? It will remain in your drafts.'
+    
+    if (confirm(message)) {
       await deleteContent.mutateAsync({ slug, hard })
       setSelectedItems(prev => {
         const next = new Set(prev)
@@ -388,16 +391,16 @@ export function ContentList() {
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
                             onClick={() => handleDelete(item.slug, false)}
-                            className="text-red-600"
+                            className="text-orange-600"
                           >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            <EyeOff className="h-4 w-4 mr-2" />
+                            Unpublish
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDelete(item.slug, true)}
                             className="text-red-600"
                           >
-                            <X className="h-4 w-4 mr-2" />
+                            <Trash2 className="h-4 w-4 mr-2" />
                             Delete Permanently
                           </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function AdminLogin() {
+  
   const router = useRouter()
   const { signIn, user, loading, error } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
   
   useEffect(() => {
     if (user) {
@@ -41,6 +43,7 @@ export default function AdminLogin() {
     process.env.NEXT_PUBLIC_SUPABASE_URL && 
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   )
+  
   
   if (!isSupabaseConfigured) {
     return (

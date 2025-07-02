@@ -21,7 +21,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    router.push('/admin/auth/login')
+    router.push('/admin/login')
   }
 
   const navigation = [

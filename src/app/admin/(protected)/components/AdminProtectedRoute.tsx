@@ -16,13 +16,13 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
         const { data: { session } } = await supabase.auth.getSession()
         
         if (!session) {
-          router.push('/admin/auth/login')
+          router.push('/admin/login')
           return
         }
 
         setIsAuthenticated(true)
       } catch (error) {
-        console.error('Auth check failed:', error)
+        console.error('[AdminProtectedRoute] Auth check failed:', error)
         router.push('/admin/auth/login')
       } finally {
         setIsLoading(false)
@@ -34,7 +34,7 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
-        router.push('/admin/auth/login')
+        router.push('/admin/login')
       }
     })
 

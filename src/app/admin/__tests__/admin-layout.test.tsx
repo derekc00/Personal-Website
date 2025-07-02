@@ -5,36 +5,27 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import AdminLayout from '../layout'
 
-// Mock the admin components
-jest.mock('../components/AdminProtectedRoute', () => ({
-  AdminProtectedRoute: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
-}))
-
-jest.mock('../components/AdminShell', () => ({
-  AdminShell: ({ children }: { children: React.ReactNode }) => (
-    <div data-testid="admin-shell">
-      <nav data-testid="admin-nav">Admin Navigation</nav>
-      {children}
-    </div>
-  )
-}))
-
 describe('AdminLayout', () => {
-  it('should render admin shell without public header/footer', () => {
-    const { getByTestId, queryByTestId } = render(
+  it('should render children without any wrapping', () => {
+    const { getByTestId } = render(
       <AdminLayout>
         <div data-testid="test-content">Test Content</div>
       </AdminLayout>
     )
 
-    // Check that admin shell is rendered
-    expect(getByTestId('admin-shell')).toBeInTheDocument()
-    expect(getByTestId('admin-nav')).toBeInTheDocument()
+    // The layout simply renders children
     expect(getByTestId('test-content')).toBeInTheDocument()
+  })
 
-    // Public header/footer should NOT be present
-    // These would be identified by specific test IDs if they were rendered
-    expect(queryByTestId('public-header')).not.toBeInTheDocument()
-    expect(queryByTestId('public-footer')).not.toBeInTheDocument()
+  it('should render multiple children', () => {
+    const { getByTestId } = render(
+      <AdminLayout>
+        <div data-testid="child-1">Child 1</div>
+        <div data-testid="child-2">Child 2</div>
+      </AdminLayout>
+    )
+
+    expect(getByTestId('child-1')).toBeInTheDocument()
+    expect(getByTestId('child-2')).toBeInTheDocument()
   })
 })

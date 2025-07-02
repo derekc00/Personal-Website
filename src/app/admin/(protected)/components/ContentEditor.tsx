@@ -14,6 +14,14 @@ interface ContentEditorProps {
   slug?: string
 }
 
+// Simple slug generation function
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
 export function ContentEditor({ slug }: ContentEditorProps) {
   const router = useRouter()
   const { data: existingContent, isLoading } = useContent(slug || '')
@@ -51,12 +59,20 @@ export function ContentEditor({ slug }: ContentEditorProps) {
           data: formData as ContentUpdate
         })
       } else {
-        await createContent.mutateAsync(formData as Omit<ContentInsert, 'slug'>)
+        // Generate slug from title
+        const generatedSlug = generateSlug(formData.title || '')
+        const dataWithSlug = { ...formData, slug: generatedSlug }
+        
+        await createContent.mutateAsync(dataWithSlug as ContentInsert)
       }
       
       router.push('/admin/content')
     } catch (error) {
-      console.error('Failed to save content:', error)
+      console.error('[ContentEditor] Failed to save content:', error)
+      console.error('[ContentEditor] Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error
+      })
     } finally {
       setIsSaving(false)
     }

@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import { hasRole } from '@/lib/auth'
+import { userHasRole } from '@/lib/types/auth'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -50,7 +50,7 @@ export default function ProtectedRoute({
     )
   }
   
-  if (requiredRole && !hasRole(user, requiredRole)) {
+  if (requiredRole && !userHasRole(user, requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

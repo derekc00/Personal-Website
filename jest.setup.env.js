@@ -1,32 +1,55 @@
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test-project.supabase.co'
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
-process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-key'
-process.env.USE_SUPABASE = 'true'
+// Environment-specific Jest setup (for jsdom environment)
+require('./jest.setup.base');
 
-// Add TextEncoder/TextDecoder for Node environment
-const { TextEncoder, TextDecoder } = require('util')
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
-
-// Add TransformStream polyfill
-if (typeof global.TransformStream === 'undefined') {
-  global.TransformStream = require('stream/web').TransformStream
-}
-
-// Add BroadcastChannel polyfill
-if (typeof global.BroadcastChannel === 'undefined') {
-  global.BroadcastChannel = class BroadcastChannel {
-    constructor(name) {
-      this.name = name
+// Add Request, Response, and Headers polyfills for jsdom environment
+if (typeof global.Request === 'undefined') {
+  global.Request = class Request {
+    constructor(url, init) {
+      this.url = url
+      this.method = init?.method || 'GET'
+      this.headers = new Headers(init?.headers)
+      this.body = init?.body
     }
-    postMessage() {}
-    close() {}
-    addEventListener() {}
-    removeEventListener() {}
   }
 }
 
-// Add fetch if it doesn't exist
-if (typeof global.fetch === 'undefined') {
-  global.fetch = jest.fn()
+if (typeof global.Response === 'undefined') {
+  global.Response = class Response {
+    constructor(body, init) {
+      this.body = body
+      this.status = init?.status || 200
+      this.statusText = init?.statusText || 'OK'
+      this.headers = new Headers(init?.headers)
+      this.ok = this.status >= 200 && this.status < 300
+    }
+    
+    async json() {
+      return typeof this.body === 'string' ? JSON.parse(this.body) : this.body
+    }
+    
+    async text() {
+      return typeof this.body === 'string' ? this.body : JSON.stringify(this.body)
+    }
+  }
+}
+
+if (typeof global.Headers === 'undefined') {
+  global.Headers = class Headers {
+    constructor(init) {
+      this._headers = {}
+      if (init) {
+        Object.entries(init).forEach(([key, value]) => {
+          this._headers[key.toLowerCase()] = value
+        })
+      }
+    }
+    
+    get(name) {
+      return this._headers[name.toLowerCase()]
+    }
+    
+    set(name, value) {
+      this._headers[name.toLowerCase()] = value
+    }
+  }
 }

@@ -1,6 +1,10 @@
 import '@testing-library/jest-dom'
+import React from 'react'
 import { beforeAll, afterEach, afterAll } from '@jest/globals'
 import { server } from './mocks/server'
+
+// Make React available globally for tests
+global.React = React
 
 // Establish API mocking before all tests
 beforeAll(() => server.listen())

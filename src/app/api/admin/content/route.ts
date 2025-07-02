@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/content - Create new content
 export async function POST(req: NextRequest) {
-  return withAuth(async (req: NextRequest) => {
+  return withAuth(async (req: NextRequest, user) => {
     try {
       const body = await req.json()
       

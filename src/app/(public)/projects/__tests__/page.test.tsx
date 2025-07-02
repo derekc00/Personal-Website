@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import Projects from '../page'
 
-vi.mock('@/components/ProjectCard', () => ({
-  default: vi.fn(({ project }) => (
+jest.mock('@/components/ProjectCard', () => ({
+  default: jest.fn(({ project }) => (
     <div data-testid={`project-card-${project.slug}`}>
       <h3>{project.title}</h3>
       <p>{project.description}</p>
@@ -18,15 +18,15 @@ vi.mock('@/components/ProjectCard', () => ({
   ))
 }))
 
-vi.mock('@/components/ui/page-layout', () => ({
-  PageLayout: vi.fn(({ children }) => <div data-testid="page-layout">{children}</div>),
-  PageHeader: vi.fn(({ title, description }) => (
+jest.mock('@/components/ui/page-layout', () => ({
+  PageLayout: jest.fn(({ children }) => <div data-testid="page-layout">{children}</div>),
+  PageHeader: jest.fn(({ title, description }) => (
     <div data-testid="page-header">
       <h1>{title}</h1>
       <p>{description}</p>
     </div>
   )),
-  Section: vi.fn(({ children }) => <div data-testid="section">{children}</div>)
+  Section: jest.fn(({ children }) => <div data-testid="section">{children}</div>)
 }))
 
 describe('Projects Page', () => {

@@ -1,4 +1,3 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getAllContent, getContentBySlug, getContentByType, getCategories, searchContent } from '../content'
 import { createMockContentItem } from '../../test/factories'
 import fs from 'fs'
@@ -8,11 +7,11 @@ import path from 'path'
 type MockDirectoryEntry = string
 
 // Mock fs module
-vi.mock('fs')
-vi.mock('path')
+jest.mock('fs')
+jest.mock('path')
 
-const mockFs = vi.mocked(fs)
-const mockPath = vi.mocked(path)
+const mockFs = jest.mocked(fs)
+const mockPath = jest.mocked(path)
 
 // Helper function to generate MDX content from factory data
 function createMdxContent(options: Parameters<typeof createMockContentItem>[0] = {}) {
@@ -31,7 +30,7 @@ ${item.content}`
 
 describe('Unified Content System', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockPath.join.mockImplementation((...args) => args.join('/'))
   })
 

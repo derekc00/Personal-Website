@@ -12,6 +12,7 @@ export type ApiErrorCode =
   | 'DUPLICATE_ENTRY'
   | 'NO_AUTH'
   | 'INSUFFICIENT_ROLE'
+  | 'OPTIMISTIC_LOCK_ERROR'
 
 export interface ApiError {
   success: false
@@ -30,7 +31,7 @@ export function createApiError(
     success: false,
     error: message,
     code,
-    ...(details && { details })
+    ...(details ? { details } : {})
   }
   
   return NextResponse.json(response, { status })

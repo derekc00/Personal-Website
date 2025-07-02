@@ -1,20 +1,19 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { getMdxBySlug, getAllMdxFiles } from '../mdx'
 import fs from 'fs/promises'
 import path from 'path'
 
 // Mock fs/promises and path modules
-vi.mock('fs/promises')
-vi.mock('path')
+jest.mock('fs/promises')
+jest.mock('path')
 
-const mockFs = vi.mocked(fs)
-const mockPath = vi.mocked(path)
+const mockFs = jest.mocked(fs)
+const mockPath = jest.mocked(path)
 
 describe('MDX Utilities', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
     mockPath.join.mockImplementation((...args) => args.join('/'))
-    vi.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   describe('getMdxBySlug', () => {
@@ -155,9 +154,9 @@ category: "Tech"
     })
 
     it('should filter out null results from failed file reads', async () => {
-      vi.clearAllMocks()
+      jest.clearAllMocks()
       mockPath.join.mockImplementation((...args) => args.join('/'))
-      vi.spyOn(console, 'error').mockImplementation(() => {})
+      jest.spyOn(console, 'error').mockImplementation(() => {})
 
       const mockFiles = ['valid.mdx', 'invalid-frontmatter.mdx']
       

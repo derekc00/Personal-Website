@@ -1,20 +1,20 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { useSearchParams } from 'next/navigation'
 import BlogListClient from '@/app/blog/BlogListClient'
 import { createMockContentItems } from '@/test/factories'
 
 // Mock Next.js navigation
-vi.mock('next/navigation', () => ({
-  useSearchParams: vi.fn(),
+jest.mock('next/navigation', () => ({
+  useSearchParams: jest.fn(),
 }))
 
-const mockUseSearchParams = vi.mocked(useSearchParams)
+const mockUseSearchParams = jest.mocked(useSearchParams)
 
 describe('BlogListClient', () => {
   beforeEach(() => {
     mockUseSearchParams.mockReturnValue({
-      get: vi.fn().mockReturnValue(null),
+      get: jest.fn().mockReturnValue(null),
     } as ReturnType<typeof useSearchParams>)
   })
 
@@ -30,7 +30,7 @@ describe('BlogListClient', () => {
 
   it('should filter posts by selected tags', () => {
     mockUseSearchParams.mockReturnValue({
-      get: vi.fn().mockReturnValue('javascript,react'),
+      get: jest.fn().mockReturnValue('javascript,react'),
     } as ReturnType<typeof useSearchParams>)
 
     const posts = createMockContentItems(3, { tags: ['javascript'] })
@@ -46,7 +46,7 @@ describe('BlogListClient', () => {
 
   it('should show "no posts found" message when no posts match tags', () => {
     mockUseSearchParams.mockReturnValue({
-      get: vi.fn().mockReturnValue('nonexistent'),
+      get: jest.fn().mockReturnValue('nonexistent'),
     } as ReturnType<typeof useSearchParams>)
 
     const posts = createMockContentItems(2, { tags: ['javascript'] })

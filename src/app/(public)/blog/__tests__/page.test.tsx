@@ -1,15 +1,15 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import Blog from '../page'
 import { getContentByType } from '@/lib/content'
 import { createMockContentItems } from '@/test/factories'
 
-vi.mock('@/lib/content', () => ({
-  getContentByType: vi.fn()
+jest.mock('@/lib/content', () => ({
+  getContentByType: jest.fn()
 }))
 
-vi.mock('../BlogListClient', () => ({
-  default: vi.fn(({ posts }) => (
+jest.mock('../BlogListClient', () => ({
+  default: jest.fn(({ posts }) => (
     <div data-testid="blog-list-client">
       {posts.map((post: { id: string; title: string }) => (
         <div key={post.id} data-testid={`blog-post-${post.id}`}>
@@ -20,11 +20,11 @@ vi.mock('../BlogListClient', () => ({
   ))
 }))
 
-const mockGetContentByType = vi.mocked(getContentByType)
+const mockGetContentByType = jest.mocked(getContentByType)
 
 describe('Blog Page', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should render blog page with posts', async () => {

@@ -1,5 +1,3 @@
-import { describe, it, expect } from 'vitest'
-
 /**
  * TDD Example: Implementing a simple blog post formatter
  * 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AuthenticatedUser } from '@/lib/api/middleware'
+import { type ApiAuthenticatedUser } from '@/lib/types/auth'
 import type { User } from '@supabase/supabase-js'
 
-export type MockHandler = (req: NextRequest, user: AuthenticatedUser) => Promise<NextResponse>
+export type MockHandler = (req: NextRequest, user: ApiAuthenticatedUser) => Promise<NextResponse>
 export type MockMiddleware = (handler: MockHandler) => (req: NextRequest) => Promise<NextResponse>
 export type MockWithRole = (role: string) => MockMiddleware
 

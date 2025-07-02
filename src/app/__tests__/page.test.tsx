@@ -1,9 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import Home from '../page'
 
-vi.mock('@/components/VideoBackgroundClient', () => ({
-  default: vi.fn(({ fileName, onVideoReady }) => {
+jest.mock('@/components/VideoBackgroundClient', () => ({
+  default: jest.fn(({ fileName, onVideoReady }) => {
     return (
       <div data-testid="video-background-client">
         <div>Video: {fileName}</div>
@@ -17,16 +17,16 @@ vi.mock('@/components/VideoBackgroundClient', () => ({
   })
 }))
 
-vi.mock('@/components/ErrorBoundary', () => ({
-  default: vi.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
+jest.mock('@/components/ErrorBoundary', () => ({
+  default: jest.fn(({ children }) => <div data-testid="error-boundary">{children}</div>)
 }))
 
-vi.mock('typewriter-effect', () => ({
-  default: vi.fn(({ onInit }) => {
+jest.mock('typewriter-effect', () => ({
+  default: jest.fn(({ onInit }) => {
     const mockTypewriter = {
-      typeString: vi.fn().mockReturnThis(),
-      pauseFor: vi.fn().mockReturnThis(),
-      start: vi.fn()
+      typeString: jest.fn().mockReturnThis(),
+      pauseFor: jest.fn().mockReturnThis(),
+      start: jest.fn()
     }
     
     if (onInit) {
@@ -38,8 +38,8 @@ vi.mock('typewriter-effect', () => ({
 }))
 
 describe('Home', () => {
-  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
+  const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   afterEach(() => {
     consoleSpy.mockClear()

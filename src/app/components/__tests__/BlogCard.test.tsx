@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import BlogCard from '@/components/BlogCard'
 import { createMockContentItem } from '@/test/factories'
@@ -41,7 +41,7 @@ describe('BlogCard', () => {
   })
 
   it('should call onTagClick when tag is clicked', () => {
-    const mockOnTagClick = vi.fn()
+    const mockOnTagClick = jest.fn()
     const post = createMockContentItem({
       tags: ['javascript']
     })

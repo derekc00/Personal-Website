@@ -20,7 +20,12 @@ async function fetchWithAuth(url: string, options?: RequestInit) {
   const data = await response.json()
   
   if (!response.ok) {
-    throw new Error(data.error || 'API request failed')
+    console.error('[fetchWithAuth] API error response:', {
+      status: response.status,
+      statusText: response.statusText,
+      data
+    })
+    throw new Error(data.error || `API request failed: ${response.status}`)
   }
   
   return data
@@ -45,7 +50,7 @@ export function useCreateContent() {
   const queryClient = useQueryClient()
   
   return useMutation({
-    mutationFn: (data: Omit<ContentInsert, 'slug'>) => 
+    mutationFn: (data: ContentInsert) => 
       fetchWithAuth(API_BASE, {
         method: 'POST',
         body: JSON.stringify(data),

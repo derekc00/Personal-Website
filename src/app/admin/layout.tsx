@@ -17,20 +17,6 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <ProtectedRoute requiredRole="admin">
-      <div className="min-h-screen bg-gray-100">
-        <div className="flex">
-          <AdminSidebar />
-          <div className="flex-1 flex flex-col">
-            <AdminHeader />
-            <AdminBreadcrumbs />
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
-        </div>
-      </div>
-    </ProtectedRoute>
-  )
+  // Don't wrap auth pages with protection
+  return <>{children}</>
 }

@@ -21,7 +21,7 @@ export async function getServerAuthenticatedUser(): Promise<SessionAuthenticated
       ...user,
       profile: profile || undefined
     }
-  } catch (error) {
+  } catch {
     return null
   }
 }

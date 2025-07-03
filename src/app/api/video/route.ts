@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { put } from '@vercel/blob'
 import { ERROR_MESSAGES, HTTP_STATUS } from '@/lib/constants'
 
 export async function GET(request: NextRequest) {
@@ -20,7 +19,7 @@ export async function GET(request: NextRequest) {
       url: `/videos/${fileName}`, // This assumes videos are in public/videos directory
       fileName
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }

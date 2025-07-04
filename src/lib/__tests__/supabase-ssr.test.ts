@@ -20,7 +20,7 @@ describe('Supabase SSR', () => {
     jest.clearAllMocks()
     
     // Setup default cookie store mock
-    mockCookies.mockResolvedValue(mockCookieStore as any)
+    mockCookies.mockResolvedValue(mockCookieStore as Parameters<typeof cookies>[0])
     mockCookieStore.getAll.mockReturnValue([])
     
     // Setup environment variables
@@ -36,7 +36,7 @@ describe('Supabase SSR', () => {
   describe('createServerClient', () => {
     it('should create server client with proper configuration', async () => {
       const mockSupabaseClient = { auth: {}, from: jest.fn() }
-      mockCreateSupabaseServerClient.mockReturnValue(mockSupabaseClient as any)
+      mockCreateSupabaseServerClient.mockReturnValue(mockSupabaseClient as unknown)
 
       const client = await createServerClient()
 
@@ -60,10 +60,10 @@ describe('Supabase SSR', () => {
       ]
       mockCookieStore.getAll.mockReturnValue(testCookies)
 
-      let cookieHandler: any
+      let cookieHandler: { getAll: () => unknown; setAll: (cookies: unknown[]) => unknown }
       mockCreateSupabaseServerClient.mockImplementation((_url, _key, options) => {
         cookieHandler = options.cookies
-        return { auth: {} } as any
+        return { auth: {} } as unknown
       })
 
       await createServerClient()
@@ -75,10 +75,10 @@ describe('Supabase SSR', () => {
     })
 
     it('should handle cookie setAll operation', async () => {
-      let cookieHandler: any
+      let cookieHandler: { getAll: () => unknown; setAll: (cookies: unknown[]) => unknown }
       mockCreateSupabaseServerClient.mockImplementation((_url, _key, options) => {
         cookieHandler = options.cookies
-        return { auth: {} } as any
+        return { auth: {} } as unknown
       })
 
       await createServerClient()
@@ -107,10 +107,10 @@ describe('Supabase SSR', () => {
     it('should handle empty cookie list', async () => {
       mockCookieStore.getAll.mockReturnValue([])
 
-      let cookieHandler: any
+      let cookieHandler: { getAll: () => unknown; setAll: (cookies: unknown[]) => unknown }
       mockCreateSupabaseServerClient.mockImplementation((_url, _key, options) => {
         cookieHandler = options.cookies
-        return { auth: {} } as any
+        return { auth: {} } as unknown
       })
 
       await createServerClient()
@@ -120,10 +120,10 @@ describe('Supabase SSR', () => {
     })
 
     it('should handle setAll with empty list', async () => {
-      let cookieHandler: any
+      let cookieHandler: { getAll: () => unknown; setAll: (cookies: unknown[]) => unknown }
       mockCreateSupabaseServerClient.mockImplementation((_url, _key, options) => {
         cookieHandler = options.cookies
-        return { auth: {} } as any
+        return { auth: {} } as unknown
       })
 
       await createServerClient()

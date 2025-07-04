@@ -14,7 +14,7 @@ describe('Login API Route', () => {
   const mockCreateServerClient = createServerClient as jest.MockedFunction<typeof createServerClient>
   const mockRateLimit = rateLimit as jest.MockedFunction<typeof rateLimit>
 
-  const mockRequest = (body: any, headers: Record<string, string> = {}) => {
+  const mockRequest = (body: unknown, headers: Record<string, string> = {}) => {
     return {
       json: jest.fn().mockResolvedValue(body),
       headers: {
@@ -114,7 +114,7 @@ describe('Login API Route', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as ReturnType<typeof createServerClient>)
 
       const request = mockRequest({ 
         email: 'test@example.com', 
@@ -145,7 +145,7 @@ describe('Login API Route', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as ReturnType<typeof createServerClient>)
 
       const request = mockRequest({ 
         email: 'test@example.com', 
@@ -172,7 +172,7 @@ describe('Login API Route', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as ReturnType<typeof createServerClient>)
 
       const request = mockRequest({ 
         email: 'test@example.com', 
@@ -195,7 +195,7 @@ describe('Login API Route', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as ReturnType<typeof createServerClient>)
 
       const request = mockRequest({ 
         email: 'test@example.com', 
@@ -254,7 +254,7 @@ describe('Login API Route', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as ReturnType<typeof createServerClient>)
 
       const request = mockRequest({ 
         email: 'test@example.com', 

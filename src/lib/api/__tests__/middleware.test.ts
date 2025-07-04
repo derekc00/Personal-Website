@@ -51,7 +51,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
@@ -94,7 +94,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn()
         const wrappedHandler = withAuth(handler)
@@ -122,7 +122,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn()
         const wrappedHandler = withAuth(handler)
@@ -154,7 +154,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
@@ -185,7 +185,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
@@ -242,7 +242,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockRejectedValue(
           new ApiError('Custom error message', 403)
@@ -281,7 +281,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockRejectedValue(
           new Error('Database connection failed')
@@ -358,7 +358,7 @@ describe('API Middleware', () => {
           }
         }
 
-        mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+        mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
         const handler = jest.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
@@ -407,7 +407,7 @@ describe('API Middleware', () => {
         }
       }
 
-      mockCreateServerClient.mockResolvedValue(mockSupabase as any)
+      mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
       const handler = jest.fn((req: AuthenticatedRequest) => {
         // TypeScript should recognize req.user

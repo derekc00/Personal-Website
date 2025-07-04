@@ -4,9 +4,17 @@ import { createClient } from './supabase-browser'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Create a dummy client for build time when env vars are not available
-// This allows the app to build on Vercel without requiring Supabase configuration
-// Authentication features will not work without proper env vars at runtime
+/**
+ * Creates a dummy Supabase client for build-time compatibility.
+ * 
+ * This pattern is necessary because:
+ * 1. Next.js evaluates modules at build time, even if they're only used client-side
+ * 2. Vercel and other platforms may not have environment variables during build
+ * 3. The Supabase SDK throws errors if initialized without valid URLs/keys
+ * 
+ * The dummy client prevents build failures while ensuring proper error messages
+ * if someone tries to use auth features without configuration.
+ */
 const createDummyClient = (): SupabaseClient => {
   return {
     auth: {

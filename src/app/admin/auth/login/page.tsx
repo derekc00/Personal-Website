@@ -12,10 +12,10 @@ export default function AdminLogin() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   useEffect(() => {
-    if (user) {
+    if (user && !loading) {
       router.push('/admin')
     }
-  }, [user, router])
+  }, [user, router, loading])
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

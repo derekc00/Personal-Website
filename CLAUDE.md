@@ -11,18 +11,8 @@
 @include shared/development-practices.yml#Code_Quality_Standards
 
 ## Technical Context
-
-### Language & Framework Preferences
-- **TypeScript**: Strict mode, schema-first development with Zod
-- **Java**: Java 17 syntax, use `String.format()` instead of `{}` for logging
-- **React**: Next.js App Router for new applications
-- **Testing**: Jest/Vitest + React Testing Library, MSW for API mocking
-
-### TypeScript Standards
-- **Strict mode always**: No `any`, no type assertions without justification, no `@ts-ignore`
-- **Schema-first development**: Use Zod or Standard Schema compliant libraries to create schemas first, derive types from them
-- **Prefer `type` over `interface`** in all cases
-- Apply strict mode rules to test code as well as production code
+@include shared/technical-standards.yml#Language_Framework_Preferences
+@include shared/technical-standards.yml#TypeScript_Standards
 
 ### Git Worktree Management
 - **Worktree naming convention**: All git worktrees should be prefixed with `worktree-{linear-ticket}` (e.g., `worktree-DER-66`, `worktree-ABC-123`)

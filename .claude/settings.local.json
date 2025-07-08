@@ -9,8 +9,19 @@
       "mcp__linear__list_issues",
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
-      "Bash(claude mcp add:*)"
+      "Bash(claude mcp add:*)",
+      "Bash(rm:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)"
     ],
     "deny": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "supabase",
+    "notionApi",
+    "linear",
+    "Context7"
+  ]
 }

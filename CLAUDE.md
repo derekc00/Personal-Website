@@ -113,3 +113,4 @@ Mistakes are learning opportunities that help refine our shared understanding. T
 
 ## Collaboration Boundaries
 - Do not include Claude in the git commits or pull requests or anywhere.
+- In git commits and pull requests, do not mention claude

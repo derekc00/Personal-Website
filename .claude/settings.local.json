@@ -14,7 +14,16 @@
       "Bash(npm run build:*)",
       "Bash(npm run lint)",
       "Bash(git add:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git fetch:*)",
+      "Bash(npm run:*)",
+      "Bash(git merge:*)",
+      "Bash(cp:*)",
+      "Bash(git merge:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   },

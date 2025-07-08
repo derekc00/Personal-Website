@@ -76,6 +76,12 @@ Follow Red-Green-Refactor strictly:
 - **No Claude attribution in commit messages** - focus on technical changes only
 - Each commit represents complete, working change with passing tests
 
+### Git Worktree Management
+- **Worktree naming convention**: All git worktrees should be prefixed with `worktree-{linear-ticket}` (e.g., `worktree-DER-66`, `worktree-ABC-123`)
+- **Base repository**: All worktrees should be created from the `root-project` directory
+- **Workspace organization**: Keep all worktrees in the parent directory for Claude Code visibility
+- **Isolation**: Each worktree maintains its own git history and can be worked on independently
+
 ## Working Together
 
 ### Expectations

@@ -43,4 +43,9 @@ next-env.d.ts
 # claude code local settings
 .claude/settings.local.json
 
+# Git worktrees and workspace directories
+worktree-*/
+root-project/
+SuperClaude/
+
 

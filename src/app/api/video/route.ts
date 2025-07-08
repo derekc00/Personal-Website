@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { list } from '@vercel/blob'
 import { ERROR_MESSAGES, HTTP_STATUS } from '@/lib/constants'
 
 export async function GET(request: NextRequest) {
@@ -13,13 +14,27 @@ export async function GET(request: NextRequest) {
       )
     }
     
-    // For now, return a placeholder response
-    // In production, this would fetch from Vercel Blob storage
+    // List all blobs to find the one matching our filename
+    const { blobs } = await list()
+    
+    // Find the blob that matches our filename
+    const matchingBlob = blobs.find(blob => 
+      blob.pathname.includes(fileName) || blob.url.includes(fileName)
+    )
+    
+    if (!matchingBlob) {
+      return NextResponse.json(
+        { error: ERROR_MESSAGES.VIDEO_NOT_FOUND },
+        { status: HTTP_STATUS.NOT_FOUND }
+      )
+    }
+    
     return NextResponse.json({
-      url: `/videos/${fileName}`, // This assumes videos are in public/videos directory
+      url: matchingBlob.url,
       fileName
     })
-  } catch {
+  } catch (error) {
+    console.error('Error fetching video from Vercel Blob:', error)
     return NextResponse.json(
       { error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }

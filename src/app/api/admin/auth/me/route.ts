@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth } from '@/lib/api/middleware'
+import { withAuth, type AuthenticatedRequest } from '@/lib/api/middleware'
 
 // GET /api/admin/auth/me - Get current user info
 export async function GET(req: NextRequest) {
-  return withAuth(async (req: NextRequest, user) => {
+  return withAuth(async (req: AuthenticatedRequest) => {
     return NextResponse.json({
       success: true,
       data: {
-        id: user.id,
-        email: user.email
+        id: req.user!.id,
+        email: req.user!.email
       }
     })
   })(req)

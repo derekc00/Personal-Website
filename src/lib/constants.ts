@@ -12,6 +12,7 @@ export const HTTP_STATUS = {
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
+  TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
 } as const;
 
@@ -29,6 +30,8 @@ export const ERROR_MESSAGES = {
   CONTENT_NOT_FOUND: 'Content not found',
   SLUG_ALREADY_EXISTS: 'Content with this slug already exists',
   OPTIMISTIC_LOCK_ERROR: 'Content was modified by another user',
+  RATE_LIMIT_EXCEEDED: 'Too many requests. Please try again later.',
+  INVALID_TOKEN: 'Invalid authentication token',
 } as const;
 
 export const FILE_EXTENSIONS = {

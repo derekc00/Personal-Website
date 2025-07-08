@@ -24,7 +24,13 @@
       "Bash(cp:*)",
       "Bash(git merge:*)",
       "Bash(mkdir:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(curl:*)",
+      "mcp__linear__create_issue",
+      "Bash(mv:*)",
+      "Bash(npm install:*)",
+      "Bash(npm install)",
+      "Bash(true)"
     ],
     "deny": []
   },
@@ -33,5 +39,13 @@
     "notionApi",
     "linear",
     "Context7"
-  ]
+  ],
+  "hooks": {
+    "afterBashCommand": [
+      {
+        "pattern": "git worktree add ../my-website-der-*",
+        "command": "cd ../my-website-der-* && npm install && cp ../root-project/.env* . 2>/dev/null || true"
+      }
+    ]
+  }
 }

@@ -1,6 +1,14 @@
 import '@testing-library/jest-dom'
-import { beforeAll, afterEach, afterAll } from '@jest/globals'
+import { jest, beforeAll, afterEach, afterAll } from '@jest/globals'
 import { server } from './mocks/server'
+
+// Mock console methods to capture logs for testing
+global.console = {
+  ...console,
+  warn: jest.fn(),
+  error: jest.fn(),
+  log: jest.fn(),
+};
 
 // Establish API mocking before all tests
 beforeAll(() => server.listen())

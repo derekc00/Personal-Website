@@ -1,8 +1,8 @@
 import { getContentBySlug, getContentByType } from "@/lib/content";
 import { notFound } from "next/navigation";
 import { serialize } from "next-mdx-remote/serialize";
-import MDXWrapper from "@/app/components/MDXWrapper";
-import Container from "@/app/components/container";
+import MDXWrapper from "@/components/app/MDXWrapper";
+import Container from "@/components/app/container";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";

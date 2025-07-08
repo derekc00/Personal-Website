@@ -80,6 +80,7 @@ Follow Red-Green-Refactor strictly:
 - **Worktree naming convention**: All git worktrees should be prefixed with `worktree-{linear-ticket}` (e.g., `worktree-DER-66`, `worktree-ABC-123`)
 - **Base repository**: All worktrees should be created from the `root-project` directory
 - **Workspace organization**: Keep all worktrees in the parent directory for Claude Code visibility
+- **Environment files**: Copy `.env` files from the root-project directory to new worktrees to ensure consistent environment configuration
 - **Isolation**: Each worktree maintains its own git history and can be worked on independently
 
 ## Working Together

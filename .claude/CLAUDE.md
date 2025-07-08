@@ -10,6 +10,8 @@ When starting a new feature, follow this workflow:
 4. **Create branch**: Create branch off updated main with format `derekchangc00/der-[issue-number]`
 5. **Install Linear MCP**: In the new worktree directory, install Linear MCP integration
 
+**Note**: Claude Code hooks automatically handle npm install and copying environment files from root-project.
+
 ### Commands to run:
 ```bash
 # Ensure we're in the parent directory for full worktree visibility

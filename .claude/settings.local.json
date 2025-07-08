@@ -23,7 +23,8 @@
       "Bash(git merge:*)",
       "Bash(cp:*)",
       "Bash(git merge:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(git rm:*)"
     ],
     "deny": []
   },

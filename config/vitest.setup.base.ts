@@ -1,4 +1,5 @@
 import { beforeAll, afterEach, afterAll, vi } from 'vitest'
+import '@testing-library/jest-dom'
 
 // Base Vitest setup - shared between all test environments
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test-project.supabase.co'
@@ -39,7 +40,10 @@ if (typeof global.fetch === 'undefined') {
 }
 
 // Environment-specific setup for jsdom
-if (typeof window !== 'undefined') {
+// Import testing library setup for component tests
+import('@testing-library/jest-dom')
+
+if (typeof window !== 'undefined' || typeof global !== 'undefined') {
   // Add Request, Response, and Headers polyfills for jsdom environment
   if (typeof global.Request === 'undefined') {
     global.Request = class Request {
@@ -105,8 +109,7 @@ if (typeof window !== 'undefined') {
     } as any
   }
   
-  // Import testing library setup for component tests
-  import('@testing-library/jest-dom')
+  // Import testing library setup removed from here to avoid duplication
   
   // Mock console methods to capture logs for testing
   global.console = {
@@ -120,8 +123,29 @@ if (typeof window !== 'undefined') {
 // MSW Setup
 import { server } from '../src/test/mocks/server'
 
+// For Node.js environment, we need to enable fetch interceptor
+if (typeof window === 'undefined') {
+  // Add fetch polyfill if it doesn't exist
+  if (typeof globalThis.fetch === 'undefined') {
+    try {
+      const { fetch, Headers, Request, Response } = require('undici')
+      globalThis.fetch = fetch
+      globalThis.Headers = Headers
+      globalThis.Request = Request
+      globalThis.Response = Response
+    } catch (error) {
+      // Fallback if undici is not available
+      console.warn('undici not available, using vitest fetch mock')
+    }
+  }
+}
+
 // Establish API mocking before all tests
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
+beforeAll(() => {
+  server.listen({ 
+    onUnhandledRequest: 'warn'
+  })
+})
 
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests

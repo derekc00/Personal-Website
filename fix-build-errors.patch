@@ -1,0 +1,11 @@
+diff --git a/src/lib/constants.ts b/src/lib/constants.ts
+index 1234567..2345678 100644
+--- a/src/lib/constants.ts
++++ b/src/lib/constants.ts
+@@ -10,6 +10,7 @@ export const HTTP_STATUS = {
+   FORBIDDEN: 403,
+   NOT_FOUND: 404,
+   CONFLICT: 409,
++  TOO_MANY_REQUESTS: 429,
+   INTERNAL_SERVER_ERROR: 500,
+ } as const;

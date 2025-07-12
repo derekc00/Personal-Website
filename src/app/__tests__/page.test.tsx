@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import Home from '../page'
+import Home from '../(public)/page'
 
 vi.mock('@/components/VideoBackgroundClient', () => ({
   default: vi.fn(({ fileName, onVideoReady }) => {

@@ -5,21 +5,22 @@ import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import AdminLayout from '../layout'
 import AdminLogin from '../(auth)/login/page'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock the dependencies
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
-  usePathname: jest.fn(),
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
+  usePathname: vi.fn(),
 }))
 
-jest.mock('@/hooks/useAuth', () => ({
-  useAuth: jest.fn(),
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(),
 }))
 
 // Mock child components to simplify testing
-jest.mock('@/components/admin/AdminHeader', () => {
+vi.mock('@/components/admin/AdminHeader', () => {
   const MockAdminHeader = () => {
-    const mockUseAuth = jest.requireMock('@/hooks/useAuth').useAuth
+    const mockUseAuth = vi.mocked(useAuth)
     const { user, signOut } = mockUseAuth()
     return (
       <div data-testid="admin-header">
@@ -36,25 +37,29 @@ jest.mock('@/components/admin/AdminHeader', () => {
   return MockAdminHeader
 })
 
-jest.mock('@/components/admin/AdminSidebar', () => {
-  return function AdminSidebar() {
-    return <div data-testid="admin-sidebar">Sidebar</div>
+vi.mock('@/components/admin/AdminSidebar', () => {
+  return {
+    default: function AdminSidebar() {
+      return <div data-testid="admin-sidebar">Sidebar</div>
+    }
   }
 })
 
-jest.mock('@/components/admin/AdminBreadcrumbs', () => {
-  return function AdminBreadcrumbs() {
-    return <div data-testid="admin-breadcrumbs">Breadcrumbs</div>
+vi.mock('@/components/admin/AdminBreadcrumbs', () => {
+  return {
+    default: function AdminBreadcrumbs() {
+      return <div data-testid="admin-breadcrumbs">Breadcrumbs</div>
+    }
   }
 })
 
 describe('Admin Authentication Flow Integration', () => {
-  const mockPush = jest.fn()
-  const mockSignIn = jest.fn()
-  const mockSignOut = jest.fn()
-  const mockUseRouter = useRouter as jest.Mock
-  const mockUsePathname = usePathname as jest.Mock
-  const mockUseAuth = useAuth as jest.Mock
+  const mockPush = vi.fn()
+  const mockSignIn = vi.fn()
+  const mockSignOut = vi.fn()
+  const mockUseRouter = vi.mocked(useRouter)
+  const mockUsePathname = vi.mocked(usePathname)
+  const mockUseAuth = vi.mocked(useAuth)
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -64,7 +69,7 @@ describe('Admin Authentication Flow Integration', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('Unauthenticated User Flow', () => {

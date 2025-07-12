@@ -4,18 +4,19 @@ import * as middleware from '@/lib/api/middleware'
 import type { ApiAuthenticatedUser } from '@/lib/types/auth'
 import { TEST_USERS, TEST_URLS } from '@/test/constants'
 import { HTTP_STATUS } from '@/lib/constants'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-jest.mock('@/lib/api/middleware')
+vi.mock('@/lib/api/middleware')
 
 describe('/api/admin/auth/me', () => {
   const mockUser: ApiAuthenticatedUser = TEST_USERS.EDITOR
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should return current user info', async () => {
-    jest.spyOn(middleware, 'withAuth').mockImplementation(
+    vi.spyOn(middleware, 'withAuth').mockImplementation(
       (handler: (req: NextRequest, user: ApiAuthenticatedUser) => Promise<NextResponse>) => 
         (req: NextRequest) => handler(req, mockUser)
     )

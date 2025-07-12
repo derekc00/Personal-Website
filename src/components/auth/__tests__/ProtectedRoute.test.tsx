@@ -4,25 +4,27 @@ import { useRouter } from 'next/navigation'
 import ProtectedRoute from '../ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
 import { userHasRole } from '@/lib/types/auth'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { AuthUser } from '@/lib/types/auth'
 
 // Mock the dependencies
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
 }))
 
-jest.mock('@/hooks/useAuth', () => ({
-  useAuth: jest.fn(),
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(),
 }))
 
-jest.mock('@/lib/types/auth', () => ({
-  userHasRole: jest.fn(),
+vi.mock('@/lib/types/auth', () => ({
+  userHasRole: vi.fn(),
 }))
 
 describe('ProtectedRoute', () => {
-  const mockPush = jest.fn()
-  const mockUseRouter = useRouter as jest.Mock
-  const mockUseAuth = useAuth as jest.Mock
-  const mockUserHasRole = userHasRole as jest.Mock
+  const mockPush = vi.fn()
+  const mockUseRouter = vi.mocked(useRouter)
+  const mockUseAuth = vi.mocked(useAuth)
+  const mockUserHasRole = vi.mocked(userHasRole)
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -31,7 +33,7 @@ describe('ProtectedRoute', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should show loading state when authentication is loading', () => {

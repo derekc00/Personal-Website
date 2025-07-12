@@ -2,24 +2,25 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { usePathname } from 'next/navigation'
 import AdminBreadcrumbs from '../AdminBreadcrumbs'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
-  usePathname: jest.fn(),
+vi.mock('next/navigation', () => ({
+  usePathname: vi.fn(),
 }))
 
 // Mock Heroicons
-jest.mock('@heroicons/react/20/solid', () => ({
+vi.mock('@heroicons/react/20/solid', () => ({
   ChevronRightIcon: ({ className }: { className: string }) => (
     <span className={className} data-testid="chevron-icon">›</span>
   ),
 }))
 
 describe('AdminBreadcrumbs', () => {
-  const mockUsePathname = usePathname as jest.Mock
+  const mockUsePathname = vi.mocked(usePathname)
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should not render breadcrumbs for root admin path', () => {

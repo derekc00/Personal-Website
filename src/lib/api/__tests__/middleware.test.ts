@@ -2,17 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withAuth, ApiError, AuthenticatedRequest } from '../middleware'
 import { createServerClient } from '@/lib/supabase-ssr'
 import { rateLimit } from '@/lib/rate-limit'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock dependencies
-jest.mock('@/lib/supabase-ssr')
-jest.mock('@/lib/rate-limit')
+vi.mock('@/lib/supabase-ssr')
+vi.mock('@/lib/rate-limit')
 
 // Mock console.error
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation()
+const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
 describe('API Middleware', () => {
-  const mockCreateServerClient = createServerClient as jest.MockedFunction<typeof createServerClient>
-  const mockRateLimit = rateLimit as jest.MockedFunction<typeof rateLimit>
+  const mockCreateServerClient = vi.mocked(createServerClient)
+  const mockRateLimit = vi.mocked(rateLimit)
 
   const mockRequest = (headers: Record<string, string> = {}) => {
     return {
@@ -23,7 +24,7 @@ describe('API Middleware', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockConsoleError.mockClear()
     
     // Default to allowing rate limit
@@ -44,7 +45,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -53,7 +54,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockResolvedValue(
+        const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
         )
 
@@ -72,7 +73,7 @@ describe('API Middleware', () => {
       })
 
       it('should return 401 when no authorization header', async () => {
-        const handler = jest.fn()
+        const handler = vi.fn()
         const wrappedHandler = withAuth(handler)
         const request = mockRequest()
         
@@ -87,7 +88,7 @@ describe('API Middleware', () => {
       it('should return 401 when authentication fails', async () => {
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: null },
               error: new Error('Invalid token')
             })
@@ -96,7 +97,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn()
+        const handler = vi.fn()
         const wrappedHandler = withAuth(handler)
         const request = mockRequest({ authorization: 'Bearer invalid' })
         
@@ -115,7 +116,7 @@ describe('API Middleware', () => {
       it('should return 401 when no user in session', async () => {
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: null },
               error: null
             })
@@ -124,7 +125,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn()
+        const handler = vi.fn()
         const wrappedHandler = withAuth(handler)
         const request = mockRequest({ authorization: 'Bearer token' })
         
@@ -147,7 +148,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -156,7 +157,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockResolvedValue(
+        const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
         )
 
@@ -178,7 +179,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -187,7 +188,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockResolvedValue(
+        const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
         )
 
@@ -208,7 +209,7 @@ describe('API Middleware', () => {
           resetTime: Date.now() + 30000
         })
 
-        const handler = jest.fn()
+        const handler = vi.fn()
         const wrappedHandler = withAuth(handler)
         const request = mockRequest({ authorization: 'Bearer token' })
         
@@ -235,7 +236,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -244,7 +245,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockRejectedValue(
+        const handler = vi.fn().mockRejectedValue(
           new ApiError('Custom error message', 403)
         )
 
@@ -274,7 +275,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -283,7 +284,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockRejectedValue(
+        const handler = vi.fn().mockRejectedValue(
           new Error('Database connection failed')
         )
 
@@ -306,7 +307,7 @@ describe('API Middleware', () => {
           new Error('Missing environment variables')
         )
 
-        const handler = jest.fn()
+        const handler = vi.fn()
         const wrappedHandler = withAuth(handler)
         const request = mockRequest({ authorization: 'Bearer token' })
         
@@ -321,7 +322,7 @@ describe('API Middleware', () => {
 
     describe('Options', () => {
       it('should bypass auth when skipAuth is true', async () => {
-        const handler = jest.fn().mockResolvedValue(
+        const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Public endpoint' })
         )
 
@@ -351,7 +352,7 @@ describe('API Middleware', () => {
 
         const mockSupabase = {
           auth: {
-            getUser: jest.fn().mockResolvedValue({
+            getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
             })
@@ -360,7 +361,7 @@ describe('API Middleware', () => {
 
         mockCreateServerClient.mockResolvedValue(mockSupabase as unknown)
 
-        const handler = jest.fn().mockResolvedValue(
+        const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Success' })
         )
 
@@ -400,7 +401,7 @@ describe('API Middleware', () => {
 
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: mockUser },
             error: null
           })

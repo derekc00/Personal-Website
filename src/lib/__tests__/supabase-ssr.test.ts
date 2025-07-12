@@ -1,23 +1,24 @@
 import { cookies } from 'next/headers'
 import { createServerClient as createSupabaseServerClient } from '@supabase/ssr'
 import { createServerClient } from '../supabase-ssr'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 // Mock dependencies
-jest.mock('next/headers')
-jest.mock('@supabase/ssr')
+vi.mock('next/headers')
+vi.mock('@supabase/ssr')
 
 describe('Supabase SSR', () => {
-  const mockCookies = cookies as jest.MockedFunction<typeof cookies>
-  const mockCreateSupabaseServerClient = createSupabaseServerClient as jest.MockedFunction<typeof createSupabaseServerClient>
+  const mockCookies = vi.mocked(cookies)
+  const mockCreateSupabaseServerClient = vi.mocked(createSupabaseServerClient)
 
   const mockCookieStore = {
-    get: jest.fn(),
-    getAll: jest.fn(),
-    set: jest.fn()
+    get: vi.fn(),
+    getAll: vi.fn(),
+    set: vi.fn()
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     
     // Setup default cookie store mock
     mockCookies.mockResolvedValue(mockCookieStore as Parameters<typeof cookies>[0])
@@ -35,7 +36,7 @@ describe('Supabase SSR', () => {
 
   describe('createServerClient', () => {
     it('should create server client with proper configuration', async () => {
-      const mockSupabaseClient = { auth: {}, from: jest.fn() }
+      const mockSupabaseClient = { auth: {}, from: vi.fn() }
       mockCreateSupabaseServerClient.mockReturnValue(mockSupabaseClient as unknown)
 
       const client = await createServerClient()

@@ -5,7 +5,10 @@ import * as contentUtils from '@/lib/api/content-utils'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
 import { TEST_USERS, MOCK_CONTENT_ROW, TEST_URLS } from '@/test/constants'
 import type { ContentRow } from '@/lib/schemas/auth'
+import type { ApiAuthenticatedUser } from '@/lib/types/auth'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+type AuthHandler = (req: NextRequest & { user: ApiAuthenticatedUser }) => Promise<Response>
 
 vi.mock('@/lib/api/middleware')
 vi.mock('@/lib/api/content-utils')
@@ -26,9 +29,9 @@ describe('/api/admin/content', () => {
       
       // Mock withAuth to execute the handler directly
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -70,9 +73,9 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'listContent').mockRejectedValue(new Error('Database error'))
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -94,9 +97,9 @@ describe('/api/admin/content', () => {
       )
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -118,9 +121,9 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -152,9 +155,9 @@ describe('/api/admin/content', () => {
 
     it('should return validation error for invalid data', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -184,9 +187,9 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(null)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -217,9 +220,9 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockRejectedValue(new Error('Database error'))
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -248,9 +251,9 @@ describe('/api/admin/content', () => {
 
     it('should prevent SQL injection in content fields', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -283,9 +286,9 @@ describe('/api/admin/content', () => {
       })
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -317,9 +320,9 @@ describe('/api/admin/content', () => {
 
     it('should handle malformed JSON gracefully', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -337,9 +340,9 @@ describe('/api/admin/content', () => {
 
     it('should enforce reasonable input size limits', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 
@@ -373,9 +376,9 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler: any) => async (req: NextRequest) => {
+        (handler: AuthHandler) => async (req: NextRequest) => {
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
       )
 

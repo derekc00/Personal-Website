@@ -18,13 +18,15 @@ Object.assign(global, {
 // Add TransformStream polyfill
 if (typeof global.TransformStream === 'undefined') {
   const { TransformStream } = await import('stream/web')
-  global.TransformStream = TransformStream as any
+  global.TransformStream = TransformStream as typeof globalThis.TransformStream
 }
 
 // Add BroadcastChannel polyfill
 if (typeof global.BroadcastChannel === 'undefined') {
   global.BroadcastChannel = class BroadcastChannel {
     name: string
+    onmessage: ((event: MessageEvent) => void) | null = null
+    onmessageerror: ((event: MessageEvent) => void) | null = null
     
     constructor(name: string) {
       this.name = name
@@ -34,7 +36,13 @@ if (typeof global.BroadcastChannel === 'undefined') {
     close() {}
     addEventListener() {}
     removeEventListener() {}
-  } as any
+    dispatchEvent(event: Event): boolean {
+      // In a real implementation, this would dispatch the event
+      // For our mock, we just return false to indicate the event was not canceled
+      void event; // Mark as used
+      return false
+    }
+  } as unknown as typeof globalThis.BroadcastChannel
 }
 
 // Add Request, Response, and Headers polyfills for jsdom environment
@@ -43,7 +51,7 @@ if (typeof global.Request === 'undefined') {
     url: string
     method: string
     headers: Headers
-    body: any
+    body: BodyInit | null | undefined
     
     constructor(url: string, init?: RequestInit) {
       this.url = url
@@ -51,18 +59,18 @@ if (typeof global.Request === 'undefined') {
       this.headers = new Headers(init?.headers)
       this.body = init?.body
     }
-  } as any
+  } as unknown as typeof globalThis.Request
 }
 
 if (typeof global.Response === 'undefined') {
   global.Response = class Response {
-    body: any
+    body: BodyInit | null | undefined
     status: number
     statusText: string
     headers: Headers
     ok: boolean
     
-    constructor(body: any, init?: ResponseInit) {
+    constructor(body: BodyInit | null | undefined, init?: ResponseInit) {
       this.body = body
       this.status = init?.status || 200
       this.statusText = init?.statusText || 'OK'
@@ -77,7 +85,7 @@ if (typeof global.Response === 'undefined') {
     async text() {
       return typeof this.body === 'string' ? this.body : JSON.stringify(this.body)
     }
-  } as any
+  } as unknown as typeof globalThis.Response
 }
 
 if (typeof global.Headers === 'undefined') {
@@ -87,7 +95,7 @@ if (typeof global.Headers === 'undefined') {
     constructor(init?: HeadersInit) {
       if (init) {
         Object.entries(init).forEach(([key, value]) => {
-          this._headers[key.toLowerCase()] = value
+          this._headers[key.toLowerCase()] = value as string
         })
       }
     }
@@ -99,7 +107,7 @@ if (typeof global.Headers === 'undefined') {
     set(name: string, value: string) {
       this._headers[name.toLowerCase()] = value
     }
-  } as any
+  } as unknown as typeof globalThis.Headers
 }
 
 // Add fetch if it doesn't exist

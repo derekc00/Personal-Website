@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { GET } from '../route'
 import * as middleware from '@/lib/api/middleware'
 import type { ApiAuthenticatedUser } from '@/lib/types/auth'
@@ -17,11 +17,11 @@ describe('/api/admin/auth/me', () => {
 
   it('should return current user info', async () => {
     vi.spyOn(middleware, 'withAuth').mockImplementation(
-      (handler: any) => 
+      (handler: (req: NextRequest & { user: ApiAuthenticatedUser }) => Promise<Response>) => 
         (req: NextRequest) => {
           // Create extended request with user property like the real withAuth does
           const extendedReq = Object.assign(req, { user: mockUser })
-          return handler(extendedReq)
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
         }
     )
 

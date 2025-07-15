@@ -13,9 +13,9 @@
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest run --coverage",
-    "test:api": "vitest --workspace vitest.workspace.ts --project api",
-    "test:components": "vitest --workspace vitest.workspace.ts --project ui",
-    "test:all": "vitest --workspace vitest.workspace.ts run",
+    "test:api": "vitest --workspace vitest.workspace.mjs --project api",
+    "test:components": "vitest --workspace vitest.workspace.mjs --project ui",
+    "test:all": "vitest --workspace vitest.workspace.mjs run",
     "prepare": "husky"
   },
   "dependencies": {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { withAuth, ApiError, AuthenticatedRequest } from '../middleware'
 import { createServerClient } from '@/lib/supabase-server'
 import { rateLimit } from '@/lib/rate-limit'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock dependencies
 vi.mock('@/lib/supabase-server')

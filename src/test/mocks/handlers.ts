@@ -75,7 +75,7 @@ export const handlers = [
   // Supabase Auth Endpoints
   // POST /auth/v1/token - Login/Sign in with password
   http.post('https://*/auth/v1/token', async ({ request }) => {
-    const body = await request.json() as { email?: string, password?: string, grant_type?: string }
+    const body = await request.json() as { email?: string, password?: string, grant_type?: string, refresh_token?: string }
     const { email, password, grant_type } = body
 
     if (grant_type === 'password' && email && password) {
@@ -331,7 +331,7 @@ export const handlers = [
   // GET /rest/v1/user_profiles
   http.get('https://*/rest/v1/user_profiles', ({ request }) => {
     const url = new URL(request.url)
-    const select = url.searchParams.get('select')
+    // const select = url.searchParams.get('select')
     const userId = url.searchParams.get('id')?.replace('eq.', '')
     
     const authHeader = request.headers.get('Authorization')

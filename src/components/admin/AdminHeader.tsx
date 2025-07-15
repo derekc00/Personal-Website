@@ -8,7 +8,12 @@ export default function AdminHeader() {
   const router = useRouter()
   
   const handleSignOut = async () => {
-    await signOut()
+    try {
+      await signOut()
+    } catch (error) {
+      // Log error but still redirect to login page
+      console.error('Sign out failed:', error)
+    }
     router.push('/admin/auth/login')
   }
   

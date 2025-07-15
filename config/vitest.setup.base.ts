@@ -40,7 +40,6 @@ if (typeof global.fetch === 'undefined') {
 }
 
 // Environment-specific setup for jsdom
-// Import testing library setup for component tests
 // The jest-dom import is already at the top of the file
 
 if (typeof window !== 'undefined' || typeof global !== 'undefined') {

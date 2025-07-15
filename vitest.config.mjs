@@ -60,11 +60,6 @@ export default defineConfig({
     
     // Pool configuration for parallel test execution
     pool: 'threads',
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
     
     // Timeout configuration
     testTimeout: 10000,

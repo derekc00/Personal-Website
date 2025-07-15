@@ -1,6 +1,25 @@
 import { cleanup } from '@testing-library/react'
 import { vi } from 'vitest'
 
+// Mock Next.js navigation at module level for proper hoisting
+const mockPush = vi.fn()
+const mockReplace = vi.fn()
+const mockBack = vi.fn()
+const mockForward = vi.fn()
+const mockRefresh = vi.fn()
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: mockReplace,
+    back: mockBack,
+    forward: mockForward,
+    refresh: mockRefresh,
+  }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/',
+}))
+
 /**
  * Comprehensive test cleanup utility
  * Call this in afterEach hooks to ensure proper test isolation
@@ -39,27 +58,10 @@ export const setupConsoleSpy = (method: 'log' | 'warn' | 'error' = 'log') => {
 }
 
 /**
- * Mock Next.js router for tests
+ * Get mocked Next.js router functions for tests
+ * Call this after importing test-utils to access the mock functions
  */
-export const mockRouter = () => {
-  const mockPush = vi.fn()
-  const mockReplace = vi.fn()
-  const mockBack = vi.fn()
-  const mockForward = vi.fn()
-  const mockRefresh = vi.fn()
-  
-  vi.mock('next/navigation', () => ({
-    useRouter: () => ({
-      push: mockPush,
-      replace: mockReplace,
-      back: mockBack,
-      forward: mockForward,
-      refresh: mockRefresh,
-    }),
-    useSearchParams: () => new URLSearchParams(),
-    usePathname: () => '/',
-  }))
-  
+export const getMockRouter = () => {
   return {
     mockPush,
     mockReplace,

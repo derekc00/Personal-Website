@@ -21,7 +21,7 @@ describe('Supabase SSR', () => {
     vi.clearAllMocks()
     
     // Setup default cookie store mock
-    mockCookies.mockResolvedValue(mockCookieStore as Parameters<typeof cookies>[0])
+    mockCookies.mockReturnValue(mockCookieStore as Parameters<typeof cookies>[0])
     mockCookieStore.getAll.mockReturnValue([])
     
     // Setup environment variables

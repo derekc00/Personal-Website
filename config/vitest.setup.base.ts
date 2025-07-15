@@ -14,9 +14,8 @@ global.TextDecoder = TextDecoder as any
 
 // Add TransformStream polyfill
 if (typeof global.TransformStream === 'undefined') {
-  import('stream/web').then(({ TransformStream }) => {
-    global.TransformStream = TransformStream as typeof globalThis.TransformStream
-  })
+  const { TransformStream } = require('stream/web')
+  global.TransformStream = TransformStream as typeof globalThis.TransformStream
 }
 
 // Add BroadcastChannel polyfill
@@ -35,15 +34,15 @@ if (typeof global.BroadcastChannel === 'undefined') {
   } as any
 }
 
-// Add fetch if it doesn't exist
-if (typeof global.fetch === 'undefined') {
-  global.fetch = vi.fn()
-}
-
 // Environment-specific setup for jsdom
 // The jest-dom import is already at the top of the file
 
-if (typeof window !== 'undefined' || typeof global !== 'undefined') {
+if (typeof window !== 'undefined') {
+  // Add fetch stub for jsdom environment only
+  if (typeof global.fetch === 'undefined') {
+    global.fetch = vi.fn()
+  }
+  
   // Add Request, Response, and Headers polyfills for jsdom environment
   if (typeof global.Request === 'undefined') {
     global.Request = class Request {

@@ -118,6 +118,7 @@ if (typeof window !== 'undefined' || typeof global !== 'undefined') {
 
 // MSW Setup
 import { server } from '../src/test/mocks/server'
+import { clearMockSessions } from '../src/test/mocks/handlers'
 
 // For Node.js environment, we need to enable fetch interceptor
 if (typeof window === 'undefined') {
@@ -147,6 +148,9 @@ beforeAll(() => {
 // so they don't affect other tests
 afterEach(() => {
   server.resetHandlers()
+  
+  // Clear mock sessions to prevent state leakage between tests
+  clearMockSessions()
   
   // Only run cleanup for browser environment (component tests)
   if (typeof window !== 'undefined') {

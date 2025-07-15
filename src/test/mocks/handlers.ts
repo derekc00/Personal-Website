@@ -55,6 +55,11 @@ const mockSessions = new Map<string, {
 // Helper function to generate mock tokens
 const generateToken = () => 'mock-token-' + Math.random().toString(36).substr(2, 9)
 
+// Function to clear mock sessions between tests
+export const clearMockSessions = () => {
+  mockSessions.clear()
+}
+
 export const handlers = [
   // Handle GET requests to /api/posts
   http.get(API_ENDPOINTS.POSTS, ({ request }) => {
@@ -365,6 +370,12 @@ export const handlers = [
       return HttpResponse.json([profile])
     }
 
+    // Return empty array when userId doesn't match
+    if (userId) {
+      return HttpResponse.json([])
+    }
+
+    // Return all profiles when no userId is specified
     return HttpResponse.json([profile])
   }),
 ]

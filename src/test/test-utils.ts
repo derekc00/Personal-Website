@@ -41,6 +41,7 @@ export const cleanupTest = () => {
   
   // Clear any timers
   vi.clearAllTimers()
+  vi.useRealTimers()
 }
 
 /**

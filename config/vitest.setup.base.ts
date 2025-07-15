@@ -14,10 +14,8 @@ global.TextDecoder = TextDecoder as any
 
 // Add TransformStream polyfill
 if (typeof global.TransformStream === 'undefined') {
-  (async () => {
-    const { TransformStream } = await import('stream/web')
-    global.TransformStream = TransformStream as typeof globalThis.TransformStream
-  })()
+  const { TransformStream } = require('stream/web')
+  global.TransformStream = TransformStream as typeof globalThis.TransformStream
 }
 
 // Add BroadcastChannel polyfill

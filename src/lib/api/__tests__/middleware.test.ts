@@ -110,11 +110,13 @@ describe('API Middleware', () => {
         expect(response.status).toBe(401)
         expect(data.error).toBe('Invalid authentication token')
         expect(handler).not.toHaveBeenCalled()
-        // Console logging may not work in test environment
-        // expect(mockConsoleError).toHaveBeenCalledWith(
-        //   '[API] Authentication failed:',
-        //   'Invalid token'
-        // )
+        
+        if (mockConsoleError.mock.calls.length > 0) {
+          expect(mockConsoleError).toHaveBeenCalledWith(
+            '[API] Authentication failed:',
+            'Invalid token'
+          )
+        }
       })
 
       it('should return 401 when no user in session', async () => {

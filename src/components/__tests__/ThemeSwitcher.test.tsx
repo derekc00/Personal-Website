@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { useTheme } from 'next-themes'
 import ThemeSwitcher from '../ThemeSwitcher'
+import { cleanupTest } from '@/test/test-utils'
 
 vi.mock('next-themes', () => ({
   useTheme: vi.fn()
@@ -21,6 +22,10 @@ describe('ThemeSwitcher', () => {
       themes: ['light', 'dark', 'system'],
       systemTheme: 'light'
     })
+  })
+
+  afterEach(() => {
+    cleanupTest()
   })
 
   it('should render theme switcher button', () => {

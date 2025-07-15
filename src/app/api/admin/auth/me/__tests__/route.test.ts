@@ -17,8 +17,12 @@ describe('/api/admin/auth/me', () => {
 
   it('should return current user info', async () => {
     vi.spyOn(middleware, 'withAuth').mockImplementation(
-      (handler: (req: NextRequest, user: ApiAuthenticatedUser) => Promise<NextResponse>) => 
-        (req: NextRequest) => handler(req, mockUser)
+      (handler: any) => 
+        (req: NextRequest) => {
+          // Create extended request with user property like the real withAuth does
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
     )
 
     const req = new NextRequest(TEST_URLS.ADMIN_AUTH_ME)

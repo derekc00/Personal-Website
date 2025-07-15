@@ -26,7 +26,10 @@ describe('/api/admin/content', () => {
       
       // Mock withAuth to execute the handler directly
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -67,7 +70,10 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'listContent').mockRejectedValue(new Error('Database error'))
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -88,7 +94,10 @@ describe('/api/admin/content', () => {
       )
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -109,7 +118,10 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const requestData = {
@@ -140,7 +152,10 @@ describe('/api/admin/content', () => {
 
     it('should return validation error for invalid data', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const requestData = {
@@ -169,7 +184,10 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(null)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const requestData = {
@@ -199,7 +217,10 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockRejectedValue(new Error('Database error'))
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const requestData = {
@@ -227,7 +248,10 @@ describe('/api/admin/content', () => {
 
     it('should prevent SQL injection in content fields', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const maliciousData = {
@@ -259,7 +283,10 @@ describe('/api/admin/content', () => {
       })
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const xssData = {
@@ -290,7 +317,10 @@ describe('/api/admin/content', () => {
 
     it('should handle malformed JSON gracefully', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT, {
@@ -307,7 +337,10 @@ describe('/api/admin/content', () => {
 
     it('should enforce reasonable input size limits', async () => {
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const largeData = {
@@ -340,7 +373,10 @@ describe('/api/admin/content', () => {
       vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
       vi.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+        (handler: any) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq)
+        }
       )
 
       const requestData = {

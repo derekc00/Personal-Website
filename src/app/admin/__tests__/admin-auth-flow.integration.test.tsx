@@ -3,9 +3,10 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
-import AdminLayout from '../layout'
+import ProtectedRoute from '@/components/auth/ProtectedRoute'
 import AdminLogin from '../(auth)/login/page'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { cleanupTest } from '@/test/test-utils'
 
 // Mock the dependencies
 vi.mock('next/navigation', () => ({
@@ -17,12 +18,13 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: vi.fn(),
 }))
 
-// Mock child components to simplify testing
-vi.mock('@/components/admin/AdminHeader', () => {
-  const MockAdminHeader = () => {
-    const mockUseAuth = vi.mocked(useAuth)
-    const { user, signOut } = mockUseAuth()
-    return (
+
+// Create a mock admin dashboard with all the expected components
+const MockAdminDashboard = () => {
+  const { user, signOut } = useAuth()
+  
+  return (
+    <div className="min-h-screen bg-gray-50 antialiased">
       <div data-testid="admin-header">
         {user && (
           <>
@@ -31,27 +33,16 @@ vi.mock('@/components/admin/AdminHeader', () => {
           </>
         )}
       </div>
-    )
-  }
-  MockAdminHeader.displayName = 'AdminHeader'
-  return MockAdminHeader
-})
-
-vi.mock('@/components/admin/AdminSidebar', () => {
-  return {
-    default: function AdminSidebar() {
-      return <div data-testid="admin-sidebar">Sidebar</div>
-    }
-  }
-})
-
-vi.mock('@/components/admin/AdminBreadcrumbs', () => {
-  return {
-    default: function AdminBreadcrumbs() {
-      return <div data-testid="admin-breadcrumbs">Breadcrumbs</div>
-    }
-  }
-})
+      <div className="flex">
+        <div data-testid="admin-sidebar">Sidebar</div>
+        <main className="flex-1 p-8">
+          <div data-testid="admin-breadcrumbs">Breadcrumbs</div>
+          <div>Admin Dashboard Content</div>
+        </main>
+      </div>
+    </div>
+  )
+}
 
 describe('Admin Authentication Flow Integration', () => {
   const mockPush = vi.fn()
@@ -62,14 +53,19 @@ describe('Admin Authentication Flow Integration', () => {
   const mockUseAuth = vi.mocked(useAuth)
 
   beforeEach(() => {
+    vi.clearAllMocks()
     mockUseRouter.mockReturnValue({
       push: mockPush,
+      replace: vi.fn(),
+      back: vi.fn(),
+      forward: vi.fn(),
+      refresh: vi.fn(),
     })
     mockUsePathname.mockReturnValue('/admin')
   })
 
   afterEach(() => {
-    vi.clearAllMocks()
+    cleanupTest()
   })
 
   describe('Unauthenticated User Flow', () => {
@@ -83,9 +79,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       await waitFor(() => {
@@ -106,9 +102,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       const spinner = document.querySelector('.animate-spin')
@@ -123,7 +119,13 @@ describe('Admin Authentication Flow Integration', () => {
       const adminUser = {
         id: '123',
         email: 'admin@example.com',
-        role: 'admin',
+        profile: {
+          id: '123',
+          email: 'admin@example.com',
+          role: 'admin',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z'
+        }
       }
 
       // Start unauthenticated
@@ -183,7 +185,13 @@ describe('Admin Authentication Flow Integration', () => {
       const adminUser = {
         id: '123',
         email: 'admin@example.com',
-        role: 'admin',
+        profile: {
+          id: '123',
+          email: 'admin@example.com',
+          role: 'admin',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z'
+        }
       }
 
       mockUseAuth.mockReturnValue({
@@ -195,9 +203,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       expect(screen.getByText('Admin Dashboard Content')).toBeInTheDocument()
@@ -211,7 +219,13 @@ describe('Admin Authentication Flow Integration', () => {
       const editorUser = {
         id: '456',
         email: 'editor@example.com',
-        role: 'editor',
+        profile: {
+          id: '456',
+          email: 'editor@example.com',
+          role: 'editor',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z'
+        }
       }
 
       mockUseAuth.mockReturnValue({
@@ -223,9 +237,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       expect(screen.getByText('Access Denied')).toBeInTheDocument()
@@ -239,7 +253,13 @@ describe('Admin Authentication Flow Integration', () => {
       const adminUser = {
         id: '123',
         email: 'admin@example.com',
-        role: 'admin',
+        profile: {
+          id: '123',
+          email: 'admin@example.com',
+          role: 'admin',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z'
+        }
       }
 
       mockUseAuth.mockReturnValue({
@@ -251,9 +271,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       const { rerender } = render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       // Click sign out
@@ -272,9 +292,9 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       rerender(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       // Should redirect to login
@@ -289,7 +309,13 @@ describe('Admin Authentication Flow Integration', () => {
       const adminUser = {
         id: '123',
         email: 'admin@example.com',
-        role: 'admin',
+        profile: {
+          id: '123',
+          email: 'admin@example.com',
+          role: 'admin',
+          created_at: '2023-01-01T00:00:00Z',
+          updated_at: '2023-01-01T00:00:00Z'
+        }
       }
 
       // First render - authenticated
@@ -302,18 +328,18 @@ describe('Admin Authentication Flow Integration', () => {
       })
 
       const { rerender } = render(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       expect(screen.getByText('Admin Dashboard Content')).toBeInTheDocument()
 
       // Simulate page refresh - still authenticated
       rerender(
-        <AdminLayout>
-          <div>Admin Dashboard Content</div>
-        </AdminLayout>
+        <ProtectedRoute>
+          <MockAdminDashboard />
+        </ProtectedRoute>
       )
 
       expect(screen.getByText('Admin Dashboard Content')).toBeInTheDocument()

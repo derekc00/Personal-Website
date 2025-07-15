@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/vitest'
 
 // Extend Vitest's expect interface with jest-dom matchers
 declare module 'vitest' {

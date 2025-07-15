@@ -67,16 +67,6 @@ export default defineConfig({
     
     // Reporter configuration
     reporters: process.env.CI ? ['default', 'github-actions'] : ['default'],
-    
-    // Environment configuration based on file patterns
-    environmentMatchGlobs: [
-      // API tests run in Node environment
-      ['src/**/api/**/__tests__/**/*.test.(ts|tsx)', 'node'],
-      ['src/lib/api/**/*.test.(ts|tsx)', 'node'],
-      ['src/utils/supabase/**/*.test.(ts|tsx)', 'node'],
-      // Everything else runs in jsdom
-      ['**/*.test.(ts|tsx)', 'jsdom'],
-    ],
   },
   
   resolve: {

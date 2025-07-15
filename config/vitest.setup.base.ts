@@ -1,5 +1,5 @@
 import { beforeAll, afterEach, afterAll, vi } from 'vitest'
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom/vitest'
 
 // Base Vitest setup - shared between all test environments
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test-project.supabase.co'
@@ -14,8 +14,10 @@ global.TextDecoder = TextDecoder as any
 
 // Add TransformStream polyfill
 if (typeof global.TransformStream === 'undefined') {
-  const { TransformStream } = require('stream/web')
-  global.TransformStream = TransformStream
+  (async () => {
+    const { TransformStream } = await import('stream/web')
+    global.TransformStream = TransformStream as typeof globalThis.TransformStream
+  })()
 }
 
 // Add BroadcastChannel polyfill

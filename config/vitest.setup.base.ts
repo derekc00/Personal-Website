@@ -111,13 +111,8 @@ if (typeof window !== 'undefined' || typeof global !== 'undefined') {
   
   // Import testing library setup removed from here to avoid duplication
   
-  // Mock console methods to capture logs for testing
-  global.console = {
-    ...console,
-    warn: vi.fn(),
-    error: vi.fn(),
-    log: vi.fn(),
-  }
+  // Console methods are not mocked globally to allow test-specific spies
+  // Individual tests should create their own console spies as needed
 }
 
 // MSW Setup
@@ -149,7 +144,27 @@ beforeAll(() => {
 
 // Reset any request handlers that we may add during the tests,
 // so they don't affect other tests
-afterEach(() => server.resetHandlers())
+afterEach(() => {
+  server.resetHandlers()
+  
+  // Only run cleanup for browser environment (component tests)
+  if (typeof window !== 'undefined') {
+    const { cleanup } = require('@testing-library/react')
+    cleanup()
+    
+    // Clear all mocks
+    vi.clearAllMocks()
+    vi.resetModules()
+    
+    // Clean DOM
+    if (typeof document !== 'undefined') {
+      document.body.innerHTML = ''
+    }
+    
+    // Clear timers
+    vi.clearAllTimers()
+  }
+})
 
 // Clean up after the tests are finished
 afterAll(() => server.close())

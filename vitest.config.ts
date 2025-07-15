@@ -11,6 +11,12 @@ export default defineConfig({
     restoreMocks: true,
     mockReset: true,
     
+    // Better test isolation
+    isolate: true,
+    sequence: {
+      concurrent: false,
+    },
+    
     // Environment configuration
     environment: 'jsdom',
     environmentOptions: {

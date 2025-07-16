@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import { rateLimit, rateLimitConfigs } from '../rate-limit'
+import { rateLimit, rateLimitConfigs, clearRateLimitStore } from '../rate-limit'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
 describe('Rate Limit', () => {
@@ -24,6 +24,7 @@ describe('Rate Limit', () => {
     requestCounter = 0;
     vi.clearAllMocks()
     vi.useFakeTimers()
+    clearRateLimitStore()
   })
 
   afterEach(() => {

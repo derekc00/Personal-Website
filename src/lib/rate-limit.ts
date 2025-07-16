@@ -99,3 +99,12 @@ export function rateLimit(
     resetTime: entry.resetTime
   }
 }
+
+/**
+ * Clear the rate limit store - for testing purposes only
+ */
+export function clearRateLimitStore() {
+  if (process.env.NODE_ENV === 'test') {
+    rateLimitStore.clear()
+  }
+}

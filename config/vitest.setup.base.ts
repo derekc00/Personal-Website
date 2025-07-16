@@ -13,6 +13,8 @@ global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder as any
 
 // Add TransformStream polyfill
+// Using require() here instead of import to ensure synchronous loading
+// and prevent race conditions in test setup
 if (typeof global.TransformStream === 'undefined') {
   const { TransformStream } = require('stream/web')
   global.TransformStream = TransformStream as typeof globalThis.TransformStream

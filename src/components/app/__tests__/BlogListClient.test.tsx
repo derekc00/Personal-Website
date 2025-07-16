@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { useSearchParams } from 'next/navigation'
-import BlogListClient from '@/app/blog/BlogListClient'
+import BlogListClient from '@/app/(public)/blog/BlogListClient'
 import { createMockContentItems } from '@/test/factories'
 
 // Mock Next.js navigation

@@ -4,25 +4,27 @@ import { useRouter } from 'next/navigation'
 import ProtectedRoute from '../ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
 import { userHasRole } from '@/lib/types/auth'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { SessionAuthenticatedUser } from '@/lib/types/auth'
 
 // Mock the dependencies
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
 }))
 
-jest.mock('@/hooks/useAuth', () => ({
-  useAuth: jest.fn(),
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(),
 }))
 
-jest.mock('@/lib/types/auth', () => ({
-  userHasRole: jest.fn(),
+vi.mock('@/lib/types/auth', () => ({
+  userHasRole: vi.fn(),
 }))
 
 describe('ProtectedRoute', () => {
-  const mockPush = jest.fn()
-  const mockUseRouter = useRouter as jest.Mock
-  const mockUseAuth = useAuth as jest.Mock
-  const mockUserHasRole = userHasRole as jest.Mock
+  const mockPush = vi.fn()
+  const mockUseRouter = vi.mocked(useRouter)
+  const mockUseAuth = vi.mocked(useAuth)
+  const mockUserHasRole = vi.mocked(userHasRole)
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -31,7 +33,7 @@ describe('ProtectedRoute', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should show loading state when authentication is loading', () => {
@@ -103,11 +105,21 @@ describe('ProtectedRoute', () => {
   })
 
   it('should show access denied when user lacks required role', () => {
-    const mockUser: AuthUser = {
+    const mockUser: SessionAuthenticatedUser = {
       id: '123',
       email: 'editor@example.com',
-      role: 'editor',
-    }
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z',
+      profile: {
+        id: '123',
+        email: 'editor@example.com',
+        role: 'editor',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z'
+      }
+    } as SessionAuthenticatedUser
 
     mockUseAuth.mockReturnValue({
       user: mockUser,
@@ -128,11 +140,21 @@ describe('ProtectedRoute', () => {
   })
 
   it('should render children when user is authenticated with correct role', () => {
-    const mockUser: AuthUser = {
+    const mockUser: SessionAuthenticatedUser = {
       id: '123',
       email: 'admin@example.com',
-      role: 'admin',
-    }
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z',
+      profile: {
+        id: '123',
+        email: 'admin@example.com',
+        role: 'admin',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z'
+      }
+    } as SessionAuthenticatedUser
 
     mockUseAuth.mockReturnValue({
       user: mockUser,
@@ -152,16 +174,30 @@ describe('ProtectedRoute', () => {
   })
 
   it('should render children when user is authenticated and no role is required', () => {
-    const mockUser: AuthUser = {
+    const mockUser: SessionAuthenticatedUser = {
       id: '123',
       email: 'user@example.com',
-      role: 'editor',
-    }
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: '2023-01-01T00:00:00Z',
+      updated_at: '2023-01-01T00:00:00Z',
+      profile: {
+        id: '123',
+        email: 'user@example.com',
+        role: 'editor',
+        created_at: '2023-01-01T00:00:00Z',
+        updated_at: '2023-01-01T00:00:00Z'
+      }
+    } as SessionAuthenticatedUser
 
     mockUseAuth.mockReturnValue({
       user: mockUser,
       loading: false,
     })
+
+    // Since no requiredRole is provided, userHasRole should not be called
+    // but if it is called, ensure it returns true
+    mockUserHasRole.mockReturnValue(true)
 
     render(
       <ProtectedRoute>
@@ -173,16 +209,16 @@ describe('ProtectedRoute', () => {
   })
 
   it('should not redirect when component unmounts during loading', () => {
+    mockUseAuth.mockReturnValue({
+      user: null,
+      loading: true,
+    })
+
     const { rerender } = render(
       <ProtectedRoute>
         <div>Protected Content</div>
       </ProtectedRoute>
     )
-
-    mockUseAuth.mockReturnValue({
-      user: null,
-      loading: true,
-    })
 
     // Unmount the component
     rerender(<div>Different Content</div>)

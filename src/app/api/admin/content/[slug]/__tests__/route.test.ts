@@ -5,9 +5,10 @@ import * as contentUtils from '@/lib/api/content-utils'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
 import { TEST_USERS, TEST_CONTENT, MOCK_CONTENT_ROW, TEST_URLS } from '@/test/constants'
 import type { ContentRow } from '@/lib/schemas/auth'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-jest.mock('@/lib/api/middleware')
-jest.mock('@/lib/api/content-utils')
+vi.mock('@/lib/api/middleware')
+vi.mock('@/lib/api/content-utils')
 
 describe('/api/admin/content/[slug]', () => {
   const mockUser = TEST_USERS.EDITOR
@@ -18,14 +19,14 @@ describe('/api/admin/content/[slug]', () => {
   const mockParams = Promise.resolve({ slug: TEST_CONTENT.SLUG })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('GET /api/admin/content/[slug]', () => {
     it('should return content when found', async () => {
-      jest.spyOn(contentUtils, 'getContent').mockResolvedValue(mockContent)
+      vi.spyOn(contentUtils, 'getContent').mockResolvedValue(mockContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -42,9 +43,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should return 404 when content not found', async () => {
-      jest.spyOn(contentUtils, 'getContent').mockResolvedValue(null)
+      vi.spyOn(contentUtils, 'getContent').mockResolvedValue(null)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -61,9 +62,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should handle errors gracefully', async () => {
-      jest.spyOn(contentUtils, 'getContent').mockRejectedValue(new Error('Database error'))
+      vi.spyOn(contentUtils, 'getContent').mockRejectedValue(new Error('Database error'))
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -83,9 +84,9 @@ describe('/api/admin/content/[slug]', () => {
   describe('PATCH /api/admin/content/[slug]', () => {
     it('should update content with valid data', async () => {
       const updatedContent = { ...mockContent, title: 'Updated Title' }
-      jest.spyOn(contentUtils, 'updateContent').mockResolvedValue(updatedContent)
+      vi.spyOn(contentUtils, 'updateContent').mockResolvedValue(updatedContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -114,11 +115,11 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should handle optimistic locking', async () => {
-      jest.spyOn(contentUtils, 'updateContent').mockRejectedValue(
+      vi.spyOn(contentUtils, 'updateContent').mockRejectedValue(
         new Error('OPTIMISTIC_LOCK_ERROR')
       )
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -144,7 +145,7 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should return validation error for invalid data', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -170,9 +171,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should return 404 when content not found', async () => {
-      jest.spyOn(contentUtils, 'updateContent').mockResolvedValue(null)
+      vi.spyOn(contentUtils, 'updateContent').mockResolvedValue(null)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -199,9 +200,9 @@ describe('/api/admin/content/[slug]', () => {
 
   describe('DELETE /api/admin/content/[slug]', () => {
     it('should allow delete operations for authenticated users', async () => {
-      jest.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
+      vi.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser) // Non-admin user
       )
 
@@ -219,9 +220,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should soft delete content by default', async () => {
-      jest.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
+      vi.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockAdminUser)
       )
 
@@ -238,9 +239,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should hard delete when specified', async () => {
-      jest.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
+      vi.spyOn(contentUtils, 'deleteContent').mockResolvedValue(true)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockAdminUser)
       )
 
@@ -257,9 +258,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should return 404 when content not found', async () => {
-      jest.spyOn(contentUtils, 'deleteContent').mockResolvedValue(false)
+      vi.spyOn(contentUtils, 'deleteContent').mockResolvedValue(false)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockAdminUser)
       )
 
@@ -279,9 +280,9 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should handle errors gracefully', async () => {
-      jest.spyOn(contentUtils, 'deleteContent').mockRejectedValue(new Error('Database error'))
+      vi.spyOn(contentUtils, 'deleteContent').mockRejectedValue(new Error('Database error'))
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockAdminUser)
       )
 
@@ -303,9 +304,9 @@ describe('/api/admin/content/[slug]', () => {
 
   describe('Security Tests', () => {
     it('should handle SQL injection attempts in slug parameter', async () => {
-      jest.spyOn(contentUtils, 'getContent').mockResolvedValue(null)
+      vi.spyOn(contentUtils, 'getContent').mockResolvedValue(null)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -322,9 +323,9 @@ describe('/api/admin/content/[slug]', () => {
 
     it('should prevent XSS attacks in PATCH requests', async () => {
       const xssContent = { ...mockContent, title: '<script>alert("xss")</script>' }
-      jest.spyOn(contentUtils, 'updateContent').mockResolvedValue(xssContent)
+      vi.spyOn(contentUtils, 'updateContent').mockResolvedValue(xssContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -347,7 +348,7 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should reject updates with invalid slug format', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -368,7 +369,7 @@ describe('/api/admin/content/[slug]', () => {
     })
 
     it('should handle extremely large payloads', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -398,11 +399,11 @@ describe('/api/admin/content/[slug]', () => {
     it('should handle concurrent update attempts correctly', async () => {
       const outdatedTimestamp = '2024-01-01T00:00:00Z'
       
-      jest.spyOn(contentUtils, 'updateContent').mockRejectedValue(
+      vi.spyOn(contentUtils, 'updateContent').mockRejectedValue(
         new Error('OPTIMISTIC_LOCK_ERROR')
       )
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 
@@ -425,10 +426,10 @@ describe('/api/admin/content/[slug]', () => {
 
     it('should prevent users from updating content they do not own', async () => {
       const otherUserContent = { ...mockContent, author_id: 'other-user-id' }
-      jest.spyOn(contentUtils, 'getContent').mockResolvedValue(otherUserContent)
-      jest.spyOn(contentUtils, 'updateContent').mockResolvedValue(otherUserContent)
+      vi.spyOn(contentUtils, 'getContent').mockResolvedValue(otherUserContent)
+      vi.spyOn(contentUtils, 'updateContent').mockResolvedValue(otherUserContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         (handler) => async (req: NextRequest) => handler(req, mockUser)
       )
 

@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import Home from '../page'
+import Home from '../(public)/page'
+import { cleanupTest, setupConsoleSpy } from '@/test/test-utils'
 
 vi.mock('@/components/VideoBackgroundClient', () => ({
   default: vi.fn(({ fileName, onVideoReady }) => {
@@ -38,12 +39,20 @@ vi.mock('typewriter-effect', () => ({
 }))
 
 describe('Home', () => {
-  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+  let consoleSpy: ReturnType<typeof setupConsoleSpy>
+  let consoleErrorSpy: ReturnType<typeof setupConsoleSpy>
+
+  beforeEach(() => {
+    // Set up fresh console spies for each test
+    consoleSpy = setupConsoleSpy('log')
+    consoleErrorSpy = setupConsoleSpy('error')
+  })
 
   afterEach(() => {
-    consoleSpy.mockClear()
-    consoleErrorSpy.mockClear()
+    // Comprehensive cleanup
+    cleanupTest()
+    consoleSpy.cleanup()
+    consoleErrorSpy.cleanup()
   })
 
   it('should render homepage with video background', () => {
@@ -56,8 +65,10 @@ describe('Home', () => {
   it('should render within error boundaries', () => {
     render(<Home />)
     
+    // Check that error boundaries are present (there are multiple nested ones)
     const errorBoundaries = screen.getAllByTestId('error-boundary')
-    expect(errorBoundaries).toHaveLength(2) // Outer and inner error boundary
+    expect(errorBoundaries).toHaveLength(2)
+    expect(errorBoundaries[0]).toBeInTheDocument()
   })
 
   it('should show typewriter animation when video is ready', async () => {
@@ -88,13 +99,13 @@ describe('Home', () => {
     
     render(<Home />)
     
-    expect(consoleSpy).toHaveBeenCalledWith('Homepage mounting - client side')
+    expect(consoleSpy.spy).toHaveBeenCalledWith('Homepage mounting - client side')
     
     // Trigger video ready to test the video ready log
     const videoReadyTrigger = screen.getByTestId('video-ready-trigger')
     fireEvent.click(videoReadyTrigger)
     
-    expect(consoleSpy).toHaveBeenCalledWith('Video ready, starting typewriter animation')
+    expect(consoleSpy.spy).toHaveBeenCalledWith('Video ready, starting typewriter animation')
     
     process.env.NODE_ENV = originalEnv
   })
@@ -109,7 +120,7 @@ describe('Home', () => {
     const videoReadyTrigger = screen.getByTestId('video-ready-trigger')
     fireEvent.click(videoReadyTrigger)
     
-    expect(consoleSpy).not.toHaveBeenCalled()
+    expect(consoleSpy.spy).not.toHaveBeenCalled()
     
     process.env.NODE_ENV = originalEnv
   })

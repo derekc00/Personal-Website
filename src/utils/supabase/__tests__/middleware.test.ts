@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import { updateSession } from '../middleware'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 // Mock the @supabase/ssr module
-jest.mock('@supabase/ssr')
+vi.mock('@supabase/ssr')
 
 describe('updateSession Middleware', () => {
-  const mockCreateServerClient = createServerClient as jest.MockedFunction<typeof createServerClient>
+  const mockCreateServerClient = vi.mocked(createServerClient)
   
   const mockRequest = (pathname: string, cookies: Record<string, string> = {}) => {
     const url = new URL(`http://localhost:3000${pathname}`)
@@ -21,7 +22,7 @@ describe('updateSession Middleware', () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('Public Routes', () => {
@@ -54,7 +55,7 @@ describe('updateSession Middleware', () => {
     it('should check auth for admin routes', async () => {
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: { id: 'user-123' } },
             error: null
           })
@@ -74,7 +75,7 @@ describe('updateSession Middleware', () => {
     it('should check auth for admin API routes', async () => {
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: { id: 'user-123' } },
             error: null
           })
@@ -94,7 +95,7 @@ describe('updateSession Middleware', () => {
     it('should handle cookie operations correctly', async () => {
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: { id: 'user-123' } },
             error: null
           })
@@ -122,7 +123,7 @@ describe('updateSession Middleware', () => {
       
       // Override cookies.set to track calls
       const originalSet = request.cookies.set
-      request.cookies.set = jest.fn((name, value) => {
+      request.cookies.set = vi.fn((name, value) => {
         cookiesSetOnRequest.push({ name, value })
         return originalSet.call(request.cookies, name, value)
       })
@@ -138,7 +139,7 @@ describe('updateSession Middleware', () => {
     it('should refresh the session by calling getUser', async () => {
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: null },
             error: { message: 'Session expired' }
           })
@@ -156,7 +157,7 @@ describe('updateSession Middleware', () => {
     it('should pass environment variables to createServerClient', async () => {
       const mockSupabase = {
         auth: {
-          getUser: jest.fn().mockResolvedValue({
+          getUser: vi.fn().mockResolvedValue({
             data: { user: { id: 'user-123' } },
             error: null
           })

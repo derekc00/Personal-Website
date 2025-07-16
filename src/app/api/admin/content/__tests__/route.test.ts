@@ -5,9 +5,13 @@ import * as contentUtils from '@/lib/api/content-utils'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
 import { TEST_USERS, MOCK_CONTENT_ROW, TEST_URLS } from '@/test/constants'
 import type { ContentRow } from '@/lib/schemas/auth'
+import type { ApiAuthenticatedUser } from '@/lib/types/auth'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-jest.mock('@/lib/api/middleware')
-jest.mock('@/lib/api/content-utils')
+type AuthHandler = (req: NextRequest & { user: ApiAuthenticatedUser }) => Promise<Response>
+
+vi.mock('@/lib/api/middleware')
+vi.mock('@/lib/api/content-utils')
 
 describe('/api/admin/content', () => {
   const mockUser = TEST_USERS.EDITOR
@@ -15,17 +19,20 @@ describe('/api/admin/content', () => {
   const mockContent: ContentRow = MOCK_CONTENT_ROW
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('GET /api/admin/content', () => {
     it('should return list of all content including unpublished', async () => {
       const mockList = [mockContent]
-      jest.spyOn(contentUtils, 'listContent').mockResolvedValue(mockList)
+      vi.spyOn(contentUtils, 'listContent').mockResolvedValue(mockList)
       
       // Mock withAuth to execute the handler directly
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -42,7 +49,7 @@ describe('/api/admin/content', () => {
 
     it('should return 401 with expired token', async () => {
       // Mock withAuth to simulate expired token
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
         () => async () => NextResponse.json(
           { success: false, error: ERROR_MESSAGES.UNAUTHORIZED, code: 'TOKEN_EXPIRED' },
           { status: HTTP_STATUS.UNAUTHORIZED }
@@ -63,10 +70,13 @@ describe('/api/admin/content', () => {
     })
 
     it('should handle errors gracefully', async () => {
-      jest.spyOn(contentUtils, 'listContent').mockRejectedValue(new Error('Database error'))
+      vi.spyOn(contentUtils, 'listContent').mockRejectedValue(new Error('Database error'))
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -82,12 +92,15 @@ describe('/api/admin/content', () => {
     })
 
     it('should handle database connection failure', async () => {
-      jest.spyOn(contentUtils, 'listContent').mockRejectedValue(
+      vi.spyOn(contentUtils, 'listContent').mockRejectedValue(
         new Error('Connection to database failed')
       )
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT)
@@ -105,10 +118,13 @@ describe('/api/admin/content', () => {
 
   describe('POST /api/admin/content', () => {
     it('should create new content with valid data', async () => {
-      jest.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
+      vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const requestData = {
@@ -138,8 +154,11 @@ describe('/api/admin/content', () => {
     })
 
     it('should return validation error for invalid data', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const requestData = {
@@ -165,10 +184,13 @@ describe('/api/admin/content', () => {
     })
 
     it('should handle creation failure', async () => {
-      jest.spyOn(contentUtils, 'createContent').mockResolvedValue(null)
+      vi.spyOn(contentUtils, 'createContent').mockResolvedValue(null)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const requestData = {
@@ -195,10 +217,13 @@ describe('/api/admin/content', () => {
     })
 
     it('should handle unexpected errors', async () => {
-      jest.spyOn(contentUtils, 'createContent').mockRejectedValue(new Error('Database error'))
+      vi.spyOn(contentUtils, 'createContent').mockRejectedValue(new Error('Database error'))
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const requestData = {
@@ -225,8 +250,11 @@ describe('/api/admin/content', () => {
     })
 
     it('should prevent SQL injection in content fields', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const maliciousData = {
@@ -251,14 +279,17 @@ describe('/api/admin/content', () => {
     })
 
     it('should prevent XSS attacks in content', async () => {
-      jest.spyOn(contentUtils, 'createContent').mockResolvedValue({
+      vi.spyOn(contentUtils, 'createContent').mockResolvedValue({
         ...mockContent,
         title: '<script>alert("xss")</script>',
         content: '<img src=x onerror="alert(1)">'
       })
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const xssData = {
@@ -288,8 +319,11 @@ describe('/api/admin/content', () => {
     })
 
     it('should handle malformed JSON gracefully', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const req = new NextRequest(TEST_URLS.ADMIN_CONTENT, {
@@ -305,8 +339,11 @@ describe('/api/admin/content', () => {
     })
 
     it('should enforce reasonable input size limits', async () => {
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const largeData = {
@@ -336,10 +373,13 @@ describe('/api/admin/content', () => {
     })
 
     it('should prevent users from setting author_id to another user', async () => {
-      jest.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
+      vi.spyOn(contentUtils, 'createContent').mockResolvedValue(mockContent)
       
-      jest.spyOn(middleware, 'withAuth').mockImplementation(
-        (handler) => async (req: NextRequest) => handler(req, mockUser)
+      vi.spyOn(middleware, 'withAuth').mockImplementation(
+        (handler: AuthHandler) => async (req: NextRequest) => {
+          const extendedReq = Object.assign(req, { user: mockUser })
+          return handler(extendedReq as NextRequest & { user: ApiAuthenticatedUser })
+        }
       )
 
       const requestData = {

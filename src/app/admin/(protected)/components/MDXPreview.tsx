@@ -8,8 +8,10 @@ import { AlertCircle } from 'lucide-react'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
-import { useMDXComponents } from '../../../../../mdx-components'
+import { useMDXComponents } from '@/../../mdx-components'
 import type { MDXComponents } from 'mdx/types'
+
+const DEBOUNCE_DELAY = 300 // milliseconds
 
 interface MDXPreviewProps {
   content: string
@@ -50,7 +52,7 @@ export function MDXPreview({ content, className }: MDXPreviewProps) {
       }
     }
 
-    const timeoutId = setTimeout(compileMDX, 300)
+    const timeoutId = setTimeout(compileMDX, DEBOUNCE_DELAY)
     return () => clearTimeout(timeoutId)
   }, [content])
 

@@ -213,7 +213,7 @@ export function ContentEditor({ slug }: ContentEditorProps) {
           </div>
 
           {/* Desktop Split View */}
-          <div className="hidden md:grid md:grid-cols-2 md:gap-4 md:h-[600px]">
+          <div className="hidden md:grid md:grid-cols-2 md:gap-4 md:min-h-[600px]">
             <div className="h-full">
               <Card className="h-full p-0 overflow-hidden">
                 <div className="p-3 border-b bg-gray-50 dark:bg-gray-800">

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth } from '@/lib/api/middleware'
+import { withAuth, type AuthenticatedRequest } from '@/lib/api/middleware'
 import { createContent, listContent } from '@/lib/api/content-utils'
 import { createServerClient } from '@/lib/supabase-server'
 import { contentInsertSchema } from '@/lib/schemas/auth'
@@ -8,7 +8,7 @@ import { HTTP_STATUS } from '@/lib/constants'
 
 // GET /api/admin/content - List all content (including drafts)
 export async function GET(req: NextRequest) {
-  return withAuth(async (req: NextRequest) => {
+  return withAuth(async (req: AuthenticatedRequest) => {
     try {
       // Get the auth token from the request
       const authHeader = req.headers.get('authorization')
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 
 // POST /api/admin/content - Create new content
 export async function POST(req: NextRequest) {
-  return withAuth(async (req: NextRequest, user) => {
+  return withAuth(async (req: AuthenticatedRequest) => {
     try {
       const body = await req.json()
       
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
       
       const content = await createContent({
         ...validationResult.data,
-        author_id: user.id
+        author_id: req.user!.id
       }, supabaseClient)
       
       if (!content) {

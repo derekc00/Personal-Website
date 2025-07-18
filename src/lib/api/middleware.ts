@@ -1,26 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase-server'
 import { HTTP_STATUS, ERROR_MESSAGES } from '@/lib/constants'
+import { rateLimit, rateLimitConfigs } from '@/lib/rate-limit'
 import { type ApiAuthenticatedUser } from '@/lib/types/auth'
 
+/**
+ * Custom error class for API errors
+ */
+export class ApiError extends Error {
+  constructor(message: string, public statusCode: number = 500) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
 
-export async function getAuthenticatedUserFromRequest(req: NextRequest): Promise<ApiAuthenticatedUser | null> {
+/**
+ * Extended request type that includes the authenticated user
+ */
+export interface AuthenticatedRequest extends NextRequest {
+  user: ApiAuthenticatedUser | null
+}
+
+/**
+ * Options for the withAuth middleware
+ */
+interface WithAuthOptions {
+  skipAuth?: boolean
+  rateLimit?: false | typeof rateLimitConfigs[keyof typeof rateLimitConfigs]
+}
+
+/**
+ * Extracts and validates the authenticated user from the request
+ */
+async function getAuthenticatedUserFromRequest(req: NextRequest): Promise<ApiAuthenticatedUser | null> {
   try {
-    // For API routes, get the auth token from the Authorization header
     const authHeader = req.headers.get('authorization')
     if (!authHeader?.startsWith('Bearer ')) {
       return null
     }
     
     const token = authHeader.substring(7)
-
-    // Use the centralized server client with the auth token
     const supabase = createServerClient(token)
     
-    // Verify the JWT token
     const { data: { user }, error } = await supabase.auth.getUser(token)
     
-    if (error || !user) {
+    if (error) {
+      console.error('[API] Authentication failed:', error.message)
+      return null
+    }
+    
+    if (!user) {
       return null
     }
 
@@ -29,25 +58,84 @@ export async function getAuthenticatedUserFromRequest(req: NextRequest): Promise
       email: user.email!
     }
   } catch (error) {
-    console.error('Error getting authenticated user:', error)
+    console.error('[API] Unexpected error during authentication:', error)
     return null
   }
 }
 
-export function withAuth(
-  handler: (req: NextRequest, user: ApiAuthenticatedUser) => Promise<NextResponse>
+/**
+ * Higher-order function that adds authentication and rate limiting to API routes
+ * 
+ * @param handler - The API route handler
+ * @param options - Optional configuration for auth and rate limiting
+ * @returns Wrapped handler with auth and rate limiting
+ */
+export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
+  handler: (req: T) => Promise<NextResponse>,
+  options: WithAuthOptions = {}
 ) {
   return async (req: NextRequest): Promise<NextResponse> => {
-    const user = await getAuthenticatedUserFromRequest(req)
-    
-    if (!user) {
+    try {
+      // Apply rate limiting if configured
+      if (options.rateLimit !== false) {
+        const rateLimitConfig = options.rateLimit || rateLimitConfigs.api
+        const { allowed, resetTime } = rateLimit(req, rateLimitConfig)
+        
+        if (!allowed) {
+          return NextResponse.json(
+            { 
+              error: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+              resetTime: new Date(resetTime).toISOString()
+            },
+            { 
+              status: HTTP_STATUS.TOO_MANY_REQUESTS,
+              headers: {
+                'X-RateLimit-Limit': String(rateLimitConfig.limit),
+                'X-RateLimit-Reset': String(resetTime),
+                'Retry-After': String(Math.ceil((resetTime - Date.now()) / 1000))
+              }
+            }
+          )
+        }
+      }
+      
+      // Skip auth if configured
+      if (options.skipAuth) {
+        const extendedReq = Object.assign(req, { user: null }) as T
+        return handler(extendedReq)
+      }
+      
+      // Authenticate the user
+      const user = await getAuthenticatedUserFromRequest(req)
+      
+      if (!user) {
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.INVALID_TOKEN },
+          { status: HTTP_STATUS.UNAUTHORIZED }
+        )
+      }
+      
+      // Add user to request object
+      const extendedReq = Object.assign(req, { user }) as T
+      
+      return handler(extendedReq)
+    } catch (error) {
+      // Handle ApiError instances
+      if (error instanceof ApiError) {
+        console.error('[API] Request failed:', error)
+        return NextResponse.json(
+          { error: error.message },
+          { status: error.statusCode }
+        )
+      }
+      
+      // Handle unexpected errors
+      console.error('[API] Unexpected error:', error)
       return NextResponse.json(
-        { success: false, error: ERROR_MESSAGES.UNAUTHORIZED, code: 'NO_AUTH' },
-        { status: HTTP_STATUS.UNAUTHORIZED }
+        { error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
       )
     }
-
-    return handler(req, user)
   }
 }
 

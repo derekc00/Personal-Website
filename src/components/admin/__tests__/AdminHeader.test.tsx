@@ -3,21 +3,22 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import AdminHeader from '../AdminHeader'
 import { useAuth } from '@/hooks/useAuth'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Mock the dependencies
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(),
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
 }))
 
-jest.mock('@/hooks/useAuth', () => ({
-  useAuth: jest.fn(),
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(),
 }))
 
 describe('AdminHeader', () => {
-  const mockPush = jest.fn()
-  const mockSignOut = jest.fn()
-  const mockUseRouter = useRouter as jest.Mock
-  const mockUseAuth = useAuth as jest.Mock
+  const mockPush = vi.fn()
+  const mockSignOut = vi.fn()
+  const mockUseRouter = vi.mocked(useRouter)
+  const mockUseAuth = vi.mocked(useAuth)
 
   beforeEach(() => {
     mockUseRouter.mockReturnValue({
@@ -26,7 +27,7 @@ describe('AdminHeader', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it('should render header with title', () => {

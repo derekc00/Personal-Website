@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import VideoBackgroundClient from '../VideoBackgroundClient'
+import { cleanupTest, setupConsoleSpy } from '@/test/test-utils'
 
 vi.mock('../VideoBackground', () => ({
   default: vi.fn(({ fileName, onVideoReady }) => {
@@ -18,10 +19,15 @@ vi.mock('../VideoBackground', () => ({
 }))
 
 describe('VideoBackgroundClient', () => {
-  const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+  let consoleSpy: ReturnType<typeof setupConsoleSpy>
+
+  beforeEach(() => {
+    consoleSpy = setupConsoleSpy('log')
+  })
 
   afterEach(() => {
-    consoleSpy.mockClear()
+    cleanupTest()
+    consoleSpy.cleanup()
   })
 
   it('should render video background with correct filename', () => {
@@ -54,7 +60,7 @@ describe('VideoBackgroundClient', () => {
     
     render(<VideoBackgroundClient fileName="test-video.mp4" />)
     
-    expect(consoleSpy).toHaveBeenCalledWith('VideoBackgroundClient mounting')
+    expect(consoleSpy.spy).toHaveBeenCalledWith('VideoBackgroundClient mounting')
     
     process.env.NODE_ENV = originalEnv
   })
@@ -65,7 +71,7 @@ describe('VideoBackgroundClient', () => {
     
     render(<VideoBackgroundClient fileName="test-video.mp4" />)
     
-    expect(consoleSpy).not.toHaveBeenCalled()
+    expect(consoleSpy.spy).not.toHaveBeenCalled()
     
     process.env.NODE_ENV = originalEnv
   })

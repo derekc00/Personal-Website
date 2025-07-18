@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { withAuth } from '@/lib/api/middleware'
+import { withAuth, type AuthenticatedRequest } from '@/lib/api/middleware'
 import { getContent, updateContent, deleteContent } from '@/lib/api/content-utils'
 import { createServerClient } from '@/lib/supabase-server'
 import { contentUpdateSchema } from '@/lib/schemas/auth'
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 
 // PATCH /api/admin/content/[slug] - Update existing content
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
-  return withAuth(async (innerReq: NextRequest) => {
+  return withAuth(async (innerReq: AuthenticatedRequest) => {
     try {
       const { slug } = await params
       const body = await innerReq.json()
@@ -91,7 +91,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 
 // DELETE /api/admin/content/[slug] - Delete content
 export async function DELETE(req: NextRequest, { params }: RouteParams) {
-  return withAuth(async (innerReq: NextRequest) => {
+  return withAuth(async (innerReq: AuthenticatedRequest) => {
     try {
       const { slug } = await params
       const url = new URL(innerReq.url)

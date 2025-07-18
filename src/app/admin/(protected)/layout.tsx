@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import AdminHeader from '@/components/admin/AdminHeader'
 import AdminSidebar from '@/components/admin/AdminSidebar'
-import { getAuthenticatedUserFromSession } from '@/lib/auth'
+import { getServerAuthenticatedUser } from '@/lib/auth-server'
 
 export const metadata: Metadata = {
   title: {
@@ -17,10 +17,10 @@ export default async function ProtectedAdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await getAuthenticatedUserFromSession()
+  const user = await getServerAuthenticatedUser()
   
   if (!user) {
-    redirect('/admin/login')
+    redirect('/admin/auth/login')
   }
 
   return (

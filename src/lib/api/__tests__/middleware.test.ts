@@ -8,12 +8,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 vi.mock('@/lib/supabase-server')
 vi.mock('@/lib/rate-limit')
 
-// Mock console.error
-const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-
 describe('API Middleware', () => {
   const mockCreateServerClient = vi.mocked(createServerClient)
   const mockRateLimit = vi.mocked(rateLimit)
+  const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
   const mockRequest = (headers: Record<string, string> = {}) => {
     return {
@@ -47,6 +45,15 @@ describe('API Middleware', () => {
           auth: {
             getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
+              error: null
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { 
+                session: {
+                  access_token: 'token',
+                  expires_at: Math.floor(Date.now() / 1000) + 3600
+                }
+              },
               error: null
             })
           }
@@ -89,11 +96,17 @@ describe('API Middleware', () => {
       })
 
       it('should return 401 when authentication fails', async () => {
+        const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+        
         const mockSupabase = {
           auth: {
             getUser: vi.fn().mockResolvedValue({
               data: { user: null },
               error: new Error('Invalid token')
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { session: null },
+              error: null
             })
           }
         }
@@ -110,10 +123,12 @@ describe('API Middleware', () => {
         expect(response.status).toBe(401)
         expect(data.error).toBe('Invalid authentication token')
         expect(handler).not.toHaveBeenCalled()
-        expect(mockConsoleError).toHaveBeenCalledWith(
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
           '[API] Authentication failed:',
           'Invalid token'
         )
+        
+        consoleErrorSpy.mockRestore()
       })
 
       it('should return 401 when no user in session', async () => {
@@ -121,6 +136,10 @@ describe('API Middleware', () => {
           auth: {
             getUser: vi.fn().mockResolvedValue({
               data: { user: null },
+              error: null
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { session: null },
               error: null
             })
           }
@@ -154,6 +173,15 @@ describe('API Middleware', () => {
             getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { 
+                session: {
+                  access_token: 'token',
+                  expires_at: Math.floor(Date.now() / 1000) + 3600
+                }
+              },
+              error: null
             })
           }
         }
@@ -184,6 +212,15 @@ describe('API Middleware', () => {
           auth: {
             getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
+              error: null
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { 
+                session: {
+                  access_token: 'token',
+                  expires_at: Math.floor(Date.now() / 1000) + 3600
+                }
+              },
               error: null
             })
           }
@@ -269,6 +306,10 @@ describe('API Middleware', () => {
             getUser: vi.fn().mockResolvedValue({
               data: { user: null },
               error: new Error('Authentication service unavailable')
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { session: null },
+              error: null
             })
           }
         }
@@ -323,6 +364,15 @@ describe('API Middleware', () => {
             getUser: vi.fn().mockResolvedValue({
               data: { user: mockUser },
               error: null
+            }),
+            getSession: vi.fn().mockResolvedValue({
+              data: { 
+                session: {
+                  access_token: 'token',
+                  expires_at: Math.floor(Date.now() / 1000) + 3600
+                }
+              },
+              error: null
             })
           }
         }
@@ -371,6 +421,15 @@ describe('API Middleware', () => {
         auth: {
           getUser: vi.fn().mockResolvedValue({
             data: { user: mockUser },
+            error: null
+          }),
+          getSession: vi.fn().mockResolvedValue({
+            data: { 
+              session: {
+                access_token: 'token',
+                expires_at: Math.floor(Date.now() / 1000) + 3600
+              }
+            },
             error: null
           })
         }

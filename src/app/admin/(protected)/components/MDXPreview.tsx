@@ -8,8 +8,7 @@ import { AlertCircle } from 'lucide-react'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
-import { useMDXComponents } from '../../../../../mdx-components'
-import type { MDXComponents } from 'mdx/types'
+import { useMDXComponents } from '@/mdx-components'
 
 const DEBOUNCE_DELAY = 300 // milliseconds
 
@@ -23,7 +22,7 @@ export function MDXPreview({ content, className, debounceDelay = DEBOUNCE_DELAY 
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isCompiling, setIsCompiling] = useState(false)
-  const components = useMDXComponents({} as MDXComponents)
+  const components = useMDXComponents({})
 
   useEffect(() => {
     const compileMDX = async () => {

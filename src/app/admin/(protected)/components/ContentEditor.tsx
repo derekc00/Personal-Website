@@ -101,7 +101,7 @@ export function ContentEditor({ slug }: ContentEditorProps) {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto">
       <div className="mb-6">
         <Link 
           href="/admin/content"

@@ -8,7 +8,7 @@ import { AlertCircle } from 'lucide-react'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
-import { useMDXComponents } from '@/../../mdx-components'
+import { useMDXComponents } from '../../../../../mdx-components'
 import type { MDXComponents } from 'mdx/types'
 
 const DEBOUNCE_DELAY = 300 // milliseconds
@@ -16,9 +16,10 @@ const DEBOUNCE_DELAY = 300 // milliseconds
 interface MDXPreviewProps {
   content: string
   className?: string
+  debounceDelay?: number
 }
 
-export function MDXPreview({ content, className }: MDXPreviewProps) {
+export function MDXPreview({ content, className, debounceDelay = DEBOUNCE_DELAY }: MDXPreviewProps) {
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isCompiling, setIsCompiling] = useState(false)
@@ -52,9 +53,9 @@ export function MDXPreview({ content, className }: MDXPreviewProps) {
       }
     }
 
-    const timeoutId = setTimeout(compileMDX, DEBOUNCE_DELAY)
+    const timeoutId = setTimeout(compileMDX, debounceDelay)
     return () => clearTimeout(timeoutId)
-  }, [content])
+  }, [content, debounceDelay])
 
   return (
     <Card className={`p-6 h-full overflow-auto ${className}`}>

@@ -67,7 +67,7 @@ export function handleApiError(error: unknown): NextResponse {
     
     // Default to internal error
     return createApiError(
-      process.env.NODE_ENV === 'production' 
+      process.env.NODE_ENV?.toLowerCase() === 'production' 
         ? ERROR_MESSAGES.INTERNAL_SERVER_ERROR 
         : error.message,
       'INTERNAL_ERROR',

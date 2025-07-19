@@ -288,7 +288,7 @@ export default function ThreeWorkspace() {
       
       setIsMobile(mobile);
       
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV?.toLowerCase() === 'development') {
         console.log('Viewport updated:', { width, mobile });
       }
     };
@@ -299,7 +299,7 @@ export default function ThreeWorkspace() {
     // Add resize listener
     window.addEventListener('resize', updateViewport);
     
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV?.toLowerCase() === 'development') {
       console.log('3D Workspace initializing...');
     }
     
@@ -314,7 +314,7 @@ export default function ThreeWorkspace() {
         return;
       }
       
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV?.toLowerCase() === 'development') {
         console.log('WebGL is supported');
         const webglContext = gl as WebGLRenderingContext;
         console.log('WebGL Version:', webglContext.getParameter(webglContext.VERSION));
@@ -330,7 +330,7 @@ export default function ThreeWorkspace() {
     }, 100); // Small delay to avoid React Strict Mode issues
     
     return () => {
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV?.toLowerCase() === 'development') {
         console.log('3D Workspace cleanup');
       }
       clearTimeout(timer);
@@ -436,7 +436,7 @@ export default function ThreeWorkspace() {
         dpr={performanceSettings.dpr}
         performance={performanceSettings.performance}
         onCreated={({ gl }) => {
-          if (process.env.NODE_ENV === 'development') {
+          if (process.env.NODE_ENV?.toLowerCase() === 'development') {
             console.log('Three.js canvas created successfully');
             console.log('Renderer info:', gl.info);
           }
@@ -449,7 +449,7 @@ export default function ThreeWorkspace() {
           };
           
           const handleContextRestored = () => {
-            if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV?.toLowerCase() === 'development') {
               console.log('WebGL context restored successfully');
             }
             setContextLost(false);

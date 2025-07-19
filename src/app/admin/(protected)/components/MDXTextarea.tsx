@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback } from 'react'
+import { cn } from '@/lib/utils'
 
 interface MDXTextareaProps {
   value: string
@@ -27,7 +28,13 @@ export function MDXTextarea({
       onChange={handleChange}
       placeholder={placeholder}
       rows={rows}
-      className={`w-full px-4 py-3 border rounded-md bg-background font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${className}`}
+      className={cn(
+        "w-full px-4 py-3 border rounded-md bg-background",
+        "font-mono text-sm resize-none",
+        "focus:outline-none focus:ring-2 focus:ring-blue-500",
+        "dark:focus:ring-blue-400",
+        className
+      )}
       spellCheck={false}
     />
   )

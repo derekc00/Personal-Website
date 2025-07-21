@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withAuth, type AuthenticatedRequest } from '@/lib/api/middleware'
 import { createContent, listContent } from '@/lib/api/content-utils'
-import { createServerClient } from '@/lib/supabase-server'
 import { contentInsertSchema } from '@/lib/schemas/auth'
 import { handleApiError, createApiError } from '@/lib/api/errors'
 import { HTTP_STATUS } from '@/lib/constants'
@@ -10,14 +9,7 @@ import { HTTP_STATUS } from '@/lib/constants'
 export async function GET(req: NextRequest) {
   return withAuth(async (req: AuthenticatedRequest) => {
     try {
-      // Get the auth token from the request
-      const authHeader = req.headers.get('authorization')
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : undefined
-      
-      // Create an authenticated Supabase client
-      const supabaseClient = createServerClient(token)
-      
-      const content = await listContent(true, supabaseClient) // Include unpublished content
+      const content = await listContent(true, req.supabase) // Include unpublished content
       
       return NextResponse.json({
         success: true,
@@ -42,19 +34,11 @@ export async function POST(req: NextRequest) {
         return handleApiError(validationResult.error)
       }
       
-      // Get the auth token from the request
-      const authHeader = req.headers.get('authorization')
-      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : undefined
-      
-      // Create an authenticated Supabase client
-      const supabaseClient = createServerClient(token)
-      
-      // Create content with author_id
-      
+      // Create content with author_id using authenticated Supabase client
       const content = await createContent({
         ...validationResult.data,
         author_id: req.user!.id
-      }, supabaseClient)
+      }, req.supabase)
       
       if (!content) {
         return createApiError(

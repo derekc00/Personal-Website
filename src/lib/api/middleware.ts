@@ -15,10 +15,11 @@ export class ApiError extends Error {
 }
 
 /**
- * Extended request type that includes the authenticated user
+ * Extended request type that includes the authenticated user and Supabase client
  */
 export interface AuthenticatedRequest extends NextRequest {
   user: ApiAuthenticatedUser | null
+  supabase: ReturnType<typeof createServerClient>
 }
 
 /**
@@ -99,9 +100,16 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
         }
       }
       
+      // Get the auth token from the request for Supabase client
+      const authHeader = req.headers.get('authorization')
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : undefined
+      
+      // Create an authenticated Supabase client
+      const supabaseClient = createServerClient(token)
+      
       // Skip auth if configured
       if (options.skipAuth) {
-        const extendedReq = Object.assign(req, { user: null }) as T
+        const extendedReq = Object.assign(req, { user: null, supabase: supabaseClient }) as T
         return handler(extendedReq)
       }
       
@@ -115,8 +123,8 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
         )
       }
       
-      // Add user to request object
-      const extendedReq = Object.assign(req, { user }) as T
+      // Add user and supabase client to request object
+      const extendedReq = Object.assign(req, { user, supabase: supabaseClient }) as T
       
       return handler(extendedReq)
     } catch (error) {

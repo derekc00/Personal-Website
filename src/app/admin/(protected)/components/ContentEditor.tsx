@@ -11,6 +11,7 @@ import { ArrowLeft, Save, Eye, EyeOff, FileText, Monitor } from 'lucide-react'
 import Link from 'next/link'
 import { MDXPreview } from './MDXPreview'
 import { MDXTextarea } from './MDXTextarea'
+import clsx from 'clsx'
 
 interface ContentEditorProps {
   slug?: string
@@ -188,11 +189,12 @@ export function ContentEditor({ slug }: ContentEditorProps) {
               <button
                 type="button"
                 onClick={() => setActiveTab('editor')}
-                className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={clsx(
+                  'flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
                   activeTab === 'editor' 
                     ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm' 
                     : 'text-gray-600 dark:text-gray-400'
-                }`}
+                )}
               >
                 <FileText className="w-4 h-4 mr-1.5" />
                 Editor
@@ -200,11 +202,12 @@ export function ContentEditor({ slug }: ContentEditorProps) {
               <button
                 type="button"
                 onClick={() => setActiveTab('preview')}
-                className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={clsx(
+                  'flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
                   activeTab === 'preview' 
                     ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm' 
                     : 'text-gray-600 dark:text-gray-400'
-                }`}
+                )}
               >
                 <Monitor className="w-4 h-4 mr-1.5" />
                 Preview

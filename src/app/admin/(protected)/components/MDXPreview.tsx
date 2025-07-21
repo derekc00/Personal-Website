@@ -10,7 +10,7 @@ import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import { useMDXComponents } from '@/mdx-components'
 
-const DEBOUNCE_DELAY = 300 // milliseconds
+const DEFAULT_DEBOUNCE_DELAY_MS = 300 // milliseconds
 
 interface MDXPreviewProps {
   content: string
@@ -18,7 +18,7 @@ interface MDXPreviewProps {
   debounceDelay?: number
 }
 
-export function MDXPreview({ content, className, debounceDelay = DEBOUNCE_DELAY }: MDXPreviewProps) {
+export function MDXPreview({ content, className, debounceDelay = DEFAULT_DEBOUNCE_DELAY_MS }: MDXPreviewProps) {
   const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isCompiling, setIsCompiling] = useState(false)

@@ -331,6 +331,9 @@ describe('API Middleware', () => {
 
     describe('Options', () => {
       it('should bypass auth when skipAuth is true', async () => {
+        const mockSupabase = { auth: { getUser: vi.fn() } }
+        mockCreateServerClient.mockReturnValue(mockSupabase as unknown)
+
         const handler = vi.fn().mockResolvedValue(
           NextResponse.json({ message: 'Public endpoint' })
         )
@@ -346,10 +349,11 @@ describe('API Middleware', () => {
         expect(handler).toHaveBeenCalledWith(
           expect.objectContaining({
             headers: request.headers,
-            user: null
+            user: null,
+            supabase: mockSupabase
           })
         )
-        expect(mockCreateServerClient).not.toHaveBeenCalled()
+        expect(mockCreateServerClient).toHaveBeenCalledWith(undefined)
       })
 
       it('should skip rate limiting when rateLimit is false', async () => {

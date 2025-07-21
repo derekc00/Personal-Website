@@ -40,7 +40,7 @@ export default function VideoBackground({ fileName, onVideoReady }: VideoBackgro
   useEffect(() => {
     async function loadVideo() {
       try {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV?.toLowerCase() === "development") {
           console.log(`Loading video via API: ${fileName}`);
         }
 
@@ -56,7 +56,7 @@ export default function VideoBackground({ fileName, onVideoReady }: VideoBackgro
           return;
         }
 
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV?.toLowerCase() === "development") {
           console.log(`Video loaded successfully via API: ${data.url}`);
         }
         setVideoUrl(data.url);
@@ -115,12 +115,12 @@ export default function VideoBackground({ fileName, onVideoReady }: VideoBackgro
         console.error("Video playback error:", e);
       }}
       onLoadStart={() => {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV?.toLowerCase() === "development") {
           console.log("Video loading started");
         }
       }}
       onCanPlay={() => {
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.NODE_ENV?.toLowerCase() === "development") {
           console.log("Video can start playing");
         }
         onVideoReady?.();

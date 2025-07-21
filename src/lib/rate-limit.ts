@@ -104,7 +104,7 @@ export function rateLimit(
  * Clear the rate limit store - for testing purposes only
  */
 export function clearRateLimitStore() {
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV?.toLowerCase() === 'test') {
     rateLimitStore.clear()
   }
 }

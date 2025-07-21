@@ -1,85 +1,98 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
-import { FrontmatterSchema, ContentItemSchema, type ContentItem } from "./schemas";
-import { FILE_EXTENSIONS, ERROR_MESSAGES, CONTENT_TYPES } from './constants';
+import { createClient } from "@supabase/supabase-js";
+import { ContentItemSchema, type ContentItem } from "./schemas";
+import { ERROR_MESSAGES, CONTENT_TYPES } from './constants';
+import { contentRowSchema } from "./schemas/auth";
+import type { Database } from "./supabase";
 
-const contentDirectory = path.join(process.cwd(), "content");
+// Helper function to ensure ISO date string format
+function ensureISODateString(date: string): string {
+  return date.includes('T') ? date : `${date}T00:00:00.000Z`;
+}
+
+// Create Supabase client for server-side use
+// Using anon key is correct here - content reading should respect RLS policies
+// and this maintains consistency with client-side access patterns
+const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export async function getAllContent(): Promise<ContentItem[]> {
-  const blogDir = path.join(contentDirectory, "blog");
-  
-  if (!fs.existsSync(blogDir)) {
+  const { data, error } = await supabase
+    .from('content')
+    .select('*')
+    .eq('published', true)
+    .order('date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching content:', error);
     return [];
   }
 
-  const files = fs.readdirSync(blogDir);
+  if (!data) {
+    return [];
+  }
+
   const validContent: ContentItem[] = [];
 
-  for (const file of files) {
-    if (!file.endsWith(FILE_EXTENSIONS.MDX)) continue;
-
+  for (const row of data) {
     try {
-      const slug = file.replace(new RegExp(`\\${FILE_EXTENSIONS.MDX}$`), "");
-      const source = fs.readFileSync(path.join(blogDir, file), "utf8");
-      const { data, content } = matter(source);
-
-      // Validate frontmatter with schema
-      const frontmatter = FrontmatterSchema.parse(data);
+      // Validate the row with schema
+      const validatedRow = contentRowSchema.parse(row);
       
       const contentItem: ContentItem = {
-        id: slug,
-        slug,
-        title: frontmatter.title,
-        excerpt: frontmatter.description || frontmatter.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
-        date: frontmatter.date,
-        category: frontmatter.category,
-        image: frontmatter.image || null,
-        type: frontmatter.type,
-        tags: frontmatter.tags,
-        content,
+        id: validatedRow.id,
+        slug: validatedRow.slug,
+        title: validatedRow.title,
+        excerpt: validatedRow.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
+        date: ensureISODateString(validatedRow.date),
+        category: validatedRow.category,
+        image: validatedRow.image,
+        type: validatedRow.type,
+        tags: validatedRow.tags || [],
+        content: validatedRow.content,
       };
 
       // Validate the complete content item
       const validatedItem = ContentItemSchema.parse(contentItem);
       validContent.push(validatedItem);
     } catch (error) {
-      console.warn(`Invalid content in ${file}:`, error);
+      console.warn(`Invalid content for slug ${row.slug}:`, error);
       // Skip invalid content
     }
   }
 
-  // Sort by date descending
-  return validContent.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  return validContent;
 }
 
 export async function getContentBySlug(slug: string): Promise<ContentItem | null> {
-  const filePath = path.join(contentDirectory, "blog", `${slug}${FILE_EXTENSIONS.MDX}`);
-  
-  if (!fs.existsSync(filePath)) {
+  const { data, error } = await supabase
+    .from('content')
+    .select('*')
+    .eq('slug', slug)
+    .eq('published', true)
+    .single();
+
+  if (error || !data) {
+    console.warn(`Content not found for slug ${slug}:`, error);
     return null;
   }
 
   try {
-    const source = fs.readFileSync(filePath, "utf8");
-    const { data, content } = matter(source);
-
-    // Validate frontmatter with schema
-    const frontmatter = FrontmatterSchema.parse(data);
+    // Validate the row with schema
+    const validatedRow = contentRowSchema.parse(data);
     
     const contentItem: ContentItem = {
-      id: slug,
-      slug,
-      title: frontmatter.title,
-      excerpt: frontmatter.description || frontmatter.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
-      date: frontmatter.date,
-      category: frontmatter.category,
-      image: frontmatter.image || null,
-      type: frontmatter.type,
-      tags: frontmatter.tags,
-      content,
+      id: validatedRow.id,
+      slug: validatedRow.slug,
+      title: validatedRow.title,
+      excerpt: validatedRow.excerpt || ERROR_MESSAGES.NO_DESCRIPTION,
+      date: validatedRow.date.includes('T') ? validatedRow.date : `${validatedRow.date}T00:00:00.000Z`,
+      category: validatedRow.category,
+      image: validatedRow.image,
+      type: validatedRow.type,
+      tags: validatedRow.tags || [],
+      content: validatedRow.content,
     };
 
     // Validate the complete content item

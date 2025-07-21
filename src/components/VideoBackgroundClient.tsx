@@ -21,7 +21,7 @@ function VideoFallback() {
 
 export default function VideoBackgroundClient({ fileName, onVideoReady }: VideoBackgroundClientProps) {
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV?.toLowerCase() === 'development') {
       console.log('VideoBackgroundClient mounting');
     }
   }, []);

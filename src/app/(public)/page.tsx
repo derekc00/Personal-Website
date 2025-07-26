@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.NODE_ENV?.toLowerCase() === "development") {
         console.log("Homepage mounting - client side");
       }
     } catch (error) {
@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   const handleVideoReady = () => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV?.toLowerCase() === "development") {
       console.log("Video ready, starting typewriter animation");
     }
     setVideoReady(true);

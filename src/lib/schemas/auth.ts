@@ -118,7 +118,7 @@ export const contentRowSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
   title: z.string().min(1).max(200),
   excerpt: z.string().max(500),
-  date: z.string().datetime(),
+  date: z.string(),
   category: z.string(),
   image: z.string().url().nullable(),
   type: z.enum(['blog', 'project']),
@@ -126,8 +126,8 @@ export const contentRowSchema = z.object({
   content: z.string(),
   published: z.boolean(),
   comments_enabled: z.boolean(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_at: z.string(),
+  updated_at: z.string(),
   author_id: z.string().uuid().nullable()
 });
 

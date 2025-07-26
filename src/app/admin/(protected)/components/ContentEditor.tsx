@@ -7,8 +7,11 @@ import { type ContentInsert, type ContentUpdate } from '@/lib/schemas/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { ArrowLeft, Save, Eye, EyeOff } from 'lucide-react'
+import { ArrowLeft, Save, Eye, EyeOff, FileText, Monitor } from 'lucide-react'
 import Link from 'next/link'
+import { MDXPreview } from './MDXPreview'
+import { MDXTextarea } from './MDXTextarea'
+import clsx from 'clsx'
 
 interface ContentEditorProps {
   slug?: string
@@ -39,6 +42,7 @@ export function ContentEditor({ slug }: ContentEditorProps) {
   })
   
   const [isSaving, setIsSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor')
 
   useEffect(() => {
     if (existingContent?.data) {
@@ -98,7 +102,7 @@ export function ContentEditor({ slug }: ContentEditorProps) {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto">
       <div className="mb-6">
         <Link 
           href="/admin/content"
@@ -109,80 +113,162 @@ export function ContentEditor({ slug }: ContentEditorProps) {
         </Link>
       </div>
 
-      <Card className="p-6">
-        <h1 className="text-2xl font-bold mb-6">
-          {slug ? 'Edit Content' : 'Create New Content'}
-        </h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Header with form controls */}
+        <Card className="p-6">
+          <h1 className="text-2xl font-bold mb-6">
+            {slug ? 'Edit Content' : 'Create New Content'}
+          </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-2">Title</label>
-            <Input
-              type="text"
-              value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              required
-              placeholder="Enter a compelling title..."
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Excerpt</label>
-            <Input
-              type="text"
-              value={formData.excerpt}
-              onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-              required
-              placeholder="Brief description of the content..."
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Type</label>
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as 'blog' | 'project' }))}
-                className="w-full px-3 py-2 border rounded-md bg-background"
-              >
-                <option value="blog">Blog Post</option>
-                <option value="project">Project</option>
-              </select>
+              <label className="block text-sm font-medium mb-2">Title</label>
+              <Input
+                type="text"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                required
+                placeholder="Enter a compelling title..."
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Category</label>
+              <label className="block text-sm font-medium mb-2">Excerpt</label>
               <Input
                 type="text"
-                value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
-                placeholder="e.g., Technology, Design..."
+                value={formData.excerpt}
+                onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+                required
+                placeholder="Brief description of the content..."
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Type</label>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as 'blog' | 'project' }))}
+                  className="w-full px-3 py-2 border rounded-md bg-background"
+                >
+                  <option value="blog">Blog Post</option>
+                  <option value="project">Project</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Category</label>
+                <Input
+                  type="text"
+                  value={formData.category}
+                  onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                  placeholder="e.g., Technology, Design..."
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Tags (comma-separated)</label>
+              <Input
+                type="text"
+                value={formData.tags?.join(', ')}
+                onChange={(e) => handleTagInput(e.target.value)}
+                placeholder="react, nextjs, typescript..."
               />
             </div>
           </div>
+        </Card>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Tags (comma-separated)</label>
-            <Input
-              type="text"
-              value={formData.tags?.join(', ')}
-              onChange={(e) => handleTagInput(e.target.value)}
-              placeholder="react, nextjs, typescript..."
-            />
+        {/* Editor and Preview Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium">Content (MDX)</label>
+            
+            {/* Mobile Tab Switcher */}
+            <div className="flex md:hidden bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+              <button
+                type="button"
+                onClick={() => setActiveTab('editor')}
+                className={clsx(
+                  'flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                  activeTab === 'editor' 
+                    ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm' 
+                    : 'text-gray-600 dark:text-gray-400'
+                )}
+              >
+                <FileText className="w-4 h-4 mr-1.5" />
+                Editor
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('preview')}
+                className={clsx(
+                  'flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                  activeTab === 'preview' 
+                    ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 shadow-sm' 
+                    : 'text-gray-600 dark:text-gray-400'
+                )}
+              >
+                <Monitor className="w-4 h-4 mr-1.5" />
+                Preview
+              </button>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Content (MDX)</label>
-            <textarea
-              value={formData.content}
-              onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-              required
-              rows={20}
-              className="w-full px-3 py-2 border rounded-md bg-background font-mono text-sm"
-              placeholder="Write your MDX content here..."
-            />
+          {/* Desktop Split View */}
+          <div className="hidden md:grid md:grid-cols-2 md:gap-4 md:min-h-[600px]">
+            <div className="h-full">
+              <Card className="h-full p-0 overflow-hidden">
+                <div className="p-3 border-b bg-gray-50 dark:bg-gray-800">
+                  <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <FileText className="w-4 h-4 mr-1.5" />
+                    Editor
+                  </div>
+                </div>
+                <div className="h-[calc(100%-48px)]">
+                  <MDXTextarea
+                    value={formData.content || ''}
+                    onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                    className="h-full border-0 rounded-none"
+                  />
+                </div>
+              </Card>
+            </div>
+            
+            <div className="h-full">
+              <Card className="h-full p-0 overflow-hidden">
+                <div className="p-3 border-b bg-gray-50 dark:bg-gray-800">
+                  <div className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <Monitor className="w-4 h-4 mr-1.5" />
+                    Preview
+                  </div>
+                </div>
+                <div className="h-[calc(100%-48px)] overflow-auto">
+                  <MDXPreview content={formData.content || ''} className="h-full border-0 rounded-none" />
+                </div>
+              </Card>
+            </div>
           </div>
 
+          {/* Mobile Tab View */}
+          <div className="md:hidden">
+            {activeTab === 'editor' ? (
+              <Card className="p-0 overflow-hidden">
+                <MDXTextarea
+                  value={formData.content || ''}
+                  onChange={(value) => setFormData(prev => ({ ...prev, content: value }))}
+                  className="border-0 rounded-md"
+                  rows={15}
+                />
+              </Card>
+            ) : (
+              <MDXPreview content={formData.content || ''} className="min-h-[400px]" />
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <Card className="p-6">
           <div className="flex items-center justify-between">
             <label className="flex items-center space-x-2 cursor-pointer">
               <input
@@ -223,8 +309,8 @@ export function ContentEditor({ slug }: ContentEditorProps) {
               </Button>
             </div>
           </div>
-        </form>
-      </Card>
+        </Card>
+      </form>
     </div>
   )
 }

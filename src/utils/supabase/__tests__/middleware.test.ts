@@ -11,7 +11,9 @@ describe('updateSession Middleware', () => {
   
   const mockRequest = (pathname: string, cookies: Record<string, string> = {}) => {
     const url = new URL(`http://localhost:3000${pathname}`)
-    const request = new NextRequest(url)
+    const request = new NextRequest(url, {
+      headers: new Headers()
+    })
     
     // Mock cookies
     Object.entries(cookies).forEach(([name, value]) => {

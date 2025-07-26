@@ -7,8 +7,9 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   plugins: [react()],
+  
+  // Global test configuration
   test: {
-    // Global test configuration
     globals: true,
     clearMocks: true,
     restoreMocks: true,
@@ -68,6 +69,90 @@ export default defineConfig({
     // Reporter configuration
     reporters: process.env.CI ? ['default', 'github-actions'] : ['default'],
   },
+  
+  // Multi-project configuration (replaces workspace)
+  projects: [
+    // UI Component Tests Project
+    {
+      name: 'ui',
+      plugins: [react()],
+      test: {
+        globals: true,
+        clearMocks: true,
+        restoreMocks: true,
+        mockReset: true,
+        isolate: true,
+        sequence: {
+          concurrent: false,
+        },
+        environment: 'jsdom',
+        environmentOptions: {
+          jsdom: {
+            resources: 'usable',
+          },
+        },
+        setupFiles: ['./config/vitest.setup.base.ts'],
+        include: [
+          'src/components/**/__tests__/**/*.(ts|tsx)',
+          'src/components/**/?(*.)+(spec|test).(ts|tsx)',
+          'src/app/**/__tests__/**/*.(ts|tsx)', 
+          'src/app/**/?(*.)+(spec|test).(ts|tsx)',
+          'src/__tests__/**/*.(ts|tsx)',
+          'src/?(*.)+(spec|test).(ts|tsx)',
+        ],
+        testTimeout: 10000,
+        hookTimeout: 10000,
+      },
+      resolve: {
+        alias: {
+          '@': resolve(__dirname, 'src'),
+        },
+      },
+      esbuild: {
+        target: 'es2020',
+        jsx: 'automatic',
+      },
+    },
+    
+    // API Tests Project  
+    {
+      name: 'api',
+      plugins: [react()],
+      test: {
+        globals: true,
+        clearMocks: true,
+        restoreMocks: true,
+        mockReset: true,
+        isolate: true,
+        sequence: {
+          concurrent: false,
+        },
+        environment: 'node',
+        setupFiles: ['./config/vitest.setup.base.ts'],
+        include: [
+          'src/app/api/**/__tests__/**/*.(ts|tsx)',
+          'src/app/api/**/?(*.)+(spec|test).(ts|tsx)',
+          'src/lib/api/**/__tests__/**/*.(ts|tsx)',
+          'src/lib/api/**/?(*.)+(spec|test).(ts|tsx)',
+          'src/lib/__tests__/**/*.(ts|tsx)',
+          'src/lib/?(*.)+(spec|test).(ts|tsx)',
+          'src/utils/supabase/**/__tests__/**/*.(ts|tsx)',
+          'src/utils/supabase/**/?(*.)+(spec|test).(ts|tsx)',
+        ],
+        testTimeout: 10000,
+        hookTimeout: 10000,
+      },
+      resolve: {
+        alias: {
+          '@': resolve(__dirname, 'src'),
+        },
+      },
+      esbuild: {
+        target: 'es2020',
+        jsx: 'automatic',
+      },
+    },
+  ],
   
   resolve: {
     alias: {

@@ -14,11 +14,10 @@ describe('API Middleware', () => {
   const mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
 
   const mockRequest = (headers: Record<string, string> = {}) => {
-    return {
-      headers: {
-        get: (key: string) => headers[key] || null
-      }
-    } as NextRequest
+    const headersObj = new Headers(headers)
+    return new NextRequest('http://localhost:3000/api/test', {
+      headers: headersObj
+    })
   }
 
   beforeEach(() => {

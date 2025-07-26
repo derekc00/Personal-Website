@@ -128,24 +128,30 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
       // Apply rate limiting if configured
       if (options.rateLimit !== false) {
         const rateLimitConfig = options.rateLimit || rateLimitConfigs.api
-        const { allowed, resetTime } = rateLimit(req, rateLimitConfig)
+        const rateLimitResult = rateLimit(req, rateLimitConfig)
         
-        if (!allowed) {
-          const response = NextResponse.json(
-            { 
-              error: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
-              resetTime: new Date(resetTime).toISOString()
-            },
-            { 
-              status: HTTP_STATUS.TOO_MANY_REQUESTS,
-              headers: {
-                'X-RateLimit-Limit': String(rateLimitConfig.limit),
-                'X-RateLimit-Reset': String(resetTime),
-                'Retry-After': String(Math.ceil((resetTime - Date.now()) / 1000))
+        // Handle cases where rateLimit might return undefined (e.g., in test environments)
+        if (rateLimitResult) {
+          const { allowed, resetTime } = rateLimitResult
+          
+          if (!allowed) {
+            const response = NextResponse.json(
+              { 
+                success: false,
+                error: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
+                resetTime: new Date(resetTime).toISOString()
+              },
+              { 
+                status: HTTP_STATUS.TOO_MANY_REQUESTS,
+                headers: {
+                  'X-RateLimit-Limit': String(rateLimitConfig.limit),
+                  'X-RateLimit-Reset': String(resetTime),
+                  'Retry-After': String(Math.ceil((resetTime - Date.now()) / 1000))
+                }
               }
-            }
-          )
-          return withCorsHeaders(response)
+            )
+            return withCorsHeaders(response)
+          }
         }
       }
       
@@ -168,7 +174,7 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
       
       if (!user) {
         const response = NextResponse.json(
-          { error: ERROR_MESSAGES.INVALID_TOKEN },
+          { success: false, error: ERROR_MESSAGES.INVALID_TOKEN },
           { status: HTTP_STATUS.UNAUTHORIZED }
         )
         return withCorsHeaders(response)
@@ -184,7 +190,7 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
       if (error instanceof ApiError) {
         console.error('[API] Request failed:', error)
         const response = NextResponse.json(
-          { error: error.message },
+          { success: false, error: error.message },
           { status: error.statusCode }
         )
         return withCorsHeaders(response)
@@ -193,7 +199,7 @@ export function withAuth<T extends AuthenticatedRequest = AuthenticatedRequest>(
       // Handle unexpected errors
       console.error('[API] Unexpected error:', error)
       const response = NextResponse.json(
-        { error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR },
+        { success: false, error: ERROR_MESSAGES.INTERNAL_SERVER_ERROR },
         { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
       )
       return withCorsHeaders(response)

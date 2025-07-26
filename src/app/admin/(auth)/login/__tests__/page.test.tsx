@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useRouter } from 'next/navigation'
 import AdminLogin from '../page'
@@ -120,7 +120,9 @@ describe('AdminLogin', () => {
     await user.type(emailInput, 'admin@example.com')
     await user.type(passwordInput, 'password')
     
-    fireEvent.click(submitButton)
+    act(() => {
+      fireEvent.click(submitButton)
+    })
 
     expect(emailInput).toBeDisabled()
     expect(passwordInput).toBeDisabled()
@@ -140,7 +142,9 @@ describe('AdminLogin', () => {
     await user.type(emailInput, 'admin@example.com')
     await user.type(passwordInput, 'password')
     
-    fireEvent.click(submitButton)
+    act(() => {
+      fireEvent.click(submitButton)
+    })
 
     const spinner = submitButton.querySelector('.animate-spin')
     expect(spinner).toBeInTheDocument()
@@ -156,11 +160,15 @@ describe('AdminLogin', () => {
     const form = emailInput.closest('form')!
 
     // Type invalid email
-    await user.type(emailInput, 'invalid-email')
-    await user.type(passwordInput, 'password')
+    await act(async () => {
+      await user.type(emailInput, 'invalid-email')
+      await user.type(passwordInput, 'password')
+    })
     
     // Try to submit
-    fireEvent.submit(form)
+    act(() => {
+      fireEvent.submit(form)
+    })
 
     // In jsdom environment, HTML5 validation is bypassed, so submission occurs
     expect(mockSignIn).toHaveBeenCalledWith('invalid-email', 'password')
@@ -173,7 +181,9 @@ describe('AdminLogin', () => {
     const form = submitButton.closest('form')!
 
     // Try to submit empty form
-    fireEvent.submit(form)
+    await act(async () => {
+      fireEvent.submit(form)
+    })
 
     // In jsdom environment, HTML5 validation is bypassed, so submission occurs with empty values
     expect(mockSignIn).toHaveBeenCalledWith('', '')

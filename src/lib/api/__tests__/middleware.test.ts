@@ -16,11 +16,10 @@ describe('API Middleware', () => {
   const mockRateLimit = vi.mocked(rateLimit)
 
   const mockRequest = (headers: Record<string, string> = {}) => {
-    return {
-      headers: {
-        get: (key: string) => headers[key] || null
-      }
-    } as NextRequest
+    const headersObj = new Headers(headers)
+    return new NextRequest('http://localhost:3000/api/test', {
+      headers: headersObj
+    })
   }
 
   beforeEach(() => {

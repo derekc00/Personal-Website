@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 
 /**
- * DER-69: Basic Testing for Critical Admin Paths
+ * Admin Security Validation Tests
  * 
- * Simplified test validation that covers the 4 core requirements:
+ * Validates that critical admin security paths are properly tested:
  * 1. Admin login/logout flow
  * 2. JWT authentication on API routes
  * 3. Basic CRUD operations work when authenticated
@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest'
  * 
  * This test validates that these critical paths are covered by existing tests.
  */
-describe('DER-69: Critical Admin Path Coverage', () => {
+describe('Admin Security: Critical Path Coverage', () => {
   describe('Core Authentication Requirements', () => {
     it('should validate admin login flow is tested', () => {
       // Requirement: Admin login/logout flow

@@ -1,15 +1,15 @@
 import { describe, it, expect } from 'vitest'
 
 /**
- * DER-69 Acceptance Criteria Validation
+ * Admin Testing Acceptance Criteria Validation
  * 
- * This file validates that all DER-69 acceptance criteria have been met:
+ * This file validates that all admin testing acceptance criteria have been met:
  * - 10-15 tests covering critical paths ✓
  * - All tests passing in CI ✓ 
  * - No complex test infrastructure ✓
  * - Run time under 30 seconds ✓
  */
-describe('DER-69: Acceptance Criteria Validation', () => {
+describe('Admin Testing: Acceptance Criteria Validation', () => {
   describe('Test Coverage Requirements', () => {
     it('should have 10-15 tests covering critical admin paths', () => {
       // Critical paths tests: 11 tests
